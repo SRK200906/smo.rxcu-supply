@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="th" class="h-full">
 <head>
+  <!-- แท็ก Favicon บนแท็บเบราว์เซอร์ -->
+<link id="dynamicFavicon" rel="icon" type="image/png" href="https://placehold.co/64x64/1b382b/ffffff?text=RxCU" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>ระบบคลังพัสดุ สโมสรนิสิตเภสัชศาสตร์ จุฬาฯ</title>
@@ -521,7 +523,17 @@
           currentUser = null;
         }
       }
-
+function updateFavicon(iconUrl) {
+  var favicon = document.getElementById('dynamicFavicon');
+  if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.id = 'dynamicFavicon';
+    favicon.rel = 'icon';
+    document.head.appendChild(favicon);
+  }
+  // ถ้ามีการตั้งค่าตราสโมสร ให้ใช้ตราสโมสรเป็น Favicon ถ้าไม่มีให้ใช้รูป Default
+  favicon.href = iconUrl ? cleanDriveUrl(iconUrl) : 'https://placehold.co/64x64/1b382b/ffffff?text=RxCU';
+}
       if (currentUser && currentUser.id) {
         unlockAppInterface();
       } else {
@@ -538,6 +550,7 @@
     function renderClubLogo(url) {
       var clean = cleanDriveUrl(url);
       var hasLogo = !!url;
+      updateFavicon(url);
 
       var gateImg = document.getElementById('gateLogoPreview');
       var gateFallback = document.getElementById('gateLogoFallback');
