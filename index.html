@@ -2,7 +2,7 @@
 <html lang="th" class="h-full">
 <head>
   <!-- แท็ก Favicon บนแท็บเบราว์เซอร์ -->
-<link id="dynamicFavicon" rel="icon" type="image/png" href="https://placehold.co/64x64/1b382b/ffffff?text=RxCU" />
+  <link id="dynamicFavicon" rel="icon" type="image/png" href="logo.png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>SMO.RXCU/SUPPLY</title>
@@ -511,8 +511,8 @@
     var tempUploadedLogo = '';
 
     window.addEventListener('DOMContentLoaded', function() {
-      currentClubLogo = localStorage.getItem('smo_rx_logo') || 'https://lh3.googleusercontent.com/d/1iB45AF0mkUfUkbgBpQZ2ujBzqtULAPSz';
-      renderClubLogo(currentClubLogo);
+  currentClubLogo = localStorage.getItem('smo_rx_logo') || 'logo.png';
+  renderClubLogo(currentClubLogo);
 
       var session = localStorage.getItem('smo_rx_user');
       if (session) {
@@ -525,11 +525,8 @@
       }
 function updateFavicon(iconUrl) {
   var favicon = document.getElementById('dynamicFavicon');
-  if (!favicon) {
-    favicon = document.createElement('link');
-    favicon.id = 'dynamicFavicon';
-    favicon.rel = 'icon';
-    document.head.appendChild(favicon);
+  if (favicon) {
+    favicon.href = iconUrl ? cleanDriveUrl(iconUrl) : 'logo.png';
   }
   // ถ้ามีการตั้งค่าตราสโมสร ให้ใช้ตราสโมสรเป็น Favicon ถ้าไม่มีให้ใช้รูป Default
   favicon.href = iconUrl ? cleanDriveUrl(iconUrl) : 'https://placehold.co/64x64/1b382b/ffffff?text=RxCU';
