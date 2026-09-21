@@ -3,8 +3,8 @@
 <head>
 
   <!-- Favicon ตราสโมสรนิสิตฯ -->
-<link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=6" />
-<link rel="shortcut icon" type="image/png" href="/favicon.png?v=6" />
+<link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=7" />
+<link rel="shortcut icon" type="image/png" href="/favicon.png?v=7" />
  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>SMO.RXCU/SUPPLY</title>
   
@@ -320,6 +320,9 @@
             <button id="adminTabLogo" onclick="openLogoSettingModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f4ece1] hover:bg-[#ebdcc8] text-[#715329] border border-[#c5a880]/40 transition-all flex items-center gap-1">
               <i class="fa-solid fa-award"></i> <span>ตั้งค่าตราสโมสร</span>
             </button>
+            <button onclick="openAddEquipmentModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-700 to-emerald-800 hover:brightness-110 text-white shadow-sm transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-plus"></i> <span>เพิ่มพัสดุใหม่</span>
+            </button>
           </div>
 
           <div class="flex items-center gap-2 w-full md:w-auto">
@@ -437,7 +440,121 @@
       </div>
     </div>
   </dialog>
+  <!-- MODAL: ADD NEW EQUIPMENT (WITH CAMERA & UPLOAD) -->
+  <dialog id="addEquipmentModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-xl w-[95vw] border border-slate-100">
+    <div class="p-4 sm:p-6 space-y-4 bg-white rounded-3xl max-h-[92vh] flex flex-col justify-between">
+      
+      <!-- Header -->
+      <div class="flex items-center justify-between border-b pb-3 shrink-0">
+        <h3 class="font-bold text-sm sm:text-base text-[#12281e] flex items-center gap-2">
+          <i class="fa-solid fa-box-open text-[#c5a880]"></i> เพิ่มรายการพัสดุ/อุปกรณ์ใหม่เข้าคลัง
+        </h3>
+        <button onclick="closeAddEquipmentModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
+      </div>
 
+      <!-- Form Body -->
+      <div class="flex-1 overflow-y-auto space-y-3.5 custom-scroll pr-1 text-xs">
+        
+        <!-- Camera & Photo Capture Area -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-dashed border-slate-300 space-y-3">
+          <label class="block font-semibold text-slate-700">รูปถ่ายพัสดุ / อุปกรณ์</label>
+          
+          <!-- Live Camera View (Hidden by default) -->
+          <div id="cameraLiveWrapper" class="hidden relative rounded-xl overflow-hidden bg-black aspect-[4/3] max-h-56 mx-auto">
+            <video id="cameraVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+            <button type="button" onclick="takeSnapshot()" class="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full font-bold shadow-lg flex items-center gap-1.5 active:scale-95">
+              <i class="fa-solid fa-camera"></i> กดถ่ายรูป
+            </button>
+          </div>
+
+          <!-- Photo Preview Container -->
+          <div id="photoPreviewWrapper" class="flex items-center gap-3">
+            <div class="w-20 h-20 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 p-1">
+              <img id="newEquipPhotoPreview" src="" alt="ตัวอย่างรูป" class="w-full h-full object-cover rounded-lg hidden" />
+              <i id="newEquipPhotoFallback" class="fa-solid fa-image text-3xl text-slate-300"></i>
+            </div>
+            <div class="space-y-1.5 flex-1">
+              <div class="flex flex-wrap gap-2">
+                <!-- Mobile & Desktop native camera button -->
+                <label class="cursor-pointer px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 flex items-center gap-1">
+                  <i class="fa-solid fa-camera"></i> ถ่ายรูป/เลือกภาพ
+                  <input type="file" id="cameraFileInput" accept="image/*" capture="environment" onchange="handleEquipPhotoFile(event)" class="hidden" />
+                </label>
+                <!-- Desktop live webcam button -->
+                <button type="button" id="btnToggleWebcam" onclick="toggleWebcam()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold border">
+                  <i class="fa-solid fa-video mr-1"></i> เปิดกล้องสด
+                </button>
+                <button type="button" id="btnRemovePhoto" onclick="removeEquipPhoto()" class="hidden px-2.5 py-1.5 rounded-xl text-rose-600 hover:bg-rose-50 font-medium">
+                  ลบรูป
+                </button>
+              </div>
+              <p class="text-[10px] text-slate-400">รองรับทั้งกดถ่ายจากกล้องมือถือ หรืออัปโหลดไฟล์ (ระบบบีบอัดภาพให้อัตโนมัติ)</p>
+            </div>
+          </div>
+          <!-- Hidden canvas for resizing -->
+          <canvas id="photoCanvas" class="hidden"></canvas>
+        </div>
+
+        <!-- Information Fields -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">รหัสพัสดุ <span class="text-rose-500">*</span></label>
+            <input type="text" id="newEquipId" placeholder="เช่น EQ-015" class="w-full p-2 bg-slate-50 border rounded-xl font-mono text-xs focus:outline-none focus:border-emerald-600" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block font-semibold text-slate-700 mb-1">ชื่อรายการพัสดุ / อุปกรณ์ <span class="text-rose-500">*</span></label>
+            <input type="text" id="newEquipName" placeholder="เช่น กล้องถ่ายวิดีโอ 4K Sony..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600 font-medium" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">หมวดหมู่ <span class="text-rose-500">*</span></label>
+            <div class="flex gap-1.5">
+              <select id="newEquipCategorySelect" onchange="handleCategorySelectChange(this.value)" class="flex-1 p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600 font-medium">
+                <option value="">-- เลือกหมวดหมู่ --</option>
+                <!-- Injected via JS -->
+              </select>
+            </div>
+            <input type="text" id="newEquipCustomCategory" placeholder="พิมพ์ชื่อหมวดหมู่ใหม่..." class="hidden w-full p-2 bg-amber-50/60 border border-amber-200 rounded-xl text-xs mt-1.5 focus:outline-none" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">จำนวนทั้งหมด <span class="text-rose-500">*</span></label>
+              <input type="number" id="newEquipTotalQty" min="1" value="1" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-bold text-center text-emerald-800" />
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">หน่วยนับ</label>
+              <input type="text" id="newEquipUnit" value="ชิ้น" placeholder="ชิ้น, เครื่อง..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs text-center" />
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-medium text-slate-700 mb-1">สี / ลวดลาย</label>
+            <input type="text" id="newEquipColor" placeholder="เช่น ดำ, น้ำเงิน..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs" />
+          </div>
+          <div>
+            <label class="block font-medium text-slate-700 mb-1">ขนาด / สเปก</label>
+            <input type="text" id="newEquipSize" placeholder="เช่น ไซส์ L, 10 เมตร..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="border-t pt-3 flex items-center justify-end gap-2 shrink-0">
+        <button type="button" onclick="closeAddEquipmentModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs transition-colors">
+          ยกเลิก
+        </button>
+        <button type="button" id="btnSaveNewEquipment" onclick="saveNewEquipment()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-[#12281e] to-[#244c37] hover:brightness-110 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-cloud-arrow-up"></i> <span>บันทึกพัสดุเข้าคลัง</span>
+        </button>
+      </div>
+
+    </div>
+  </dialog>
   <!-- TOAST -->
   <div id="toastNotification" class="fixed bottom-4 right-4 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 max-w-sm w-full px-3">
     <div id="toastInner" class="p-3.5 rounded-2xl shadow-xl font-medium text-xs flex items-center justify-between text-white bg-slate-800">
@@ -512,7 +629,7 @@
     var tempUploadedLogo = '';
 
     window.addEventListener('DOMContentLoaded', function() {
-  currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=6';
+  currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=7';
   renderClubLogo(currentClubLogo);
 
       var session = localStorage.getItem('smo_rx_user');
@@ -1587,6 +1704,234 @@ function updateFavicon(iconUrl) {
         printWin.print();
         printWin.close();
       }, 400);
+    }
+    // --- NEW EQUIPMENT & CAMERA CAPTURE LOGIC ---
+    var mediaStream = null;
+    var capturedPhotoBase64 = '';
+
+    function openAddEquipmentModal() {
+      // Auto-suggest Next ID
+      var maxNum = 0;
+      allItems.forEach(function(i) {
+        var id = (i['รหัสพัสดุ'] || '').toUpperCase();
+        var num = parseInt(id.replace(/[^0-9]/g, ''), 10);
+        if (!isNaN(num) && num > maxNum) maxNum = num;
+      });
+      var nextId = 'EQ-' + ('00' + (maxNum + 1)).slice(-3);
+
+      document.getElementById('newEquipId').value = nextId;
+      document.getElementById('newEquipName').value = '';
+      document.getElementById('newEquipTotalQty').value = 1;
+      document.getElementById('newEquipUnit').value = 'ชิ้น';
+      document.getElementById('newEquipColor').value = '';
+      document.getElementById('newEquipSize').value = '';
+      document.getElementById('newEquipCustomCategory').value = '';
+      document.getElementById('newEquipCustomCategory').classList.add('hidden');
+      
+      // Populate category options
+      var catSelect = document.getElementById('newEquipCategorySelect');
+      catSelect.innerHTML = '<option value="">-- เลือกหมวดหมู่ --</option>';
+      var existingCats = [];
+      allItems.forEach(function(item) {
+        var c = item['หมวดหมู่'];
+        if (c && existingCats.indexOf(c) === -1) existingCats.push(c);
+      });
+      existingCats.forEach(function(cat) {
+        catSelect.insertAdjacentHTML('beforeend', '<option value="' + cat + '">' + cat + '</option>');
+      });
+      catSelect.insertAdjacentHTML('beforeend', '<option value="__NEW__">➕ เพิ่มหมวดหมู่ใหม่...</option>');
+
+      removeEquipPhoto();
+      addEquipmentModal.showModal();
+    }
+
+    function closeAddEquipmentModal() {
+      stopWebcam();
+      addEquipmentModal.close();
+    }
+
+    function handleCategorySelectChange(val) {
+      var customInput = document.getElementById('newEquipCustomCategory');
+      if (val === '__NEW__') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+      } else {
+        customInput.classList.add('hidden');
+      }
+    }
+
+    // Camera Stream (Webcam / Live Device Camera)
+    async function toggleWebcam() {
+      var wrapper = document.getElementById('cameraLiveWrapper');
+      var btn = document.getElementById('btnToggleWebcam');
+
+      if (mediaStream) {
+        stopWebcam();
+        return;
+      }
+
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 960 } },
+          audio: false
+        });
+        var video = document.getElementById('cameraVideo');
+        video.srcObject = mediaStream;
+        wrapper.classList.remove('hidden');
+        btn.innerHTML = '<i class="fa-solid fa-video-slash mr-1"></i> ปิดกล้องสด';
+      } catch (err) {
+        showToast('ไม่สามารถเข้าถึงกล้องได้ กรุณาใช้ปุ่มถ่ายรูป/เลือกภาพแทน', 'warning');
+      }
+    }
+
+    function stopWebcam() {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(function(track) { track.stop(); });
+        mediaStream = null;
+      }
+      var wrapper = document.getElementById('cameraLiveWrapper');
+      if (wrapper) wrapper.classList.add('hidden');
+      var btn = document.getElementById('btnToggleWebcam');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-video mr-1"></i> เปิดกล้องสด';
+    }
+
+    // Take snapshot from Live Webcam
+    function takeSnapshot() {
+      var video = document.getElementById('cameraVideo');
+      var canvas = document.getElementById('photoCanvas');
+      var ctx = canvas.getContext('2d');
+
+      canvas.width = video.videoWidth || 800;
+      canvas.height = video.videoHeight || 600;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      compressAndSetPhoto(canvas.toDataURL('image/jpeg', 0.8));
+      stopWebcam();
+    }
+
+    // Handle Image from Native Camera / File Picker
+    function handleEquipPhotoFile(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+
+      var reader = new FileReader();
+      reader.onload = function(evt) {
+        var img = new Image();
+        img.onload = function() {
+          // Client-side auto resize for fast upload (Max 900px)
+          var canvas = document.getElementById('photoCanvas');
+          var ctx = canvas.getContext('2d');
+          var maxDim = 900;
+          var width = img.width;
+          var height = img.height;
+
+          if (width > height && width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          compressAndSetPhoto(canvas.toDataURL('image/jpeg', 0.78));
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function compressAndSetPhoto(base64Str) {
+      capturedPhotoBase64 = base64Str;
+      var preview = document.getElementById('newEquipPhotoPreview');
+      var fallback = document.getElementById('newEquipPhotoFallback');
+      var removeBtn = document.getElementById('btnRemovePhoto');
+
+      preview.src = base64Str;
+      preview.classList.remove('hidden');
+      fallback.classList.add('hidden');
+      removeBtn.classList.remove('hidden');
+    }
+
+    function removeEquipPhoto() {
+      capturedPhotoBase64 = '';
+      var preview = document.getElementById('newEquipPhotoPreview');
+      var fallback = document.getElementById('newEquipPhotoFallback');
+      var fileInput = document.getElementById('cameraFileInput');
+      var removeBtn = document.getElementById('btnRemovePhoto');
+
+      preview.src = '';
+      preview.classList.add('hidden');
+      fallback.classList.remove('hidden');
+      removeBtn.classList.add('hidden');
+      if (fileInput) fileInput.value = '';
+    }
+
+    // Submit New Equipment
+    function saveNewEquipment() {
+      var id = document.getElementById('newEquipId').value.trim();
+      var name = document.getElementById('newEquipName').value.trim();
+      var catSelect = document.getElementById('newEquipCategorySelect').value;
+      var catCustom = document.getElementById('newEquipCustomCategory').value.trim();
+      var category = catSelect === '__NEW__' ? catCustom : catSelect;
+      var totalQty = Number(document.getElementById('newEquipTotalQty').value || 1);
+      var unit = document.getElementById('newEquipUnit').value.trim() || 'ชิ้น';
+      var color = document.getElementById('newEquipColor').value.trim();
+      var size = document.getElementById('newEquipSize').value.trim();
+
+      if (!id || !name) return showToast('กรุณาระบุรหัสพัสดุและชื่อรายการ', 'warning');
+      if (!category) return showToast('กรุณาเลือกหรือระบุหมวดหมู่พัสดุ', 'warning');
+
+      // Check Duplicate ID
+      var isDuplicate = allItems.some(function(i) { return (i['รหัสพัสดุ'] || '').toUpperCase() === id.toUpperCase(); });
+      if (isDuplicate) return showToast('รหัสพัสดุ ' + id + ' มีอยู่ในระบบแล้ว', 'warning');
+
+      var payload = {
+        id: id,
+        name: name,
+        category: category,
+        totalQty: totalQty,
+        unit: unit,
+        color: color,
+        size: size,
+        imageBase64: capturedPhotoBase64
+      };
+
+      var btn = document.getElementById('btnSaveNewEquipment');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> กำลังบันทึกข้อมูลและอัปโหลดรูป...';
+      showLoading(true);
+
+      // Call API (will route through google.script.run wrapper to Apps Script)
+      fetch(GAS_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'addNewEquipment', payload: payload }),
+        redirect: 'follow'
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> <span>บันทึกพัสดุเข้าคลัง</span>';
+        showLoading(false);
+
+        if (data && data.success) {
+          showToast('เพิ่มรายการพัสดุ ' + name + ' เรียบร้อยแล้ว', 'success');
+          closeAddEquipmentModal();
+          fetchCategories();
+          fetchCatalogData();
+        } else {
+          showToast(data ? data.message : 'เกิดข้อผิดพลาดในการบันทึก', 'error');
+        }
+      })
+      .catch(function(err) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> <span>บันทึกพัสดุเข้าคลัง</span>';
+        showLoading(false);
+        showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+      });
     }
   </script>
 </body>
