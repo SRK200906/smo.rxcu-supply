@@ -570,6 +570,8 @@
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw9DjdFBpgcobqpR_uzGNeLHgImVHDYImXyuhkWALACLWHxqlMtVXRo_a0BpsQnnP3Q/exec";
 
     // REST API Wrapper: จำลอง google.script.run ให้เรียกผ่าน fetch API แทน
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx_ใส่_DEPLOYMENT_ID_ของคุณ/exec";
+
     window.google = {
       script: {
         run: (function createRunner(successHandler, failureHandler) {
@@ -604,12 +606,29 @@
                   body: JSON.stringify({ action: actionName, payload: payload }),
                   redirect: 'follow'
                 })
-                .then(function(res) { return res.json(); })
-                .then(function(data) {
-                  if (successHandler) successHandler(data);
+                .then(function(res) {
+                  if (!res.ok) {
+                    throw new Error("HTTP Status " + res.status);
+                  }
+                  return res.text();
+                })
+                .then(function(text) {
+                  try {
+                    var data = JSON.parse(text);
+                    if (successHandler) successHandler(data);
+                  } catch (e) {
+                    throw new Error("Invalid JSON: " + text.substring(0, 100));
+                  }
                 })
                 .catch(function(err) {
-                  console.error("Fetch Error:", err);
+                  console.error("API Call Error:", err);
+                  showLoading(false);
+                  var loginBtn = document.getElementById('btnGateLogin');
+                  if (loginBtn) {
+                    loginBtn.disabled = false;
+                    loginBtn.innerText = 'เข้าสู่ระบบคลังพัสดุ';
+                  }
+                  showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ (ตรวจสอบสิทธิ์การ Deploy ของ Google Script)', 'error');
                   if (failureHandler) failureHandler(err);
                 });
               };
@@ -661,11 +680,25 @@ function updateFavicon(iconUrl) {
       if (startDateEl) startDateEl.value = today;
       if (endDateEl) endDateEl.value = today;
     });
-
+function updateFavicon(iconUrl) {
+      var favicon = document.getElementById('dynamicFavicon');
+      if (!favicon) {
+        favicon = document.createElement('link');
+        favicon.id = 'dynamicFavicon';
+        favicon.rel = 'icon';
+        document.head.appendChild(favicon);
+      }
+      if (iconUrl) {
+        favicon.href = cleanDriveUrl(iconUrl);
+      }
+    }
     function renderClubLogo(url) {
       var clean = cleanDriveUrl(url);
       var hasLogo = !!url;
-      updateFavicon(url);
+
+      if (typeof updateFavicon === 'function') {
+        updateFavicon(url);
+      }
 
       var gateImg = document.getElementById('gateLogoPreview');
       var gateFallback = document.getElementById('gateLogoFallback');
