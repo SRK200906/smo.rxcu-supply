@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="th" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>ระบบคลังพัสดุ สโมสรนิสิตเภสัชศาสตร์ จุฬาฯ</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <style>
+    :root {
+      --emerald-dark: #12281e;
+      --emerald-primary: #1b382b;
+      --emerald-accent: #2d5a43;
+      --champagne-gold: #c5a880;
+      --gold-light: #f5eedc;
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #f8faf8;
+      color: #1e293b;
+      overflow-x: hidden;
+    }
+    .luxury-glass {
+      background: linear-gradient(135deg, rgba(18, 40, 30, 0.94), rgba(35, 70, 52, 0.96));
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(197, 168, 128, 0.3);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+    }
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+  </style>
+</head>
+<body class="min-h-full flex flex-col antialiased selection:bg-emerald-800 selection:text-white">
+
+  <!-- AUTHENTICATION GATE -->
+  <section id="authGateSection" class="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-[#0a1812] via-[#12281e] to-[#1e4231] text-slate-800 relative z-50">
+    <div class="max-w-md w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-[#c5a880]/30 overflow-hidden transition-all duration-300">
+      
+      <div class="bg-gradient-to-r from-[#12281e] to-[#1e4231] p-6 text-center text-white relative">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shadow-inner mb-3 overflow-hidden p-1">
+          <img id="gateLogoPreview" src="" alt="ตราสโมสร" class="w-full h-full object-contain hidden" />
+          <i id="gateLogoFallback" class="fa-solid fa-boxes-stacked text-2xl text-[#c5a880]"></i>
+        </div>
+        <h2 class="text-base sm:text-lg font-bold text-white tracking-wide">ระบบคลังพัสดุและอุปกรณ์</h2>
+        <p class="text-xs text-emerald-200 mt-0.5 font-light">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>
+        <span class="inline-block mt-2 text-[10px] bg-[#c5a880]/20 text-[#f5eedc] px-3 py-0.5 rounded-full font-medium border border-[#c5a880]/30">
+          Smo.RxCU Inventory Portal
+        </span>
+      </div>
+
+      <div class="p-5 sm:p-6 space-y-4">
+        <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-semibold">
+          <button id="gateTabLogin" onclick="switchGateAuthMode('LOGIN')" class="flex-1 py-2 rounded-xl bg-white shadow-sm text-[#1b382b] font-bold transition-all">
+            <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> เข้าสู่ระบบ
+          </button>
+          <button id="gateTabRegister" onclick="switchGateAuthMode('REGISTER')" class="flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-medium transition-all">
+            <i class="fa-solid fa-user-plus mr-1"></i> ลงทะเบียนใหม่
+          </button>
+        </div>
+
+        <!-- Mode 1: Login Form -->
+        <div id="gateLoginForm" class="space-y-3.5 text-xs">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">รหัสนิสิต / รหัสประจำตัว <span class="text-rose-500">*</span></label>
+            <div class="relative">
+              <i class="fa-solid fa-id-card absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="gateLoginId" placeholder="เช่น 68xxxxxx33" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium text-slate-800 transition-colors" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">ชื่อจริง (ไม่ต้องระบุคำนำหน้า) <span class="text-rose-500">*</span></label>
+            <div class="relative">
+              <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="text" id="gateLoginName" placeholder="เช่น ธนชัย" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium text-slate-800 transition-colors" />
+            </div>
+          </div>
+
+          <button id="btnGateLogin" onclick="executeGateLogin()" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#12281e] to-[#244c37] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-950/20 transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2">
+            <span>เข้าสู่ระบบคลังพัสดุ</span>
+            <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+
+          <p class="text-[11px] text-center text-slate-400 pt-1">
+            ยังไม่เคยมีข้อมูลในระบบ? <a href="javascript:void(0)" onclick="switchGateAuthMode('REGISTER')" class="text-emerald-700 font-bold hover:underline">ลงทะเบียนผู้ยืมใหม่</a>
+          </p>
+        </div>
+
+        <!-- Mode 2: Register Form -->
+        <div id="gateRegisterForm" class="hidden space-y-2.5 text-xs max-h-[55vh] overflow-y-auto pr-1 custom-scroll">
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block font-medium text-slate-700 mb-1">คำนำหน้า</label>
+              <input type="text" id="gateRegPrefix" value="นสภ." class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            </div>
+            <div class="col-span-2">
+              <label class="block font-medium text-slate-700 mb-1">ชื่อจริง <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegFirstName" placeholder="ชื่อจริง" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-medium text-slate-700 mb-1">นามสกุล <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegLastName" placeholder="นามสกุล" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            </div>
+            <div>
+              <label class="block font-medium text-slate-700 mb-1">ชื่อเล่น <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegNickname" placeholder="ชื่อเล่น" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-medium text-slate-700 mb-1">รหัสนิสิต <span class="text-rose-500">*</span></label>
+            <input type="text" id="gateRegId" placeholder="เช่น 68xxxxxx33" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-medium text-slate-700 mb-1">ชั้นปี</label>
+              <input type="text" id="gateRegYear" placeholder="เช่น 2" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            </div>
+            <div>
+              <label class="block font-medium text-slate-700 mb-1">ฝ่ายที่สังกัด</label>
+              <input type="text" id="gateRegDept" placeholder="เช่น ฝ่ายพัสดุและแสงเสียง" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-medium text-slate-700 mb-1">ในนามโครงการ / ชมรม</label>
+            <input type="text" id="gateRegProject" placeholder="เช่น สโมสรนิสิตฯ, ชมรมดนตรีสากล" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-medium text-slate-700 mb-1">เบอร์โทรศัพท์ <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegPhone" placeholder="08xxxxxxxx" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            </div>
+            <div>
+              <label class="block font-medium text-slate-700 mb-1">ไอดีไลน์ <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegLine" placeholder="Line ID" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            </div>
+          </div>
+
+          <button id="btnGateRegister" onclick="executeGateRegister()" class="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md transition-all active:scale-[0.98] mt-2">
+            บันทึกการลงทะเบียนและเข้าใช้งาน
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN APP INTERFACE -->
+  <div id="appMainWrapper" class="hidden min-h-screen flex flex-col pb-16 sm:pb-0">
+
+    <header class="luxury-glass sticky top-0 z-40 px-3 sm:px-6 py-2.5 text-white shadow-lg transition-all">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+        
+        <div class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer min-w-0" onclick="showStoreView()">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shrink-0 shadow-inner overflow-hidden p-1">
+            <img id="navLogoPreview" src="" alt="ตราสโมสร" class="w-full h-full object-contain hidden" />
+            <i id="navLogoFallback" class="fa-solid fa-boxes-stacked text-[#c5a880] text-sm sm:text-base"></i>
+          </div>
+          <div class="truncate">
+            <h1 class="text-xs sm:text-base font-semibold tracking-tight text-white flex items-center gap-1.5 truncate">
+              <span>คลังพัสดุ สโมสรนิสิตฯ</span>
+              <span class="hidden sm:inline-block text-[10px] bg-[#c5a880]/25 text-[#fcefdc] px-2 py-0.5 rounded-full font-normal border border-[#c5a880]/30">Smo.RxCU</span>
+            </h1>
+            <p id="userBarInfo" class="text-[11px] text-emerald-200/90 hover:text-white truncate transition-colors">
+              กำลังโหลดข้อมูลผู้ใช้...
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+          <span id="globalLoadingBadge" class="hidden text-[11px] bg-white/10 text-emerald-100 border border-white/20 px-2.5 py-1 rounded-full animate-pulse">
+            <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> กำลังโหลด...
+          </span>
+
+          <button id="btnTrackRequests" onclick="showTrackingView()" class="hidden px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all">
+            <i class="fa-solid fa-clock-rotate-left mr-1"></i> <span class="hidden sm:inline">ติดตามบิล</span>
+          </button>
+
+          <button id="btnAdminView" onclick="showAdminView()" class="hidden px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-gradient-to-r from-[#d8be98] to-[#c5a880] hover:brightness-105 text-[#12281e] font-bold shadow-md transition-all">
+            <i class="fa-solid fa-shield-halved mr-1"></i> <span>เมนูแอดมิน</span>
+          </button>
+
+          <button onclick="showCartView()" class="relative p-2 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600/70 hover:bg-emerald-600 border border-emerald-400/30 text-white transition-all flex items-center gap-1.5">
+            <i class="fa-solid fa-bag-shopping text-sm sm:text-base"></i>
+            <span class="hidden sm:inline text-xs font-medium">ตะกร้า</span>
+            <span id="cartBadgeCount" class="w-5 h-5 rounded-full bg-amber-400 text-slate-900 font-extrabold text-[10px] flex items-center justify-center shadow-sm">
+              0
+            </span>
+          </button>
+
+          <button id="btnAuthTrigger" onclick="handleLogout()" title="ออกจากระบบ" class="px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-rose-500/20 hover:bg-rose-600 border border-rose-300/30 text-rose-200 hover:text-white transition-all">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+      
+      <!-- STORE VIEW -->
+      <section id="storeView" class="space-y-4 sm:space-y-5">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-center">
+          <div class="relative w-full sm:flex-1">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ค้นหารหัสพัสดุ, ชื่ออุปกรณ์ หรือสี..." class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 transition-colors" />
+          </div>
+          <div class="w-full sm:w-64 shrink-0">
+            <select id="categoryFilter" onchange="applyFilters()" class="w-full py-2 px-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium text-slate-700">
+              <option value="ALL">📦 หมวดหมู่ทั้งหมด</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="equipmentGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4"></div>
+      </section>
+
+      <!-- CART VIEW -->
+      <section id="cartView" class="hidden space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+          <h2 class="text-base sm:text-lg font-bold text-[#12281e] flex items-center gap-2">
+            <i class="fa-solid fa-cart-shopping text-emerald-700"></i> สรุปรายการขอยืมพัสดุในตะกร้า
+          </h2>
+          <button onclick="showStoreView()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors">
+            <i class="fa-solid fa-arrow-left mr-1"></i> เลือกพัสดุเพิ่ม
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-start">
+          <div class="lg:col-span-2 space-y-3">
+            <div id="cartItemsList" class="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1 custom-scroll"></div>
+          </div>
+
+          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3.5">
+            <h3 class="text-sm font-bold text-slate-800 border-b pb-2 flex items-center gap-1.5">
+              <i class="fa-solid fa-calendar-check text-[#244c37]"></i> ข้อมูลการใช้งานและกำหนดส่งคืน
+            </h3>
+
+            <div class="space-y-2.5 text-xs">
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">วันที่เริ่มยืมพัสดุ <span class="text-rose-500">*</span></label>
+                <input type="date" id="cartStartDate" class="w-full p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600 font-medium" />
+              </div>
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">วันที่กำหนดส่งคืน <span class="text-rose-500">*</span></label>
+                <input type="date" id="cartEndDate" class="w-full p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600 font-medium" />
+              </div>
+              <div>
+                <label class="block font-medium text-slate-700 mb-1">กิจกรรม / วัตถุประสงค์ความจำเป็น <span class="text-rose-500">*</span></label>
+                <textarea id="cartUserNote" rows="2" placeholder="เช่น งานปฐมนิเทศนิสิตใหม่..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600"></textarea>
+              </div>
+            </div>
+
+            <button id="btnSubmitBorrow" onclick="submitBorrowOrder()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#12281e] to-[#244c37] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-transform active:scale-[0.98]">
+              ยืนยันส่งคำขอยืมอุปกรณ์
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRACKING VIEW -->
+      <section id="trackingView" class="hidden space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+          <h2 class="text-base sm:text-lg font-bold text-[#12281e] flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-list text-emerald-700"></i> ประวัติและสถานะใบยืมของคุณ
+          </h2>
+          <button onclick="showStoreView()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600">
+            <i class="fa-solid fa-arrow-left mr-1"></i> กลับหน้ารายการพัสดุ
+          </button>
+        </div>
+
+        <div id="trackingBillsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </section>
+
+      <!-- ADMIN VIEW (COMPACT) -->
+      <section id="adminView" class="hidden space-y-4">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
+          <div class="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
+            <button id="adminTabBorrow" onclick="switchAdminMode('BORROW')" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#12281e] text-white shadow-sm transition-all">
+              คำขอยืมรอตรวจ <span id="adminPendingBadge" class="ml-1 px-1.5 py-0.2 bg-amber-400 text-slate-900 rounded-full text-[10px]">0</span>
+            </button>
+            <button id="adminTabReturn" onclick="switchAdminMode('RETURN')" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">
+              พัสดุอยู่ระหว่างยืม <span id="adminActiveBadge" class="ml-1 px-1.5 py-0.2 bg-emerald-600 text-white rounded-full text-[10px]">0</span>
+            </button>
+            <button id="adminTabLogo" onclick="openLogoSettingModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f4ece1] hover:bg-[#ebdcc8] text-[#715329] border border-[#c5a880]/40 transition-all flex items-center gap-1">
+              <i class="fa-solid fa-award"></i> <span>ตั้งค่าตราสโมสร</span>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2 w-full md:w-auto">
+            <div class="relative flex-1 md:w-56">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input type="text" id="adminSearchInput" oninput="filterAdminCards()" placeholder="ค้นหาเลขบิล, ชื่อ หรือโครงการ..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:border-emerald-600 font-medium" />
+            </div>
+            <button onclick="loadAdminData()" title="รีเฟรชข้อมูล" class="p-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold shrink-0">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div id="adminCardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: ITEM DETAIL -->
+  <dialog id="itemDetailModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-lg w-[94vw] border border-slate-100">
+    <div class="p-4 sm:p-5 space-y-4 bg-white rounded-3xl">
+      <div class="flex items-center justify-between border-b pb-2.5">
+        <h3 class="font-bold text-sm sm:text-base text-[#12281e] flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info text-[#c5a880]"></i> คุณลักษณะและสถานะพัสดุ
+        </h3>
+        <button onclick="itemDetailModal.close()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div class="w-full h-44 sm:h-52 rounded-2xl bg-slate-50 border overflow-hidden flex items-center justify-center p-2">
+          <img id="detailImg" src="" alt="พัสดุ" class="w-full h-full object-contain" />
+        </div>
+        <div class="space-y-1.5 self-center">
+          <h4 id="detailTitle" class="font-bold text-sm sm:text-base text-slate-800"></h4>
+          <p id="detailId" class="text-slate-400 font-mono text-[11px]"></p>
+          <div class="pt-1 space-y-1 text-slate-600">
+            <p><b>🎨 สี/ลาย:</b> <span id="detailColor">-</span></p>
+            <p><b>📏 ขนาด:</b> <span id="detailSize">-</span></p>
+            <p><b>📦 ทั้งหมด:</b> <span id="detailTotal">-</span></p>
+            <p class="text-emerald-700 font-semibold"><b>🟢 พร้อมยืม:</b> <span id="detailStock">-</span></p>
+            <p class="text-amber-700 font-semibold"><b>🟠 ติดยืมอยู่:</b> <span id="detailBorrowed">-</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t pt-3 space-y-2">
+        <h5 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+          <i class="fa-solid fa-users text-emerald-600"></i> ผู้ที่กำลังยืมอุปกรณ์นี้ขณะนี้
+        </h5>
+        <div id="borrowerListContainer" class="max-h-36 overflow-y-auto space-y-1.5 custom-scroll text-xs"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: ADMIN BILL DETAIL WITH IMAGES -->
+  <dialog id="billManageModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-3xl w-[95vw] border border-slate-100">
+    <div class="p-4 sm:p-6 space-y-4 bg-white rounded-3xl max-h-[90vh] flex flex-col justify-between">
+      
+      <div class="flex items-center justify-between border-b pb-3 shrink-0">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="billManageBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">รอดำเนินการ</span>
+            <h3 id="billManageTitle" class="font-bold text-sm sm:text-base text-[#12281e]"></h3>
+          </div>
+          <p id="billManageSub" class="text-[11px] text-slate-400 font-mono mt-0.5"></p>
+        </div>
+        <button onclick="billManageModal.close()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold flex items-center justify-center transition-colors">✕</button>
+      </div>
+
+      <div id="billManageMeta" class="bg-slate-50 p-3 rounded-2xl text-xs text-slate-600 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shrink-0 border border-slate-100"></div>
+      <div class="flex-1 overflow-y-auto space-y-2.5 custom-scroll py-1 pr-1" id="billManageItemsContainer"></div>
+      <div id="billManageFooter" class="border-t pt-3 shrink-0 flex flex-col sm:flex-row gap-2 items-center justify-between"></div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: CLUB LOGO CONFIG -->
+  <dialog id="logoModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-md w-[94vw] border border-slate-100">
+    <div class="p-5 space-y-4 bg-white rounded-3xl">
+      <div class="flex items-center justify-between border-b pb-2.5">
+        <h3 class="font-bold text-sm sm:text-base text-[#12281e] flex items-center gap-1.5">
+          <i class="fa-solid fa-award text-[#c5a880]"></i> ตั้งค่าตราสัญลักษณ์สโมสร
+        </h3>
+        <button onclick="logoModal.close()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="flex flex-col items-center justify-center p-4 bg-slate-50 border border-dashed border-slate-300 rounded-2xl">
+          <div class="w-20 h-20 rounded-2xl bg-white border shadow-sm p-1.5 flex items-center justify-center overflow-hidden mb-2">
+            <img id="logoModalPreview" src="" alt="ตัวอย่างตราสโมสร" class="w-full h-full object-contain hidden" />
+            <i id="logoModalFallback" class="fa-solid fa-image text-3xl text-slate-300"></i>
+          </div>
+          <p class="text-[11px] text-slate-400">ตัวอย่างตราสโมสรที่จะนำไปใช้ในระบบและใบพิมพ์</p>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">1. ใส่เป็น URL รูปภาพ (Direct Link หรือ Google Drive)</label>
+          <input type="text" id="logoUrlInput" oninput="previewLogoFromUrl(this.value)" placeholder="https://... หรือ Google Drive Link" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600" />
+        </div>
+
+        <div class="text-center font-bold text-slate-400 text-[11px]">หรือ</div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">2. อัปโหลดไฟล์จากเครื่อง (PNG / JPG / WEBP)</label>
+          <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoFileUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-800 hover:file:bg-emerald-100" />
+        </div>
+      </div>
+
+      <div class="border-t pt-3 flex items-center justify-between gap-2">
+        <button onclick="resetToDefaultLogo()" class="px-3 py-2 rounded-xl text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors">ล้างค่าเริ่มต้น</button>
+        <div class="flex items-center gap-2">
+          <button onclick="logoModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold">ยกเลิก</button>
+          <button onclick="saveLogoSettings()" class="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow-md">บันทึกตราสโมสร</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- TOAST -->
+  <div id="toastNotification" class="fixed bottom-4 right-4 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 max-w-sm w-full px-3">
+    <div id="toastInner" class="p-3.5 rounded-2xl shadow-xl font-medium text-xs flex items-center justify-between text-white bg-slate-800">
+      <span id="toastMsg">แจ้งเตือน</span>
+      <button onclick="hideToast()" class="ml-3 font-bold opacity-75 hover:opacity-100">✕</button>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 🔗 กำหนด Web App URL ที่ได้จากการ Deploy Google Apps Script ในขั้นตอนที่ 1
+    // =========================================================================
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw9DjdFBpgcobqpR_uzGNeLHgImVHDYImXyuhkWALACLWHxqlMtVXRo_a0BpsQnnP3Q/exec";
+
+    // REST API Wrapper: จำลอง google.script.run ให้เรียกผ่าน fetch API แทน
+    window.google = {
+      script: {
+        run: (function createRunner(successHandler, failureHandler) {
+          return new Proxy({}, {
+            get: function(target, actionName) {
+              if (actionName === 'withSuccessHandler') return function(fn) { return createRunner(fn, failureHandler); };
+              if (actionName === 'withFailureHandler') return function(fn) { return createRunner(successHandler, fn); };
+              
+              return function() {
+                var args = Array.prototype.slice.call(arguments);
+                var payload = {};
+
+                if (actionName === 'verifyLogin') {
+                  payload = { loginId: args[0], firstName: args[1], userType: args[2] };
+                } else if (actionName === 'registerNewUser') {
+                  payload = args[0];
+                } else if (actionName === 'submitCartRequest') {
+                  payload = { cartItems: args[0], userInfo: args[1], userNote: args[2] };
+                } else if (actionName === 'getAdminRequests') {
+                  payload = { userIdFilter: args[0] };
+                } else if (actionName === 'processBatchApproval') {
+                  payload = { billActionsList: args[0] };
+                } else if (actionName === 'processBatchReturn') {
+                  payload = { returnList: args[0], generalComment: args[1] };
+                } else if (actionName === 'getEquipmentBorrowers') {
+                  payload = { eqId: args[0] };
+                }
+
+                fetch(GAS_API_URL, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                  body: JSON.stringify({ action: actionName, payload: payload }),
+                  redirect: 'follow'
+                })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                  if (successHandler) successHandler(data);
+                })
+                .catch(function(err) {
+                  console.error("Fetch Error:", err);
+                  if (failureHandler) failureHandler(err);
+                });
+              };
+            }
+          });
+        })(null, null)
+      }
+    };
+
+    var currentUser = null;
+    var allItems = [];
+    var cart = [];
+    var adminRequests = [];
+    var currentAdminMode = 'BORROW';
+    var activeCategory = 'ALL';
+    var currentClubLogo = '';
+    var tempUploadedLogo = '';
+
+    window.addEventListener('DOMContentLoaded', function() {
+      currentClubLogo = localStorage.getItem('smo_rx_logo') || '';
+      renderClubLogo(currentClubLogo);
+
+      var session = localStorage.getItem('smo_rx_user');
+      if (session) {
+        try {
+          currentUser = JSON.parse(session);
+        } catch(e) {
+          localStorage.removeItem('smo_rx_user');
+          currentUser = null;
+        }
+      }
+
+      if (currentUser && currentUser.id) {
+        unlockAppInterface();
+      } else {
+        lockToAuthGate();
+      }
+
+      var today = new Date().toISOString().split('T')[0];
+      var startDateEl = document.getElementById('cartStartDate');
+      var endDateEl = document.getElementById('cartEndDate');
+      if (startDateEl) startDateEl.value = today;
+      if (endDateEl) endDateEl.value = today;
+    });
+
+    function renderClubLogo(url) {
+      var clean = cleanDriveUrl(url);
+      var hasLogo = !!url;
+
+      var gateImg = document.getElementById('gateLogoPreview');
+      var gateFallback = document.getElementById('gateLogoFallback');
+      if (hasLogo) {
+        gateImg.src = clean;
+        gateImg.classList.remove('hidden');
+        gateFallback.classList.add('hidden');
+      } else {
+        gateImg.classList.add('hidden');
+        gateFallback.classList.remove('hidden');
+      }
+
+      var navImg = document.getElementById('navLogoPreview');
+      var navFallback = document.getElementById('navLogoFallback');
+      if (hasLogo) {
+        navImg.src = clean;
+        navImg.classList.remove('hidden');
+        navFallback.classList.add('hidden');
+      } else {
+        navImg.classList.add('hidden');
+        navFallback.classList.remove('hidden');
+      }
+    }
+
+    function openLogoSettingModal() {
+      tempUploadedLogo = '';
+      document.getElementById('logoUrlInput').value = currentClubLogo.indexOf('data:image') === 0 ? '' : currentClubLogo;
+      document.getElementById('logoFileInput').value = '';
+      previewLogoModal(currentClubLogo);
+      logoModal.showModal();
+    }
+
+    function previewLogoFromUrl(val) {
+      tempUploadedLogo = '';
+      previewLogoModal(val.trim());
+    }
+
+    function handleLogoFileUpload(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('ขนาดไฟล์ภาพต้องไม่เกิน 2MB', 'warning');
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function(evt) {
+        tempUploadedLogo = evt.target.result;
+        previewLogoModal(tempUploadedLogo);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewLogoModal(src) {
+      var img = document.getElementById('logoModalPreview');
+      var fb = document.getElementById('logoModalFallback');
+      var clean = cleanDriveUrl(src);
+      if (src) {
+        img.src = clean;
+        img.classList.remove('hidden');
+        fb.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        fb.classList.remove('hidden');
+      }
+    }
+
+    function saveLogoSettings() {
+      var finalLogo = tempUploadedLogo || document.getElementById('logoUrlInput').value.trim();
+      currentClubLogo = finalLogo;
+      if (finalLogo) {
+        localStorage.setItem('smo_rx_logo', finalLogo);
+        showToast('บันทึกตราสัญลักษณ์เรียบร้อย', 'success');
+      } else {
+        localStorage.removeItem('smo_rx_logo');
+        showToast('รีเซ็ตเป็นค่าเริ่มต้นแล้ว', 'info');
+      }
+      renderClubLogo(currentClubLogo);
+      logoModal.close();
+    }
+
+    function resetToDefaultLogo() {
+      tempUploadedLogo = '';
+      document.getElementById('logoUrlInput').value = '';
+      document.getElementById('logoFileInput').value = '';
+      previewLogoModal('');
+    }
+
+    function lockToAuthGate() {
+      document.getElementById('authGateSection').classList.remove('hidden');
+      document.getElementById('appMainWrapper').classList.add('hidden');
+    }
+
+    function unlockAppInterface() {
+      document.getElementById('authGateSection').classList.add('hidden');
+      document.getElementById('appMainWrapper').classList.remove('hidden');
+      updateUserDisplay();
+      fetchCategories();
+      fetchCatalogData();
+    }
+
+    function switchGateAuthMode(mode) {
+      var tabLogin = document.getElementById('gateTabLogin');
+      var tabReg = document.getElementById('gateTabRegister');
+      var formLogin = document.getElementById('gateLoginForm');
+      var formReg = document.getElementById('gateRegisterForm');
+
+      if (mode === 'LOGIN') {
+        tabLogin.className = 'flex-1 py-2 rounded-xl bg-white shadow-sm text-[#12281e] font-bold transition-all';
+        tabReg.className = 'flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-medium transition-all';
+        formLogin.classList.remove('hidden');
+        formReg.classList.add('hidden');
+      } else {
+        tabReg.className = 'flex-1 py-2 rounded-xl bg-white shadow-sm text-[#12281e] font-bold transition-all';
+        tabLogin.className = 'flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-medium transition-all';
+        formReg.classList.remove('hidden');
+        formLogin.classList.add('hidden');
+      }
+    }
+
+    function executeGateLogin() {
+      var id = document.getElementById('gateLoginId').value.trim();
+      var name = document.getElementById('gateLoginName').value.trim();
+      if (!id || !name) return showToast('กรุณากรอกรหัสนิสิตและชื่อจริง', 'warning');
+
+      var btn = document.getElementById('btnGateLogin');
+      btn.disabled = true;
+      btn.innerText = 'กำลังตรวจสอบข้อมูล...';
+      showLoading(true);
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          btn.disabled = false;
+          btn.innerText = 'เข้าสู่ระบบคลังพัสดุ';
+          showLoading(false);
+
+          if (res && res.success) {
+            if (!res.isRegistered) {
+              showToast('ไม่พบบัญชีในระบบ กรุณากรอกข้อมูลเพื่อลงทะเบียนใหม่', 'warning');
+              switchGateAuthMode('REGISTER');
+              document.getElementById('gateRegId').value = id;
+              document.getElementById('gateRegFirstName').value = name;
+            } else {
+              currentUser = res.user;
+              localStorage.setItem('smo_rx_user', JSON.stringify(currentUser));
+              showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' + (currentUser.firstName || ''), 'success');
+              unlockAppInterface();
+            }
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการตรวจสอบสิทธิ์', 'error');
+          }
+        })
+        .withFailureHandler(function() {
+          btn.disabled = false;
+          btn.innerText = 'เข้าสู่ระบบคลังพัสดุ';
+          showLoading(false);
+          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+        })
+        .verifyLogin(id, name, 'ภายใน');
+    }
+
+    function executeGateRegister() {
+      var payload = {
+        prefix: document.getElementById('gateRegPrefix').value.trim(),
+        firstName: document.getElementById('gateRegFirstName').value.trim(),
+        lastName: document.getElementById('gateRegLastName').value.trim(),
+        nickname: document.getElementById('gateRegNickname').value.trim(),
+        id: document.getElementById('gateRegId').value.trim(),
+        year: document.getElementById('gateRegYear').value.trim(),
+        department: document.getElementById('gateRegDept').value.trim(),
+        project: document.getElementById('gateRegProject').value.trim() || 'ทั่วไป',
+        phone: document.getElementById('gateRegPhone').value.trim(),
+        lineId: document.getElementById('gateRegLine').value.trim()
+      };
+
+      if (!payload.firstName || !payload.lastName || !payload.id || !payload.phone || !payload.lineId) {
+        return showToast('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน (*)', 'warning');
+      }
+
+      var btn = document.getElementById('btnGateRegister');
+      btn.disabled = true;
+      btn.innerText = 'กำลังบันทึกข้อมูล...';
+      showLoading(true);
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          btn.disabled = false;
+          btn.innerText = 'บันทึกการลงทะเบียนและเข้าใช้งาน';
+          showLoading(false);
+
+          if (res && res.success) {
+            currentUser = res.user;
+            localStorage.setItem('smo_rx_user', JSON.stringify(currentUser));
+            showToast('ลงทะเบียนสำเร็จ ยินดีต้อนรับ ' + (currentUser.firstName || ''), 'success');
+            unlockAppInterface();
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการลงทะเบียน', 'error');
+          }
+        })
+        .withFailureHandler(function() {
+          btn.disabled = false;
+          btn.innerText = 'บันทึกการลงทะเบียนและเข้าใช้งาน';
+          showLoading(false);
+          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+        })
+        .registerNewUser(payload);
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('smo_rx_user');
+      currentUser = null;
+      cart = [];
+      updateCartState();
+      document.getElementById('gateLoginId').value = '';
+      document.getElementById('gateLoginName').value = '';
+      lockToAuthGate();
+      showToast('ออกจากระบบเรียบร้อยแล้ว', 'info');
+    }
+
+    function updateUserDisplay() {
+      if (!currentUser) return;
+      document.getElementById('userBarInfo').innerText = '👤 ' + (currentUser.fullName || currentUser.firstName) + ' [' + (currentUser.project || 'ทั่วไป') + ']';
+      document.getElementById('btnTrackRequests').classList.remove('hidden');
+
+      var role = (currentUser.role || '').toLowerCase();
+      var isAdmin = role.indexOf('แอดมิน') !== -1 || role.indexOf('พัสดุ') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1;
+      if (isAdmin) {
+        document.getElementById('btnAdminView').classList.remove('hidden');
+      } else {
+        document.getElementById('btnAdminView').classList.add('hidden');
+      }
+    }
+
+    function showStoreView() {
+      document.getElementById('storeView').classList.remove('hidden');
+      document.getElementById('cartView').classList.add('hidden');
+      document.getElementById('trackingView').classList.add('hidden');
+      document.getElementById('adminView').classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showCartView() {
+      if (!currentUser) return lockToAuthGate();
+      document.getElementById('storeView').classList.add('hidden');
+      document.getElementById('cartView').classList.remove('hidden');
+      document.getElementById('trackingView').classList.add('hidden');
+      document.getElementById('adminView').classList.add('hidden');
+      renderCartPage();
+    }
+
+    function showTrackingView() {
+      if (!currentUser) return lockToAuthGate();
+      document.getElementById('storeView').classList.add('hidden');
+      document.getElementById('cartView').classList.add('hidden');
+      document.getElementById('trackingView').classList.remove('hidden');
+      document.getElementById('adminView').classList.add('hidden');
+      loadTrackingData();
+    }
+
+    function showAdminView() {
+      if (!currentUser) return lockToAuthGate();
+      document.getElementById('storeView').classList.add('hidden');
+      document.getElementById('cartView').classList.add('hidden');
+      document.getElementById('trackingView').classList.add('hidden');
+      document.getElementById('adminView').classList.remove('hidden');
+      loadAdminData();
+    }
+
+    function showLoading(show) {
+      var badge = document.getElementById('globalLoadingBadge');
+      if (badge) badge.classList.toggle('hidden', !show);
+    }
+
+    function showToast(msg, type) {
+      var toast = document.getElementById('toastNotification');
+      var inner = document.getElementById('toastInner');
+      var text = document.getElementById('toastMsg');
+      text.innerText = msg;
+
+      inner.className = 'p-3.5 rounded-2xl shadow-xl font-medium text-xs flex items-center justify-between text-white ';
+      if (type === 'success') inner.className += 'bg-emerald-700';
+      else if (type === 'error') inner.className += 'bg-rose-600';
+      else if (type === 'warning') inner.className += 'bg-amber-600';
+      else inner.className += 'bg-slate-800';
+
+      toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
+      setTimeout(hideToast, 4000);
+    }
+
+    function hideToast() {
+      var toast = document.getElementById('toastNotification');
+      toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+    }
+
+    function cleanDriveUrl(url) {
+      var fallback = 'https://placehold.co/300x200/1e4231/ffffff?text=RxCU+Supply';
+      if (!url) return fallback;
+      url = url.toString().trim();
+      if (url.indexOf('data:image') === 0) return url;
+      if (url.indexOf('drive.google.com') !== -1) {
+        var match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/[?&]id=([a-zA-Z0-9-_]+)/);
+        if (match && match[1]) return 'https://lh3.googleusercontent.com/d/' + match[1];
+      }
+      return url || fallback;
+    }
+
+    function fetchCategories() {
+      google.script.run
+        .withSuccessHandler(function(cats) {
+          var select = document.getElementById('categoryFilter');
+          select.innerHTML = '<option value="ALL">📦 หมวดหมู่ทั้งหมด</option>';
+          (cats || []).forEach(function(c) {
+            select.insertAdjacentHTML('beforeend', '<option value="' + c + '">' + c + '</option>');
+          });
+        })
+        .getDynamicCategories();
+    }
+
+    function fetchCatalogData() {
+      showLoading(true);
+      google.script.run
+        .withSuccessHandler(function(data) {
+          showLoading(false);
+          allItems = data || [];
+          renderEquipmentGrid(allItems);
+        })
+        .withFailureHandler(function() {
+          showLoading(false);
+          showToast('ไม่สามารถดึงข้อมูลพัสดุได้', 'error');
+        })
+        .getEquipmentData();
+    }
+
+    function renderEquipmentGrid(items) {
+      var grid = document.getElementById('equipmentGrid');
+      grid.innerHTML = '';
+
+      if (!items || items.length === 0) {
+        grid.innerHTML = '<p class="col-span-full text-center text-slate-400 py-10 text-xs">ไม่พบรายการพัสดุในระบบ</p>';
+        return;
+      }
+
+      items.forEach(function(item) {
+        var id = item['รหัสพัสดุ'];
+        var name = item['รายการ'] || 'ไม่มีชื่อ';
+        var inStock = Number(item['จำนวนคงเหลือปัจจุบัน'] || 0);
+        var img = cleanDriveUrl(item['รูปภาพ']);
+        var cartItem = cart.find(function(c) { return c.id === id; });
+
+        var badgeClass = inStock > 0 ? 'bg-emerald-600 text-white' : 'bg-slate-300 text-slate-600';
+        var badgeText = inStock > 0 ? 'เหลือ ' + inStock : 'หมด';
+
+        var card = document.createElement('div');
+        card.id = 'card-' + id;
+        card.className = 'bg-white rounded-2xl p-2.5 sm:p-3 border border-slate-200/90 shadow-sm flex flex-col justify-between hover:shadow-md transition-all relative ' + (cartItem ? 'ring-2 ring-emerald-600' : '');
+
+        card.innerHTML = 
+          '<div class="cursor-pointer" onclick="openItemDetails(\'' + id + '\')">' +
+            '<div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-50 mb-2 relative border border-slate-100 flex items-center justify-center p-1">' +
+              '<img src="' + img + '" alt="' + name + '" class="w-full h-full object-cover rounded-lg" />' +
+              '<span class="text-[9px] font-bold px-2 py-0.5 rounded-md absolute top-1.5 right-1.5 shadow-sm ' + badgeClass + '">' + badgeText + '</span>' +
+            '</div>' +
+            '<div class="space-y-0.5 text-left">' +
+              '<h3 class="font-bold text-xs sm:text-sm text-slate-800 truncate" title="' + name + '">' + name + '</h3>' +
+              '<p class="text-[10px] text-slate-400 font-mono">ID: ' + id + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<div id="cardAction-' + id + '" class="mt-2.5 pt-1 border-t border-slate-100">' +
+            renderCardButtonHtml(id, inStock, cartItem) +
+          '</div>';
+
+        grid.appendChild(card);
+      });
+    }
+
+    function renderCardButtonHtml(id, inStock, cartItem) {
+      if (inStock <= 0) {
+        return '<button disabled class="w-full py-1.5 rounded-lg bg-slate-100 text-slate-400 text-[11px] font-medium">ของหมด</button>';
+      }
+      if (cartItem) {
+        return '<div class="flex items-center justify-between bg-emerald-50 rounded-lg p-0.5 border border-emerald-200">' +
+          '<button onclick="changeCartQty(\'' + id + '\', -1)" class="w-7 h-6 rounded bg-white text-emerald-800 font-bold hover:bg-emerald-600 hover:text-white transition-colors text-xs">-</button>' +
+          '<span class="font-bold text-emerald-800 text-xs">' + cartItem.qty + '</span>' +
+          '<button onclick="changeCartQty(\'' + id + '\', 1)" class="w-7 h-6 rounded bg-white text-emerald-800 font-bold hover:bg-emerald-600 hover:text-white transition-colors text-xs">+</button>' +
+        '</div>';
+      }
+      return '<button onclick="addToCart(\'' + id + '\')" class="w-full py-1.5 rounded-lg bg-gradient-to-r from-[#12281e] to-[#244c37] hover:brightness-110 text-white font-semibold text-[11px] shadow-sm transition-all">' +
+        '<i class="fa-solid fa-plus mr-1"></i> ยืมพัสดุ' +
+      '</button>';
+    }
+
+    function applyFilters() {
+      var query = document.getElementById('searchInput').value.toLowerCase().trim();
+      var category = document.getElementById('categoryFilter').value;
+
+      var filtered = allItems.filter(function(item) {
+        var name = (item['รายการ'] || '').toLowerCase();
+        var id = (item['รหัสพัสดุ'] || '').toLowerCase();
+        var color = (item['สี/ลาย'] || '').toLowerCase();
+        var cat = item['หมวดหมู่'] || '';
+
+        var matchQuery = !query || name.indexOf(query) !== -1 || id.indexOf(query) !== -1 || color.indexOf(query) !== -1;
+        var matchCat = category === 'ALL' || cat === category;
+        return matchQuery && matchCat;
+      });
+
+      renderEquipmentGrid(filtered);
+    }
+
+    function addToCart(id) {
+      if (!currentUser) return lockToAuthGate();
+      var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === id; });
+      if (!item) return;
+
+      var inStock = Number(item['จำนวนคงเหลือปัจจุบัน'] || 0);
+      if (inStock <= 0) return showToast('พัสดุนี้หมดคลังแล้ว', 'warning');
+
+      var existing = cart.find(function(c) { return c.id === id; });
+      if (!existing) {
+        cart.push({
+          id: id,
+          name: item['รายการ'],
+          unit: item['หน่วย'] || 'ชิ้น',
+          max: inStock,
+          qty: 1,
+          img: cleanDriveUrl(item['รูปภาพ'])
+        });
+      }
+      updateCartState();
+      updateSingleCard(id);
+      showToast('เพิ่ม ' + item['รายการ'] + ' ลงตะกร้าแล้ว', 'success');
+    }
+
+    function changeCartQty(id, delta) {
+      var idx = cart.findIndex(function(c) { return c.id === id; });
+      if (idx === -1) return;
+
+      var newQty = cart[idx].qty + delta;
+      if (newQty <= 0) {
+        cart.splice(idx, 1);
+      } else if (newQty > cart[idx].max) {
+        showToast('เลือกได้สูงสุด ' + cart[idx].max + ' ' + cart[idx].unit + ' ตามสต็อกคงเหลือ', 'warning');
+        cart[idx].qty = cart[idx].max;
+      } else {
+        cart[idx].qty = newQty;
+      }
+
+      updateCartState();
+      updateSingleCard(id);
+      if (!document.getElementById('cartView').classList.contains('hidden')) {
+        renderCartPage();
+      }
+    }
+
+    function updateSingleCard(id) {
+      var card = document.getElementById('card-' + id);
+      var actionBox = document.getElementById('cardAction-' + id);
+      if (!card || !actionBox) return;
+
+      var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === id; });
+      var inStock = item ? Number(item['จำนวนคงเหลือปัจจุบัน'] || 0) : 0;
+      var cartItem = cart.find(function(c) { return c.id === id; });
+
+      card.classList.toggle('ring-2', !!cartItem);
+      card.classList.toggle('ring-emerald-600', !!cartItem);
+      actionBox.innerHTML = renderCardButtonHtml(id, inStock, cartItem);
+    }
+
+    function updateCartState() {
+      var count = cart.reduce(function(acc, c) { return acc + c.qty; }, 0);
+      document.getElementById('cartBadgeCount').innerText = count;
+    }
+
+    function renderCartPage() {
+      var list = document.getElementById('cartItemsList');
+      list.innerHTML = '';
+
+      if (cart.length === 0) {
+        list.innerHTML = 
+          '<div class="bg-white p-8 rounded-2xl border border-slate-200 text-center space-y-2">' +
+            '<i class="fa-solid fa-cart-arrow-down text-3xl text-slate-300"></i>' +
+            '<p class="text-xs text-slate-500 font-medium">ยังไม่มีรายการพัสดุในตะกร้าของคุณ</p>' +
+            '<button onclick="showStoreView()" class="mt-2 text-xs font-bold text-emerald-700 hover:underline">← กลับไปเลือกพัสดุ</button>' +
+          '</div>';
+        return;
+      }
+
+      cart.forEach(function(item) {
+        var row = document.createElement('div');
+        row.className = 'bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between gap-3 text-xs';
+        row.innerHTML = 
+          '<div class="flex items-center gap-3 min-w-0">' +
+            '<img src="' + item.img + '" class="w-12 h-12 rounded-xl object-cover border shrink-0 bg-slate-50" />' +
+            '<div class="truncate">' +
+              '<h4 class="font-bold text-slate-800 truncate">' + item.name + '</h4>' +
+              '<p class="text-[10px] text-slate-400 font-mono">ID: ' + item.id + '</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="flex items-center gap-2 shrink-0">' +
+            '<div class="flex items-center bg-slate-50 rounded-lg border px-1">' +
+              '<button onclick="changeCartQty(\'' + item.id + '\', -1)" class="w-6 h-6 text-slate-600 font-bold hover:text-emerald-700">-</button>' +
+              '<span class="w-8 text-center font-bold text-slate-800">' + item.qty + '</span>' +
+              '<button onclick="changeCartQty(\'' + item.id + '\', 1)" class="w-6 h-6 text-slate-600 font-bold hover:text-emerald-700">+</button>' +
+            '</div>' +
+            '<button onclick="changeCartQty(\'' + item.id + '\', -999)" class="text-slate-300 hover:text-rose-600 p-1.5"><i class="fa-solid fa-trash-can"></i></button>' +
+          '</div>';
+        list.appendChild(row);
+      });
+    }
+
+    function submitBorrowOrder() {
+      if (!currentUser) return lockToAuthGate();
+      if (cart.length === 0) return showToast('กรุณาเลือกพัสดุก่อนส่งคำขอ', 'warning');
+
+      var start = document.getElementById('cartStartDate').value;
+      var end = document.getElementById('cartEndDate').value;
+      var note = document.getElementById('cartUserNote').value.trim();
+
+      if (!start || !end) return showToast('กรุณาระบุวันเริ่มยืมและกำหนดส่งคืน', 'warning');
+      if (end < start) return showToast('วันกำหนดคืนต้องไม่ก่อนวันเริ่มยืม', 'warning');
+      if (!note) return showToast('กรุณาระบุชื่อกิจกรรมหรือเหตุผลความจำเป็น', 'warning');
+
+      var payloadItems = cart.map(function(c) {
+        return { id: c.id, qty: c.qty, startDate: start, endDate: end };
+      });
+
+      var btn = document.getElementById('btnSubmitBorrow');
+      btn.disabled = true;
+      btn.innerText = 'กำลังส่งข้อมูล...';
+      showLoading(true);
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          btn.disabled = false;
+          btn.innerText = 'ยืนยันส่งคำขอยืมอุปกรณ์';
+          showLoading(false);
+
+          if (res && res.success) {
+            showToast('ยื่นคำขอสำเร็จ รหัสบิล: ' + res.transactionId, 'success');
+            cart = [];
+            updateCartState();
+            allItems.forEach(function(i) { updateSingleCard(i['รหัสพัสดุ']); });
+            showTrackingView();
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการส่งคำขอ', 'error');
+          }
+        })
+        .withFailureHandler(function() {
+          btn.disabled = false;
+          btn.innerText = 'ยืนยันส่งคำขอยืมอุปกรณ์';
+          showLoading(false);
+          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+        })
+        .submitCartRequest(payloadItems, currentUser, note);
+    }
+
+    function loadTrackingData() {
+      var container = document.getElementById('trackingBillsContainer');
+      container.innerHTML = '<p class="col-span-full text-center text-xs text-slate-400 py-10">กำลังดึงข้อมูลใบยืมของคุณ...</p>';
+      showLoading(true);
+
+      google.script.run
+        .withSuccessHandler(function(requests) {
+          showLoading(false);
+          renderTrackingCards(requests || []);
+        })
+        .withFailureHandler(function() {
+          showLoading(false);
+          container.innerHTML = '<p class="col-span-full text-center text-xs text-rose-500 py-10">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
+        })
+        .getAdminRequests(currentUser ? currentUser.id : null);
+    }
+
+    function renderTrackingCards(requests) {
+      var container = document.getElementById('trackingBillsContainer');
+      container.innerHTML = '';
+
+      if (!requests || requests.length === 0) {
+        container.innerHTML = 
+          '<div class="col-span-full bg-white p-8 rounded-3xl border text-center space-y-2 max-w-sm mx-auto">' +
+            '<i class="fa-solid fa-receipt text-3xl text-slate-300"></i>' +
+            '<h4 class="font-bold text-xs text-slate-700">ไม่มีประวัติคำขอยืมในระบบ</h4>' +
+            '<p class="text-[11px] text-slate-400">เมื่อคุณส่งคำขอยืม รายการจะแสดงขึ้นที่นี่</p>' +
+          '</div>';
+        return;
+      }
+
+      var groups = {};
+      requests.forEach(function(r) {
+        if (!groups[r.TransactionID]) {
+          groups[r.TransactionID] = {
+            txId: r.TransactionID,
+            project: r.ProjectGroup,
+            borrowDate: r.BorrowDate,
+            returnDate: r.ReturnDate,
+            userNote: r.UserNote,
+            items: []
+          };
+        }
+        groups[r.TransactionID].items.push(r);
+      });
+
+      Object.keys(groups).forEach(function(tx) {
+        var bill = groups[tx];
+        var card = document.createElement('div');
+        card.className = 'bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-xs';
+
+        var itemsHtml = bill.items.map(function(item) {
+          var st = item.Status;
+          var stColor = st.indexOf('อนุมัติ') !== -1 ? 'bg-emerald-100 text-emerald-800' : (st.indexOf('คืน') !== -1 ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800');
+          return '<div class="flex items-center justify-between py-1.5 border-b border-slate-50 last:border-none">' +
+            '<div class="truncate pr-2">' +
+              '<span class="font-semibold text-slate-700 truncate block">' + item.EquipmentName + '</span>' +
+              '<span class="text-[10px] text-slate-400 font-mono">จำนวน: ' + item.Quantity + ' ' + item.EquipmentUnit + '</span>' +
+            '</div>' +
+            '<span class="text-[9px] px-2 py-0.5 rounded-full font-bold ' + stColor + ' shrink-0">' + st + '</span>' +
+          '</div>';
+        }).join('');
+
+        card.innerHTML = 
+          '<div class="flex items-center justify-between border-b pb-2">' +
+            '<div>' +
+              '<h4 class="font-bold text-sm text-[#12281e] flex items-center gap-1.5">' +
+                '<i class="fa-solid fa-folder-closed text-[#c5a880]"></i> โครงการ: ' + bill.project +
+              '</h4>' +
+              '<p class="text-[10px] text-slate-400 font-mono mt-0.5">เลขที่บิล: ' + bill.txId + '</p>' +
+            '</div>' +
+            '<button onclick="printA4Receipt(\'' + bill.txId + '\')" class="p-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition-colors">' +
+              '<i class="fa-solid fa-print mr-1"></i> พิมพ์ A4' +
+            '</button>' +
+          '</div>' +
+          '<div class="space-y-1">' + itemsHtml + '</div>' +
+          '<div class="bg-slate-50 p-2.5 rounded-xl text-[10px] text-slate-500 space-y-0.5">' +
+            '<p><b>🗓️ กำหนดการ:</b> ' + bill.borrowDate + ' ถึง ' + bill.returnDate + '</p>' +
+            '<p class="truncate"><b>✍️ เหตุผล:</b> ' + bill.userNote + '</p>' +
+          '</div>';
+
+        container.appendChild(card);
+      });
+    }
+
+    function switchAdminMode(mode) {
+      currentAdminMode = mode;
+      var tabBorrow = document.getElementById('adminTabBorrow');
+      var tabReturn = document.getElementById('adminTabReturn');
+
+      if (mode === 'BORROW') {
+        tabBorrow.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#12281e] text-white shadow-sm transition-all';
+        tabReturn.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all';
+      } else {
+        tabReturn.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#12281e] text-white shadow-sm transition-all';
+        tabBorrow.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all';
+      }
+      renderAdminCards();
+    }
+
+    function loadAdminData() {
+      var container = document.getElementById('adminCardsContainer');
+      container.innerHTML = '<p class="col-span-full text-center text-xs text-slate-400 py-10">กำลังโหลดข้อมูลคำขอทั้งหมด...</p>';
+      showLoading(true);
+
+      google.script.run
+        .withSuccessHandler(function(data) {
+          showLoading(false);
+          adminRequests = data || [];
+          updateAdminBadges();
+          renderAdminCards();
+        })
+        .withFailureHandler(function() {
+          showLoading(false);
+          showToast('โหลดข้อมูลแอดมินล้มเหลว', 'error');
+        })
+        .getAdminRequests(null);
+    }
+
+    function updateAdminBadges() {
+      var pendingTxs = {}, activeTxs = {};
+      adminRequests.forEach(function(r) {
+        if (r.Status.indexOf('รอ') !== -1) pendingTxs[r.TransactionID] = true;
+        if (r.Status.indexOf('อนุมัติ') !== -1) activeTxs[r.TransactionID] = true;
+      });
+      document.getElementById('adminPendingBadge').innerText = Object.keys(pendingTxs).length;
+      document.getElementById('adminActiveBadge').innerText = Object.keys(activeTxs).length;
+    }
+
+    function renderAdminCards() {
+      var container = document.getElementById('adminCardsContainer');
+      container.innerHTML = '';
+
+      var query = document.getElementById('adminSearchInput').value.toLowerCase().trim();
+
+      var bills = {};
+      adminRequests.forEach(function(r) {
+        if (!bills[r.TransactionID]) {
+          bills[r.TransactionID] = {
+            txId: r.TransactionID,
+            borrowerName: r.BorrowerName,
+            borrowerId: r.BorrowerID,
+            project: r.ProjectGroup,
+            borrowDate: r.BorrowDate,
+            returnDate: r.ReturnDate,
+            userNote: r.UserNote,
+            items: []
+          };
+        }
+        bills[r.TransactionID].items.push(r);
+      });
+
+      var txKeys = Object.keys(bills).filter(function(tx) {
+        var b = bills[tx];
+        var match = !query || b.borrowerName.toLowerCase().indexOf(query) !== -1 || b.project.toLowerCase().indexOf(query) !== -1 || b.txId.toLowerCase().indexOf(query) !== -1;
+        if (!match) return false;
+
+        var hasPending = b.items.some(function(i) { return i.Status.indexOf('รอ') !== -1; });
+        var hasBorrowing = b.items.some(function(i) { return i.Status.indexOf('อนุมัติ') !== -1; });
+
+        if (currentAdminMode === 'BORROW') return hasPending;
+        return hasBorrowing;
+      });
+
+      if (txKeys.length === 0) {
+        container.innerHTML = '<div class="col-span-full bg-white p-8 rounded-3xl border text-center text-xs text-slate-400">ไม่มีบิลในหมวดหมู่นี้</div>';
+        return;
+      }
+
+      txKeys.forEach(function(tx) {
+        var b = bills[tx];
+        var card = document.createElement('div');
+        card.className = 'bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all space-y-2.5 text-xs flex flex-col justify-between cursor-pointer group';
+        card.onclick = function(e) {
+          if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
+            openBillManageModal(b.txId);
+          }
+        };
+
+        var totalQty = b.items.reduce(function(acc, cur) { return acc + cur.Quantity; }, 0);
+
+        card.innerHTML = 
+          '<div>' +
+            '<div class="flex items-start justify-between border-b pb-2">' +
+              '<div class="pr-2 truncate">' +
+                '<span class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold">' + b.txId + '</span>' +
+                '<h4 class="font-bold text-sm text-[#12281e] truncate mt-1 group-hover:text-emerald-800 transition-colors">' + b.project + '</h4>' +
+              '</div>' +
+              '<span class="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ' + (currentAdminMode === 'BORROW' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800') + '">' +
+                (currentAdminMode === 'BORROW' ? 'รอดำเนินการ' : 'อยู่ระหว่างยืม') +
+              '</span>' +
+            '</div>' +
+            '<div class="pt-2 space-y-1 text-slate-600 text-[11px]">' +
+              '<p class="truncate">👤 <b>ผู้ยืม:</b> ' + b.borrowerName + ' <span class="text-slate-400 font-mono">(' + b.borrowerId + ')</span></p>' +
+              '<p>🗓️ <b>กำหนดส่ง:</b> ' + b.returnDate + '</p>' +
+              '<p class="text-emerald-800 font-medium">📦 <b>พัสดุรวม:</b> ' + b.items.length + ' ชนิด (' + totalQty + ' รายการ)</p>' +
+            '</div>' +
+          '</div>' +
+          '<div class="border-t pt-2.5 flex items-center justify-between gap-2 mt-1">' +
+            '<button onclick="printA4Receipt(\'' + b.txId + '\')" class="p-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition-colors"><i class="fa-solid fa-print mr-1"></i> พิมพ์บิล</button>' +
+            '<button onclick="openBillManageModal(\'' + b.txId + '\')" class="flex-1 py-1.5 px-3 rounded-xl bg-[#12281e] hover:bg-[#244c37] text-white font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-1.5">' +
+              '<span>' + (currentAdminMode === 'BORROW' ? 'ตรวจบิล' : 'รับคืนพัสดุ') + '</span>' +
+              '<i class="fa-solid fa-chevron-right text-[10px]"></i>' +
+            '</button>' +
+          '</div>';
+
+        container.appendChild(card);
+      });
+    }
+
+    function filterAdminCards() {
+      renderAdminCards();
+    }
+
+    function openBillManageModal(txId) {
+      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
+      if (billItems.length === 0) return;
+
+      var first = billItems[0];
+      var isBorrowMode = currentAdminMode === 'BORROW';
+
+      document.getElementById('billManageTitle').innerText = 'โครงการ: ' + first.ProjectGroup;
+      document.getElementById('billManageSub').innerText = 'เลขที่บิล: ' + txId + ' | รหัสนิสิต: ' + first.BorrowerID;
+      
+      var badge = document.getElementById('billManageBadge');
+      badge.innerText = isBorrowMode ? 'คำขอยืมรอดำเนินการ' : 'อยู่ระหว่างการยืม';
+      badge.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full ' + (isBorrowMode ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800');
+
+      var meta = document.getElementById('billManageMeta');
+      meta.innerHTML = 
+        '<div><p><b>👤 ผู้ขอยืม:</b> ' + first.BorrowerName + '</p><p><b>🗓️ ระยะเวลายืม:</b> ' + first.BorrowDate + ' ถึง ' + first.ReturnDate + '</p></div>' +
+        '<div><p class="truncate"><b>✍️ เหตุผล/กิจกรรม:</b> ' + (first.UserNote || '-') + '</p><p><b>📦 จำนวนชนิดอุปกรณ์:</b> ' + billItems.length + ' ชนิด</p></div>';
+
+      var container = document.getElementById('billManageItemsContainer');
+      container.innerHTML = '';
+
+      billItems.forEach(function(item) {
+        var row = document.createElement('div');
+        row.className = 'bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3';
+
+        var imgUrl = cleanDriveUrl(item.EquipmentImage);
+
+        if (isBorrowMode) {
+          row.innerHTML = 
+            '<div class="flex items-center gap-3 min-w-0 flex-1">' +
+              '<div class="w-14 h-14 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center p-1">' +
+                '<img src="' + imgUrl + '" alt="' + item.EquipmentName + '" class="w-full h-full object-cover rounded-lg" />' +
+              '</div>' +
+              '<div class="min-w-0">' +
+                '<h5 class="font-bold text-slate-800 truncate" title="' + item.EquipmentName + '">' + item.EquipmentName + '</h5>' +
+                '<p class="text-[10px] text-slate-400 font-mono">รหัส: ' + item.EquipmentID + ' | สี: ' + (item.EquipmentColor || '-') + '</p>' +
+                '<p class="text-[11px] text-emerald-800 font-medium mt-0.5">ขอยืม: <b>' + item.Quantity + '</b> ' + item.EquipmentUnit + ' <span class="text-slate-400">(เหลือในคลัง: ' + item.EquipmentInStock + ')</span></p>' +
+              '</div>' +
+            '</div>' +
+            '<div class="flex flex-wrap items-center gap-2 w-full sm:w-auto shrink-0">' +
+              '<div class="flex items-center gap-1 bg-white p-1 rounded-xl border">' +
+                '<span class="text-slate-500 font-medium text-[11px] pl-1">อนุมัติ:</span>' +
+                '<input type="number" id="approveQty-' + item.rowIndex + '" value="' + item.Quantity + '" min="1" max="' + item.EquipmentInStock + '" class="w-12 p-1 text-center font-bold text-emerald-800 rounded text-xs bg-slate-50 focus:bg-white" />' +
+              '</div>' +
+              '<select id="approveStatus-' + item.rowIndex + '" class="p-1.5 bg-white border rounded-xl text-xs font-semibold text-slate-700">' +
+                '<option value="อนุมัติ" selected>🟢 อนุมัติ</option>' +
+                '<option value="ไม่อนุมัติ">🔴 ไม่อนุมัติ</option>' +
+                '<option value="รอดำเนินการ">🟡 รอไว้ก่อน</option>' +
+              '</select>' +
+              '<input type="text" id="approveComment-' + item.rowIndex + '" placeholder="หมายเหตุ..." class="p-1.5 bg-white border rounded-xl text-xs w-28 sm:w-36" />' +
+            '</div>';
+        } else {
+          row.innerHTML = 
+            '<div class="flex items-center gap-3 min-w-0 flex-1">' +
+              '<div class="w-14 h-14 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center p-1">' +
+                '<img src="' + imgUrl + '" alt="' + item.EquipmentName + '" class="w-full h-full object-cover rounded-lg" />' +
+              '</div>' +
+              '<div class="min-w-0">' +
+                '<h5 class="font-bold text-slate-800 truncate">' + item.EquipmentName + '</h5>' +
+                '<p class="text-[10px] text-slate-400 font-mono">รหัส: ' + item.EquipmentID + ' | สี: ' + (item.EquipmentColor || '-') + '</p>' +
+                '<p class="text-[11px] text-blue-800 font-medium mt-0.5">ยอดที่ยืมอยู่: <b>' + item.Quantity + '</b> ' + item.EquipmentUnit + '</p>' +
+              '</div>' +
+            '</div>' +
+            '<div class="flex items-center gap-2.5 shrink-0 w-full sm:w-auto justify-end">' +
+              '<div class="bg-emerald-50 border border-emerald-200 p-1 rounded-xl text-center">' +
+                '<span class="block text-[9px] font-bold text-emerald-800">คืนสมบูรณ์:</span>' +
+                '<input type="number" id="returnGood-' + item.rowIndex + '" value="' + item.Quantity + '" min="0" max="' + item.Quantity + '" class="w-12 p-0.5 text-center bg-white border rounded font-bold text-emerald-800 text-xs" />' +
+              '</div>' +
+              '<div class="bg-rose-50 border border-rose-200 p-1 rounded-xl text-center">' +
+                '<span class="block text-[9px] font-bold text-rose-700">ชำรุด/สูญหาย:</span>' +
+                '<input type="number" id="returnBad-' + item.rowIndex + '" value="0" min="0" max="' + item.Quantity + '" class="w-12 p-0.5 text-center bg-white border rounded font-bold text-rose-700 text-xs" />' +
+              '</div>' +
+            '</div>';
+        }
+
+        container.appendChild(row);
+      });
+
+      var footer = document.getElementById('billManageFooter');
+      if (isBorrowMode) {
+        footer.innerHTML = 
+          '<button onclick="billManageModal.close()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs transition-colors">ยกเลิก</button>' +
+          '<button onclick="submitBatchApprovalAction(\'' + txId + '\')" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-[#12281e] hover:bg-[#244c37] text-white font-bold text-xs shadow-md transition-all">บันทึกการอนุมัติบิล</button>';
+      } else {
+        footer.innerHTML = 
+          '<input type="text" id="returnGeneralComment" placeholder="หมายเหตุสรุปสภาพอุปกรณ์ตอนรับคืน..." class="w-full sm:flex-1 p-2 bg-slate-50 border rounded-xl text-xs" />' +
+          '<button onclick="submitBatchReturnAction(\'' + txId + '\')" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md shrink-0 transition-all">บันทึกรับคืนพัสดุ</button>';
+      }
+
+      billManageModal.showModal();
+    }
+
+    function submitBatchApprovalAction(txId) {
+      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
+      var actions = [];
+
+      billItems.forEach(function(item) {
+        var r = item.rowIndex;
+        var q = document.getElementById('approveQty-' + r).value;
+        var act = document.getElementById('approveStatus-' + r).value;
+        var comment = document.getElementById('approveComment-' + r).value.trim();
+        actions.push({ rowIndex: r, action: act, quantity: q, comment: comment });
+      });
+
+      showLoading(true);
+      billManageModal.close();
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          showLoading(false);
+          if (res && res.success) {
+            showToast('บันทึกผลการพิจารณาบิลเรียบร้อยแล้ว', 'success');
+            loadAdminData();
+            fetchCatalogData();
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'error');
+          }
+        })
+        .withFailureHandler(function() {
+          showLoading(false);
+          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+        })
+        .processBatchApproval(actions);
+    }
+
+    function submitBatchReturnAction(txId) {
+      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
+      var returns = [];
+
+      for (var i = 0; i < billItems.length; i++) {
+        var r = billItems[i].rowIndex;
+        var good = Number(document.getElementById('returnGood-' + r).value || 0);
+        var bad = Number(document.getElementById('returnBad-' + r).value || 0);
+
+        if ((good + bad) !== billItems[i].Quantity) {
+          return showToast('ผลรวมการตรวจคืนของ ' + billItems[i].EquipmentName + ' ต้องเท่ากับยอดที่ยืม (' + billItems[i].Quantity + ')', 'warning');
+        }
+        returns.push({ rowIndex: r, returnQty: good, consumedQty: bad });
+      }
+
+      var note = document.getElementById('returnGeneralComment').value.trim();
+      showLoading(true);
+      billManageModal.close();
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          showLoading(false);
+          if (res && res.success) {
+            showToast('บันทึกการรับคืนเสร็จสมบูรณ์', 'success');
+            loadAdminData();
+            fetchCatalogData();
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาด', 'error');
+          }
+        })
+        .withFailureHandler(function() {
+          showLoading(false);
+          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
+        })
+        .processBatchReturn(returns, note);
+    }
+
+    function openItemDetails(id) {
+      var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === id; });
+      if (!item) return;
+
+      document.getElementById('detailTitle').innerText = item['รายการ'] || '-';
+      document.getElementById('detailId').innerText = 'รหัสพัสดุ: ' + id;
+      document.getElementById('detailImg').src = cleanDriveUrl(item['รูปภาพ']);
+      document.getElementById('detailColor').innerText = item['สี/ลาย'] || '-';
+      document.getElementById('detailSize').innerText = item['ขนาด'] || '-';
+      document.getElementById('detailTotal').innerText = (item['จำนวนทั้งหมด'] || 0) + ' ' + (item['หน่วย'] || 'ชิ้น');
+      document.getElementById('detailStock').innerText = (item['จำนวนคงเหลือปัจจุบัน'] || 0) + ' ' + (item['หน่วย'] || 'ชิ้น');
+      document.getElementById('detailBorrowed').innerText = (item['จำนวนที่ติดยืมปัจจุบัน'] || 0) + ' ' + (item['หน่วย'] || 'ชิ้น');
+
+      var list = document.getElementById('borrowerListContainer');
+      list.innerHTML = '<p class="text-slate-400 text-center py-2">กำลังดึงข้อมูลผู้ยืม...</p>';
+
+      itemDetailModal.showModal();
+
+      google.script.run
+        .withSuccessHandler(function(borrowers) {
+          if (!borrowers || borrowers.length === 0) {
+            list.innerHTML = '<p class="text-slate-400 text-center py-2">ไม่มีผู้ค้างยืมพัสดุนี้</p>';
+            return;
+          }
+          list.innerHTML = borrowers.map(function(b) {
+            return '<div class="p-2 bg-amber-50 rounded-xl border border-amber-100 flex items-center justify-between text-xs">' +
+              '<div><p class="font-bold text-amber-900">' + b.name + '</p><p class="text-[10px] text-slate-500">กำหนดคืน: ' + b.deadline + '</p></div>' +
+              '<span class="font-bold text-amber-800 text-[11px]">' + b.qty + ' รายการ</span>' +
+            '</div>';
+          }).join('');
+        })
+        .getEquipmentBorrowers(id);
+    }
+
+    function printA4Receipt(txId) {
+      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
+      if (billItems.length === 0) return showToast('ไม่พบข้อมูลบิลสำหรับพิมพ์', 'warning');
+
+      var first = billItems[0];
+      var logoSrc = cleanDriveUrl(currentClubLogo);
+
+      var printWin = window.open('', '_blank', 'width=850,height=900');
+      if (!printWin) return showToast('กรุณาอนุญาตป๊อปอัปเพื่อเปิดหน้าพิมพ์เอกสาร', 'warning');
+
+      var doc = printWin.document;
+      doc.open();
+      doc.write('<!DOCTYPE html><html><head><title>ใบยืม - คืนอุปกรณ์ ' + txId + '</title>');
+      doc.write('<style>');
+      doc.write('@page { size: A4 portrait; margin: 15mm; }');
+      doc.write('body { font-family: "Kanit", sans-serif; font-size: 13px; color: #111; margin: 0; padding: 10px; line-height: 1.6; }');
+      doc.write('.header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1b382b; padding-bottom: 10px; margin-bottom: 14px; }');
+      doc.write('.logo-box { width: 55px; height: 55px; object-fit: contain; margin-right: 12px; }');
+      doc.write('.brand-title { display: flex; align-items: center; }');
+      doc.write('.tx-box { border: 1.5px solid #1b382b; padding: 4px 10px; font-weight: bold; font-family: monospace; font-size: 13px; border-radius: 4px; }');
+      doc.write('table { width: 100%; border-collapse: collapse; margin: 14px 0; }');
+      doc.write('th, td { border: 1px solid #94a3b8; padding: 7px 10px; font-size: 12px; text-align: left; }');
+      doc.write('th { background-color: #f1f5f9; text-align: center; font-weight: bold; }');
+      doc.write('.sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 35px; text-align: center; font-size: 12px; }');
+      doc.write('</style></head><body>');
+
+      doc.write('<div class="header">');
+      doc.write('<div class="brand-title">');
+      if (currentClubLogo) {
+        doc.write('<img src="' + logoSrc + '" class="logo-box" alt="ตราสโมสร" />');
+      }
+      doc.write('<div><h2 style="margin:0; font-size:18px; color:#1b382b;">ใบยืม - คืน พัสดุอุปกรณ์</h2><p style="margin:0; font-size:12px; color:#475569;">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p></div>');
+      doc.write('</div>');
+      doc.write('<div class="tx-box">ที่ ' + txId + '</div>');
+      doc.write('</div>');
+
+      doc.write('<div style="margin-bottom: 12px; font-size: 12px; line-height:1.7;">');
+      doc.write('<p><b>ผู้ขอยืม:</b> ' + first.BorrowerName + ' &nbsp;&nbsp;&nbsp;&nbsp; <b>รหัสนิสิต:</b> ' + first.BorrowerID + '</p>');
+      doc.write('<p><b>ในนามโครงการ / ฝ่าย:</b> ' + first.ProjectGroup + '</p>');
+      doc.write('<p><b>นำไปใช้ในกิจกรรม:</b> ' + (first.UserNote || '-') + '</p>');
+      doc.write('<p><b>วันที่ยืม:</b> ' + first.BorrowDate + ' &nbsp;&nbsp;&nbsp;&nbsp; <b>กำหนดส่งคืน:</b> ' + first.ReturnDate + '</p>');
+      doc.write('</div>');
+
+      doc.write('<table>');
+      doc.write('<thead><tr><th style="width:8%;">ลำดับ</th><th>รายการพัสดุ</th><th style="width:20%;">จำนวน / หน่วย</th><th style="width:14%;">ช่องตรวจยืม</th><th style="width:14%;">ช่องตรวจคืน</th></tr></thead>');
+      doc.write('<tbody>');
+      billItems.forEach(function(item, idx) {
+        doc.write('<tr>');
+        doc.write('<td style="text-align:center;">' + (idx + 1) + '</td>');
+        doc.write('<td>' + item.EquipmentName + ' (' + (item.EquipmentColor || '-') + ')</td>');
+        doc.write('<td style="text-align:center;">' + item.Quantity + ' ' + item.EquipmentUnit + '</td>');
+        doc.write('<td style="text-align:center;">[ &nbsp; ]</td>');
+        doc.write('<td style="text-align:center;">[ &nbsp; ]</td>');
+        doc.write('</tr>');
+      });
+      doc.write('</tbody></table>');
+
+      doc.write('<p style="font-size:11px; margin-top:8px; color:#475569;">* ข้าพเจ้าขอรับรองว่าจะดูแลรักษาพัสดุอุปกรณ์ให้อยู่ในสภาพสมบูรณ์ หากเกิดการชำรุด เสียหาย หรือสูญหาย ยินดีรับผิดชอบชดใช้ตามระเบียบงานคลังพัสดุ สโมสรนิสิตฯ ทุกประการ</p>');
+
+      doc.write('<div class="sig-grid">');
+      doc.write('<div><p>ลงชื่อ ........................................................... ผู้ยืม</p><p>( ' + first.BorrowerName + ' )</p><p>วันที่ ......./......./...........</p></div>');
+      doc.write('<div><p>ลงชื่อ ........................................................... เจ้าหน้าที่คลังพัสดุ</p><p>( กรรมการฝ่ายพัสดุและสถานที่ สโมสรนิสิตฯ )</p><p>วันที่ ......./......./...........</p></div>');
+      doc.write('</div>');
+
+      doc.write('</body></html>');
+      doc.close();
+
+      setTimeout(function() {
+        printWin.focus();
+        printWin.print();
+        printWin.close();
+      }, 400);
+    }
+  </script>
+</body>
+</html>
