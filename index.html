@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
     :root {
@@ -59,7 +59,7 @@
     <div class="max-w-md w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-[#c5a880]/30 overflow-hidden">
       
       <div class="bg-gradient-to-r from-[#10231a] to-[#1b3a2c] p-6 text-center text-white relative">
-        <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shadow-inner mb-3 overflow-hidden p-1.5">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shadow-inner mb-3 overflow-hidden p-1.5 relative">
           <img id="gateLogoPreview" src="" alt="ตราสโมสร" class="w-full h-full object-contain hidden" />
           <i id="gateLogoFallback" class="fa-solid fa-boxes-stacked text-2xl text-[#c5a880]"></i>
         </div>
@@ -160,8 +160,8 @@
             </div>
           </div>
 
-          <button id="btnGateRegister" onclick="executeGateRegister()" class="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md transition-all mt-2">
-            บันทึกการลงทะเบียนและเข้าใช้งาน
+          <button id="btnGateRegister" onclick="executeGateRegister()" class="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md transition-all mt-2 flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและเข้าใช้งาน</span>
           </button>
         </div>
 
@@ -177,7 +177,7 @@
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
         
         <div class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer min-w-0" onclick="showStoreView()">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shrink-0 shadow-inner overflow-hidden p-1">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shrink-0 shadow-inner overflow-hidden p-1 relative">
             <img id="navLogoPreview" src="" alt="ตราสโมสร" class="w-full h-full object-contain hidden" />
             <i id="navLogoFallback" class="fa-solid fa-boxes-stacked text-[#c5a880] text-sm sm:text-base"></i>
           </div>
@@ -273,8 +273,8 @@
               </div>
             </div>
 
-            <button id="btnSubmitBorrow" onclick="submitBorrowOrder()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#10231a] to-[#204434] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98]">
-              ยืนยันส่งคำขอยืมอุปกรณ์
+            <button id="btnSubmitBorrow" onclick="submitBorrowOrder()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#10231a] to-[#204434] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i> <span>ยืนยันส่งคำขอยืมอุปกรณ์</span>
             </button>
           </div>
         </div>
@@ -339,7 +339,7 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-        <div class="w-full h-44 rounded-2xl bg-slate-50 border overflow-hidden flex items-center justify-center p-2">
+        <div class="w-full h-44 rounded-2xl bg-slate-50 border overflow-hidden flex items-center justify-center p-2 relative">
           <img id="detailImg" src="" alt="พัสดุ" class="w-full h-full object-contain" />
         </div>
         <div class="space-y-1.5 self-center">
@@ -394,7 +394,7 @@
           </div>
 
           <div id="photoPreviewWrapper" class="flex items-center gap-3">
-            <div class="w-20 h-20 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 p-1">
+            <div class="w-20 h-20 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 p-1 relative">
               <img id="newEquipPhotoPreview" src="" alt="ตัวอย่างรูป" class="w-full h-full object-cover rounded-lg hidden" />
               <i id="newEquipPhotoFallback" class="fa-solid fa-image text-3xl text-slate-300"></i>
             </div>
@@ -497,7 +497,7 @@
 
       <div class="space-y-3 text-xs">
         <div class="flex flex-col items-center justify-center p-4 bg-slate-50 border border-dashed rounded-2xl">
-          <div class="w-20 h-20 rounded-2xl bg-white border shadow-sm p-1.5 flex items-center justify-center overflow-hidden mb-2">
+          <div class="w-20 h-20 rounded-2xl bg-white border shadow-sm p-1.5 flex items-center justify-center overflow-hidden mb-2 relative">
             <img id="logoModalPreview" src="" alt="ตัวอย่างตราสโมสร" class="w-full h-full object-contain hidden" />
             <i id="logoModalFallback" class="fa-solid fa-image text-3xl text-slate-300"></i>
           </div>
@@ -538,7 +538,6 @@
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw9DjdFBpgcobqpR_uzGNeLHgImVHDYImXyuhkWALACLWHxqlMtVXRo_a0BpsQnnP3Q/exec";
 
-    // Dynamic API Runner พร้อม credentials: 'omit' เพื่อแก้ปัญหา Google Multiple Accounts Echo 404
     window.google = {
       script: {
         run: (function createRunner(successHandler, failureHandler) {
@@ -628,18 +627,19 @@
     });
 
     function cleanDriveUrl(url) {
-      var fallback = 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
-      if (!url) return fallback;
+      if (!url) return '';
       url = url.toString().trim();
+      if (url === 'ซ้ำ' || url === '-' || url.toLowerCase() === 'undefined' || url.toLowerCase() === 'null') return '';
       if (url.indexOf('data:image') === 0) return url;
+      if (url.startsWith('/') || url.startsWith('./')) return url;
       if (url.indexOf('drive.google.com') !== -1) {
         var match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/[?&]id=([a-zA-Z0-9-_]+)/);
         if (match && match[1]) return 'https://lh3.googleusercontent.com/d/' + match[1];
       }
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        return fallback;
+        return '';
       }
-      return url || fallback;
+      return url;
     }
 
     function updateFavicon(iconUrl) {
@@ -650,28 +650,47 @@
         favicon.rel = 'icon';
         document.head.appendChild(favicon);
       }
-      favicon.href = iconUrl ? cleanDriveUrl(iconUrl) : '/favicon.png?v=9';
+      var clean = cleanDriveUrl(iconUrl);
+      favicon.href = clean ? clean : '/favicon.png?v=9';
     }
 
     function renderClubLogo(url) {
       var clean = cleanDriveUrl(url);
-      var hasLogo = !!url;
       updateFavicon(url);
 
       var gateImg = document.getElementById('gateLogoPreview');
       var gateFallback = document.getElementById('gateLogoFallback');
-      if (gateImg && gateFallback) {
-        gateImg.src = clean;
-        gateImg.classList.toggle('hidden', !hasLogo);
-        gateFallback.classList.toggle('hidden', hasLogo);
-      }
-
       var navImg = document.getElementById('navLogoPreview');
       var navFallback = document.getElementById('navLogoFallback');
-      if (navImg && navFallback) {
-        navImg.src = clean;
-        navImg.classList.toggle('hidden', !hasLogo);
-        navFallback.classList.toggle('hidden', hasLogo);
+
+      if (clean) {
+        if (gateImg) {
+          gateImg.src = clean;
+          gateImg.onload = function() {
+            gateImg.classList.remove('hidden');
+            if (gateFallback) gateFallback.classList.add('hidden');
+          };
+          gateImg.onerror = function() {
+            gateImg.classList.add('hidden');
+            if (gateFallback) gateFallback.classList.remove('hidden');
+          };
+        }
+        if (navImg) {
+          navImg.src = clean;
+          navImg.onload = function() {
+            navImg.classList.remove('hidden');
+            if (navFallback) navFallback.classList.add('hidden');
+          };
+          navImg.onerror = function() {
+            navImg.classList.add('hidden');
+            if (navFallback) navFallback.classList.remove('hidden');
+          };
+        }
+      } else {
+        if (gateImg) gateImg.classList.add('hidden');
+        if (gateFallback) gateFallback.classList.remove('hidden');
+        if (navImg) navImg.classList.add('hidden');
+        if (navFallback) navFallback.classList.remove('hidden');
       }
     }
 
@@ -714,7 +733,7 @@
 
       var btn = document.getElementById('btnGateLogin');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> ตรวจสอบข้อมูล...';
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> <span>ตรวจสอบข้อมูล...</span>';
       showLoading(true);
 
       google.script.run
@@ -767,13 +786,13 @@
 
       var btn = document.getElementById('btnGateRegister');
       btn.disabled = true;
-      btn.innerText = 'กำลังบันทึกข้อมูล...';
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> <span>กำลังบันทึกข้อมูล...</span>';
       showLoading(true);
 
       google.script.run
         .withSuccessHandler(function(res) {
           btn.disabled = false;
-          btn.innerText = 'บันทึกการลงทะเบียนและเข้าใช้งาน';
+          btn.innerHTML = '<i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและเข้าใช้งาน</span>';
           showLoading(false);
 
           if (res && res.success) {
@@ -787,7 +806,7 @@
         })
         .withFailureHandler(function() {
           btn.disabled = false;
-          btn.innerText = 'บันทึกการลงทะเบียนและเข้าใช้งาน';
+          btn.innerHTML = '<i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและเข้าใช้งาน</span>';
           showLoading(false);
         })
         .registerNewUser(payload);
@@ -914,7 +933,7 @@
         var id = item['รหัสพัสดุ'];
         var name = item['รายการ'] || 'ไม่มีชื่อ';
         var inStock = Number(item['จำนวนคงเหลือปัจจุบัน'] || 0);
-        var img = cleanDriveUrl(item['รูปภาพ']);
+        var img = cleanDriveUrl(item['รูปภาพ']) || 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
         var cartItem = cart.find(function(c) { return c.id === id; });
 
         var badgeClass = inStock > 0 ? 'bg-emerald-600 text-white' : 'bg-slate-300 text-slate-600';
@@ -927,7 +946,7 @@
         card.innerHTML = 
           '<div class="cursor-pointer" onclick="openItemDetails(\'' + id + '\')">' +
             '<div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-50 mb-2 relative border border-slate-100 flex items-center justify-center p-1">' +
-              '<img src="' + img + '" alt="' + name + '" class="w-full h-full object-cover rounded-lg" />' +
+              '<img src="' + img + '" alt="' + name + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-full h-full object-cover rounded-lg" />' +
               '<span class="text-[9px] font-bold px-2 py-0.5 rounded-md absolute top-1.5 right-1.5 shadow-sm ' + badgeClass + '">' + badgeText + '</span>' +
             '</div>' +
             '<div class="space-y-0.5 text-left">' +
@@ -993,7 +1012,7 @@
           unit: item['หน่วย'] || 'ชิ้น',
           max: inStock,
           qty: 1,
-          img: cleanDriveUrl(item['รูปภาพ'])
+          img: cleanDriveUrl(item['รูปภาพ']) || 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply'
         });
       }
       updateCartState();
@@ -1060,7 +1079,7 @@
         row.className = 'bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between gap-3 text-xs';
         row.innerHTML = 
           '<div class="flex items-center gap-3 min-w-0">' +
-            '<img src="' + item.img + '" class="w-12 h-12 rounded-xl object-cover border shrink-0 bg-slate-50" />' +
+            '<img src="' + item.img + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-12 h-12 rounded-xl object-cover border shrink-0 bg-slate-50" />' +
             '<div class="truncate">' +
               '<h4 class="font-bold text-slate-800 truncate">' + item.name + '</h4>' +
               '<p class="text-[10px] text-slate-400 font-mono">ID: ' + item.id + '</p>' +
@@ -1096,13 +1115,13 @@
 
       var btn = document.getElementById('btnSubmitBorrow');
       btn.disabled = true;
-      btn.innerText = 'กำลังส่งข้อมูล...';
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> <span>กำลังส่งข้อมูล...</span>';
       showLoading(true);
 
       google.script.run
         .withSuccessHandler(function(res) {
           btn.disabled = false;
-          btn.innerText = 'ยืนยันส่งคำขอยืมอุปกรณ์';
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>ยืนยันส่งคำขอยืมอุปกรณ์</span>';
           showLoading(false);
 
           if (res && res.success) {
@@ -1117,7 +1136,7 @@
         })
         .withFailureHandler(function() {
           btn.disabled = false;
-          btn.innerText = 'ยืนยันส่งคำขอยืมอุปกรณ์';
+          btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>ยืนยันส่งคำขอยืมอุปกรณ์</span>';
           showLoading(false);
         })
         .submitCartRequest(payloadItems, currentUser, note);
@@ -1174,8 +1193,12 @@
         card.className = 'bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-xs';
 
         var itemsHtml = bill.items.map(function(item) {
-          var st = item.Status;
-          var stColor = st.indexOf('อนุมัติ') !== -1 ? 'bg-emerald-100 text-emerald-800' : (st.indexOf('คืน') !== -1 ? 'bg-blue-100 text-blue-800' : (st.indexOf('ไม่อนุมัติ') !== -1 ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'));
+          var st = item.Status || 'รอดำเนินการ';
+          var isRejected = st.indexOf('ไม่อนุมัติ') !== -1;
+          var isApproved = !isRejected && st.indexOf('อนุมัติ') !== -1;
+          var isReturned = st.indexOf('คืน') !== -1;
+
+          var stColor = isApproved ? 'bg-emerald-100 text-emerald-800' : (isReturned ? 'bg-blue-100 text-blue-800' : (isRejected ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'));
           var commentHtml = item.AdminComment ? '<p class="text-[10px] text-slate-500 mt-0.5"><b>ความเห็น:</b> ' + item.AdminComment + '</p>' : '';
           
           return '<div class="py-1.5 border-b border-slate-50 last:border-none">' +
@@ -1249,8 +1272,10 @@
     function updateAdminBadges() {
       var pendingTxs = {}, activeTxs = {};
       adminRequests.forEach(function(r) {
-        if (r.Status.indexOf('รอ') !== -1) pendingTxs[r.TransactionID] = true;
-        if (r.Status.indexOf('อนุมัติ') !== -1) activeTxs[r.TransactionID] = true;
+        var st = r.Status || '';
+        if (st.indexOf('รอ') !== -1) pendingTxs[r.TransactionID] = true;
+        // ต้องอนุมัติจริง และต้องไม่ใช่คำว่า "ไม่อนุมัติ"
+        if (st.indexOf('อนุมัติ') !== -1 && st.indexOf('ไม่อนุมัติ') === -1) activeTxs[r.TransactionID] = true;
       });
       document.getElementById('adminPendingBadge').innerText = Object.keys(pendingTxs).length;
       document.getElementById('adminActiveBadge').innerText = Object.keys(activeTxs).length;
@@ -1284,9 +1309,9 @@
         if (!match) return false;
 
         var hasPending = b.items.some(function(i) { return i.Status.indexOf('รอ') !== -1; });
-        var hasBorrowing = b.items.some(function(i) { return i.Status.indexOf('อนุมัติ') !== -1; });
+        // กรองเฉพาะสถานะอนุมัติจริง (ตัดไม่อนุมัติออก)
+        var hasBorrowing = b.items.some(function(i) { return i.Status.indexOf('อนุมัติ') !== -1 && i.Status.indexOf('ไม่อนุมัติ') === -1; });
 
-        // กรองการแสดงผลตามโหมดแอดมิน
         return currentAdminMode === 'BORROW' ? hasPending : hasBorrowing;
       });
 
@@ -1307,7 +1332,7 @@
 
         var relevantItems = currentAdminMode === 'BORROW' 
           ? b.items.filter(function(i) { return i.Status.indexOf('รอ') !== -1; })
-          : b.items.filter(function(i) { return i.Status.indexOf('อนุมัติ') !== -1; });
+          : b.items.filter(function(i) { return i.Status.indexOf('อนุมัติ') !== -1 && i.Status.indexOf('ไม่อนุมัติ') === -1; });
 
         var totalQty = relevantItems.reduce(function(acc, cur) { return acc + cur.Quantity; }, 0);
 
@@ -1351,13 +1376,13 @@
       var first = allBillItems[0];
       var isBorrowMode = currentAdminMode === 'BORROW';
 
-      // ถ้าเป็นโหมดรับคืน ให้กรองเฉพาะรายการที่อนุมัติ/ยืมอยู่จริงเท่านั้น
+      // กรองเฉพาะรายการที่อนุมัติจริง ตัด "ไม่อนุมัติ" ออกทั้งหมดในโหมดรับคืน
       var billItems = isBorrowMode 
         ? allBillItems.filter(function(r) { return r.Status.indexOf('รอ') !== -1; })
-        : allBillItems.filter(function(r) { return r.Status.indexOf('อนุมัติ') !== -1; });
+        : allBillItems.filter(function(r) { return r.Status.indexOf('อนุมัติ') !== -1 && r.Status.indexOf('ไม่อนุมัติ') === -1; });
 
       if (billItems.length === 0) {
-        showToast('ไม่มีรายการพัสดุสำหรับโหมดนี้', 'info');
+        showToast('ไม่มีรายการพัสดุสำหรับโหมดนี้ (อาจถูกปฏิเสธหรือคืนไปแล้ว)', 'info');
         return;
       }
 
@@ -1370,7 +1395,7 @@
 
       var meta = document.getElementById('billManageMeta');
       meta.innerHTML = 
-        '<div><p><b>👤 ผู้ขอยืม:</b> ' + first.BorrowerName + '</p><p><b>🗓️️ ระยะเวลายืม:</b> ' + first.BorrowDate + ' ถึง ' + first.ReturnDate + '</p></div>' +
+        '<div><p><b>👤 ผู้ขอยืม:</b> ' + first.BorrowerName + '</p><p><b>🗓 ระยะเวลายืม:</b> ' + first.BorrowDate + ' ถึง ' + first.ReturnDate + '</p></div>' +
         '<div><p class="truncate"><b>✍️ เหตุผล/กิจกรรม:</b> ' + (first.UserNote || '-') + '</p><p><b>📦 รายการในบิล:</b> ' + billItems.length + ' ชนิด</p></div>';
 
       var container = document.getElementById('billManageItemsContainer');
@@ -1379,13 +1404,13 @@
       billItems.forEach(function(item) {
         var row = document.createElement('div');
         row.className = 'bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3';
-        var imgUrl = cleanDriveUrl(item.EquipmentImage);
+        var imgUrl = cleanDriveUrl(item.EquipmentImage) || 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
 
         if (isBorrowMode) {
           row.innerHTML = 
             '<div class="flex items-center gap-3 min-w-0 flex-1">' +
               '<div class="w-14 h-14 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center p-1">' +
-                '<img src="' + imgUrl + '" alt="' + item.EquipmentName + '" class="w-full h-full object-cover rounded-lg" />' +
+                '<img src="' + imgUrl + '" alt="' + item.EquipmentName + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-full h-full object-cover rounded-lg" />' +
               '</div>' +
               '<div class="min-w-0">' +
                 '<h5 class="font-bold text-slate-800 truncate">' + item.EquipmentName + '</h5>' +
@@ -1409,7 +1434,7 @@
           row.innerHTML = 
             '<div class="flex items-center gap-3 min-w-0 flex-1">' +
               '<div class="w-14 h-14 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center p-1">' +
-                '<img src="' + imgUrl + '" alt="' + item.EquipmentName + '" class="w-full h-full object-cover rounded-lg" />' +
+                '<img src="' + imgUrl + '" alt="' + item.EquipmentName + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-full h-full object-cover rounded-lg" />' +
               '</div>' +
               '<div class="min-w-0">' +
                 '<h5 class="font-bold text-slate-800 truncate">' + item.EquipmentName + '</h5>' +
@@ -1471,7 +1496,6 @@
         var act = document.getElementById('approveStatus-' + r).value;
         var comment = document.getElementById('approveComment-' + r).value.trim();
 
-        // ตรวจสอบ: หากเลือกไม่อนุมัติ บังคับให้เขียนเหตุผล
         if (act === 'ไม่อนุมัติ' && !comment) {
           showToast('กรุณาระบุเหตุผลที่ไม่อนุมัติสำหรับ "' + item.EquipmentName + '"', 'warning');
           document.getElementById('approveComment-' + r).focus();
@@ -1502,7 +1526,10 @@
     }
 
     function submitBatchReturnAction(txId) {
-      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId && r.Status.indexOf('อนุมัติ') !== -1; });
+      // ดึงเฉพาะไอเทมที่ได้รับอนุมัติจริงเท่านั้น
+      var billItems = adminRequests.filter(function(r) { 
+        return r.TransactionID === txId && (r.Status.indexOf('อนุมัติ') !== -1 && r.Status.indexOf('ไม่อนุมัติ') === -1); 
+      });
       var returns = [];
 
       for (var i = 0; i < billItems.length; i++) {
@@ -1544,7 +1571,7 @@
 
       document.getElementById('detailTitle').innerText = item['รายการ'] || '-';
       document.getElementById('detailId').innerText = 'รหัสพัสดุ: ' + id;
-      document.getElementById('detailImg').src = cleanDriveUrl(item['รูปภาพ']);
+      document.getElementById('detailImg').src = cleanDriveUrl(item['รูปภาพ']) || 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
       document.getElementById('detailCategory').innerText = item['หมวดหมู่'] || '-';
       document.getElementById('detailColor').innerText = item['สี/ลาย'] || '-';
       document.getElementById('detailSize').innerText = item['ขนาด'] || '-';
@@ -1552,7 +1579,6 @@
       document.getElementById('detailStock').innerText = (item['จำนวนคงเหลือปัจจุบัน'] || 0) + ' ' + (item['หน่วย'] || 'ชิ้น');
       document.getElementById('detailBorrowed').innerText = (item['จำนวนที่ติดยืมปัจจุบัน'] || 0) + ' ' + (item['หน่วย'] || 'ชิ้น');
 
-      // ตรวจสอบสิทธิ์เพื่อแสดงปุ่มแก้ไขพัสดุ
       var role = (currentUser && currentUser.role ? currentUser.role : '').toLowerCase();
       var isAdmin = role.indexOf('แอดมิน') !== -1 || role.indexOf('พัสดุ') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1;
       document.getElementById('btnAdminEditEquip').classList.toggle('hidden', !isAdmin);
@@ -1588,7 +1614,7 @@
       if (billItems.length === 0) return showToast('ไม่พบข้อมูลบิลสำหรับพิมพ์', 'warning');
 
       var first = billItems[0];
-      var logoSrc = cleanDriveUrl(currentClubLogo);
+      var logoSrc = cleanDriveUrl(currentClubLogo) || '/favicon.png?v=9';
       var printWin = window.open('', '_blank', 'width=850,height=900');
       if (!printWin) return showToast('กรุณาอนุญาตป๊อปอัปเพื่อเปิดหน้าพิมพ์เอกสาร', 'warning');
 
@@ -1655,7 +1681,6 @@
       }, 400);
     }
 
-    // Modal & Camera Logic
     function openAddEquipmentModal() {
       currentEditingItemId = null;
       document.getElementById('equipModalTitle').innerHTML = '<i class="fa-solid fa-box-open text-[#c5a880]"></i> <span>เพิ่มรายการพัสดุใหม่เข้าคลัง</span>';
@@ -1696,7 +1721,7 @@
 
       var idInput = document.getElementById('newEquipId');
       idInput.value = id;
-      idInput.disabled = true; // ป้องกันการแก้ ID ซ้ำซ้อน
+      idInput.disabled = true;
 
       document.getElementById('newEquipName').value = item['รายการ'] || '';
       document.getElementById('newEquipTotalQty').value = Number(item['จำนวนทั้งหมด'] || 1);
@@ -1708,18 +1733,22 @@
 
       populateCategorySelect(item['หมวดหมู่'] || '');
 
-      // พรีวิวรูปเดิม
       capturedPhotoBase64 = '';
       var preview = document.getElementById('newEquipPhotoPreview');
       var fallback = document.getElementById('newEquipPhotoFallback');
       var removeBtn = document.getElementById('btnRemovePhoto');
       var existingImg = cleanDriveUrl(item['รูปภาพ']);
 
-      if (item['รูปภาพ']) {
+      if (existingImg) {
         preview.src = existingImg;
-        preview.classList.remove('hidden');
-        fallback.classList.add('hidden');
-        removeBtn.classList.remove('hidden');
+        preview.onload = function() {
+          preview.classList.remove('hidden');
+          fallback.classList.add('hidden');
+          removeBtn.classList.remove('hidden');
+        };
+        preview.onerror = function() {
+          removeEquipPhoto();
+        };
       } else {
         removeEquipPhoto();
       }
@@ -1781,7 +1810,7 @@
         var video = document.getElementById('cameraVideo');
         video.srcObject = mediaStream;
         wrapper.classList.remove('hidden');
-        btn.innerHTML = '<i class="fa-solid fa-video-slash mr-1"></i> ปิดกล้องสด';
+        btn.innerHTML = '<i class="fa-solid fa-video-slash mr-1"></i> <span>ปิดกล้องสด</span>';
       } catch (err) {
         showToast('ไม่สามารถเปิดกล้องได้ กรุณาใช้ปุ่มถ่ายรูป/เลือกภาพแทน', 'warning');
       }
@@ -1795,7 +1824,7 @@
       var wrapper = document.getElementById('cameraLiveWrapper');
       if (wrapper) wrapper.classList.add('hidden');
       var btn = document.getElementById('btnToggleWebcam');
-      if (btn) btn.innerHTML = '<i class="fa-solid fa-video mr-1"></i> เปิดกล้องสด';
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-video mr-1"></i> <span>เปิดกล้องสด</span>';
     }
 
     function takeSnapshot() {
@@ -1849,9 +1878,14 @@
       var removeBtn = document.getElementById('btnRemovePhoto');
 
       preview.src = base64Str;
-      preview.classList.remove('hidden');
-      fallback.classList.add('hidden');
-      removeBtn.classList.remove('hidden');
+      preview.onload = function() {
+        preview.classList.remove('hidden');
+        fallback.classList.add('hidden');
+        removeBtn.classList.remove('hidden');
+      };
+      preview.onerror = function() {
+        removeEquipPhoto();
+      };
     }
 
     function removeEquipPhoto() {
@@ -1901,7 +1935,7 @@
 
       var btn = document.getElementById('btnSaveNewEquipment');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> กำลังบันทึกข้อมูล...';
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> <span>กำลังบันทึกข้อมูล...</span>';
       showLoading(true);
 
       var action = isEdit ? 'updateEquipment' : 'addNewEquipment';
@@ -1928,7 +1962,6 @@
         })[action](payload);
     }
 
-    // Logo Modal Handlers
     function openLogoSettingModal() {
       tempUploadedLogo = '';
       document.getElementById('logoUrlInput').value = currentClubLogo.indexOf('data:image') === 0 ? '' : currentClubLogo;
@@ -1958,10 +1991,16 @@
       var img = document.getElementById('logoModalPreview');
       var fb = document.getElementById('logoModalFallback');
       var clean = cleanDriveUrl(src);
-      if (src) {
+      if (clean) {
         img.src = clean;
-        img.classList.remove('hidden');
-        fb.classList.add('hidden');
+        img.onload = function() {
+          img.classList.remove('hidden');
+          fb.classList.add('hidden');
+        };
+        img.onerror = function() {
+          img.classList.add('hidden');
+          fb.classList.remove('hidden');
+        };
       } else {
         img.classList.add('hidden');
         fb.classList.remove('hidden');
