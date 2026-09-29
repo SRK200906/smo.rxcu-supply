@@ -8,6 +8,23 @@
   <meta name="description" content="ระบบขอยืม-คืนพัสดุและอุปกรณ์ สำหรับนิสิตและโครงการ สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย" />
   
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            rx: {
+              dark: '#0a1510',
+              card: '#12231b',
+              gold: '#c5a880',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -27,6 +44,11 @@
       font-family: 'Kanit', sans-serif;
       background-color: #f7faf8;
       color: #1e293b;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+    html.dark body {
+      background-color: #0a1510;
+      color: #f1f5f9;
     }
     .luxury-glass {
       background: linear-gradient(135deg, rgba(15, 32, 24, 0.95), rgba(24, 51, 39, 0.98));
@@ -40,6 +62,9 @@
     .custom-scroll::-webkit-scrollbar-thumb {
       background: #cbd5e1;
       border-radius: 999px;
+    }
+    html.dark .custom-scroll::-webkit-scrollbar-thumb {
+      background: #1e3a2b;
     }
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { 
@@ -56,7 +81,7 @@
 
   <!-- AUTHENTICATION GATE -->
   <section id="authGateSection" class="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-[#091510] via-[#12281e] to-[#1c3d2e] text-slate-800 relative z-50">
-    <div class="max-w-md w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-[#c5a880]/30 overflow-hidden">
+    <div class="max-w-md w-full bg-white/95 dark:bg-[#12231b]/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-[#c5a880]/30 overflow-hidden transition-colors">
       
       <div class="bg-gradient-to-r from-[#10231a] to-[#1b3a2c] p-6 text-center text-white relative">
         <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shadow-inner mb-3 overflow-hidden p-1.5 relative">
@@ -71,11 +96,11 @@
       </div>
 
       <div class="p-5 sm:p-6 space-y-4">
-        <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-semibold">
-          <button id="gateTabLogin" onclick="switchGateAuthMode('LOGIN')" class="flex-1 py-2 rounded-xl bg-white shadow-sm text-[#183327] font-bold transition-all">
+        <div class="flex bg-slate-100 dark:bg-slate-900/60 p-1 rounded-2xl text-xs font-semibold">
+          <button id="gateTabLogin" onclick="switchGateAuthMode('LOGIN')" class="flex-1 py-2 rounded-xl bg-white dark:bg-[#1b3327] shadow-sm text-[#183327] dark:text-[#f2e6d0] font-bold transition-all">
             <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> เข้าสู่ระบบ
           </button>
-          <button id="gateTabRegister" onclick="switchGateAuthMode('REGISTER')" class="flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-medium transition-all">
+          <button id="gateTabRegister" onclick="switchGateAuthMode('REGISTER')" class="flex-1 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-all">
             <i class="fa-solid fa-user-plus mr-1"></i> ลงทะเบียนใหม่
           </button>
         </div>
@@ -83,18 +108,18 @@
         <!-- Login Form -->
         <div id="gateLoginForm" class="space-y-3.5 text-xs">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">รหัสนิสิต / ประจำตัวประชาชน <span class="text-rose-500">*</span></label>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">รหัสนิสิต / ประจำตัวประชาชน <span class="text-rose-500">*</span></label>
             <div class="relative">
               <i class="fa-solid fa-id-card absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="text" id="gateLoginId" placeholder="เช่น 68xxxxxx33" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium" />
+              <input type="text" id="gateLoginId" placeholder="เช่น 68xxxxxx33" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl focus:bg-white dark:focus:bg-[#12231b] focus:outline-none focus:border-emerald-600 font-medium text-slate-800 dark:text-slate-100" />
             </div>
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">ชื่อจริง (ไม่ต้องระบุคำนำหน้า) <span class="text-rose-500">*</span></label>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ชื่อจริง (ไม่ต้องระบุคำนำหน้า) <span class="text-rose-500">*</span></label>
             <div class="relative">
               <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="text" id="gateLoginName" placeholder="เช่น ภัทรพล" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium" />
+              <input type="text" id="gateLoginName" placeholder="เช่น ภัทรพล" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl focus:bg-white dark:focus:bg-[#12231b] focus:outline-none focus:border-emerald-600 font-medium text-slate-800 dark:text-slate-100" />
             </div>
           </div>
 
@@ -108,55 +133,55 @@
         <div id="gateRegisterForm" class="hidden space-y-2.5 text-xs max-h-[55vh] overflow-y-auto pr-1 custom-scroll">
           <div class="grid grid-cols-3 gap-2">
             <div>
-              <label class="block font-medium text-slate-700 mb-1">คำนำหน้า</label>
-              <input type="text" id="gateRegPrefix" value="นสภ." class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">คำนำหน้า</label>
+              <input type="text" id="gateRegPrefix" value="นสภ." class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
             </div>
             <div class="col-span-2">
-              <label class="block font-medium text-slate-700 mb-1">ชื่อจริง <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegFirstName" placeholder="ชื่อจริง" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ชื่อจริง <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegFirstName" placeholder="ชื่อจริง" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-medium text-slate-700 mb-1">นามสกุล <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegLastName" placeholder="นามสกุล" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">นามสกุล <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegLastName" placeholder="นามสกุล" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
             </div>
             <div>
-              <label class="block font-medium text-slate-700 mb-1">ชื่อเล่น <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegNickname" placeholder="ชื่อเล่น" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ชื่อเล่น <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegNickname" placeholder="ชื่อเล่น" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
             </div>
           </div>
 
           <div>
-            <label class="block font-medium text-slate-700 mb-1">รหัสนิสิต / ประจำตัวประชาชน <span class="text-rose-500">*</span></label>
-            <input type="text" id="gateRegId" placeholder="เช่น 68xxxxxx33" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">รหัสนิสิต / ประจำตัวประชาชน <span class="text-rose-500">*</span></label>
+            <input type="text" id="gateRegId" placeholder="เช่น 68xxxxxx33" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-medium text-slate-700 mb-1">ชั้นปี</label>
-              <input type="text" id="gateRegYear" placeholder="เช่น 3" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ชั้นปี</label>
+              <input type="text" id="gateRegYear" placeholder="เช่น 3" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
             </div>
             <div>
-              <label class="block font-medium text-slate-700 mb-1">ฝ่ายที่สังกัด</label>
-              <input type="text" id="gateRegDept" placeholder="เช่น ฝ่ายพัสดุฯ" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ฝ่ายที่สังกัด</label>
+              <input type="text" id="gateRegDept" placeholder="เช่น ฝ่ายพัสดุฯ" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
             </div>
           </div>
 
           <div>
-            <label class="block font-medium text-slate-700 mb-1">ในนามโครงการ / ชมรม</label>
-            <input type="text" id="gateRegProject" placeholder="เช่น สโมสรนิสิตฯ, ค่ายเภสัชฯ" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ในนามโครงการ / ชมรม</label>
+            <input type="text" id="gateRegProject" placeholder="เช่น สโมสรนิสิตฯ, ค่ายเภสัชฯ" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-medium text-slate-700 mb-1">เบอร์โทรศัพท์ <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegPhone" placeholder="08xxxxxxxx" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">เบอร์โทรศัพท์ <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegPhone" placeholder="08xxxxxxxx" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
             </div>
             <div>
-              <label class="block font-medium text-slate-700 mb-1">ไอดีไลน์ <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegLine" placeholder="Line ID" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ไอดีไลน์ <span class="text-rose-500">*</span></label>
+              <input type="text" id="gateRegLine" placeholder="Line ID" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
             </div>
           </div>
 
@@ -195,6 +220,11 @@
             <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> โหลดข้อมูล...
           </span>
 
+          <!-- THEME TOGGLE BUTTON -->
+          <button id="themeToggleBtn" onclick="toggleTheme()" title="สลับโหมดมืด/สว่าง" class="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all flex items-center justify-center">
+            <i id="themeToggleIcon" class="fa-solid fa-moon text-sm text-emerald-200"></i>
+          </button>
+
           <button id="btnTrackRequests" onclick="showTrackingView()" class="hidden px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all">
             <i class="fa-solid fa-clock-rotate-left mr-1"></i> <span class="hidden sm:inline">ประวัติใบยืม</span>
           </button>
@@ -222,13 +252,13 @@
       
       <!-- STORE CATALOG -->
       <section id="storeView" class="space-y-4">
-        <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row gap-2.5 items-center">
+        <div class="bg-white dark:bg-[#12231b] p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-emerald-950/80 flex flex-col sm:flex-row gap-2.5 items-center transition-colors">
           <div class="relative w-full sm:flex-1">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ค้นหารหัสพัสดุ, ชื่ออุปกรณ์ หรือสี..." class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600" />
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ค้นหารหัสพัสดุ, ชื่ออุปกรณ์ หรือสี..." class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl focus:bg-white dark:focus:bg-[#12231b] focus:outline-none focus:border-emerald-600 text-slate-800 dark:text-slate-100" />
           </div>
           <div class="w-full sm:w-64 shrink-0">
-            <select id="categoryFilter" onchange="applyFilters()" class="w-full py-2 px-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium text-slate-700">
+            <select id="categoryFilter" onchange="applyFilters()" class="w-full py-2 px-3 text-xs sm:text-sm bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl focus:bg-white dark:focus:bg-[#12231b] focus:outline-none focus:border-emerald-600 font-medium text-slate-700 dark:text-slate-200">
               <option value="ALL">📦 หมวดหมู่ทั้งหมด</option>
             </select>
           </div>
@@ -239,11 +269,11 @@
 
       <!-- CART & BORROW FORM -->
       <section id="cartView" class="hidden space-y-4">
-        <div class="flex items-center justify-between border-b pb-3">
-          <h2 class="text-base sm:text-lg font-bold text-[#10231a] flex items-center gap-2">
-            <i class="fa-solid fa-cart-shopping text-emerald-700"></i> สรุปรายการพัสดุในตะกร้า
+        <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-3">
+          <h2 class="text-base sm:text-lg font-bold text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-2">
+            <i class="fa-solid fa-cart-shopping text-emerald-700 dark:text-emerald-400"></i> สรุปรายการพัสดุในตะกร้า
           </h2>
-          <button onclick="showStoreView()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600">
+          <button onclick="showStoreView()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300">
             <i class="fa-solid fa-arrow-left mr-1"></i> เลือกพัสดุเพิ่ม
           </button>
         </div>
@@ -253,23 +283,23 @@
             <div id="cartItemsList" class="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1 custom-scroll"></div>
           </div>
 
-          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3.5">
-            <h3 class="text-sm font-bold text-slate-800 border-b pb-2 flex items-center gap-1.5">
-              <i class="fa-solid fa-calendar-check text-[#183327]"></i> รายละเอียดการยืม
+          <div class="bg-white dark:bg-[#12231b] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm space-y-3.5 transition-colors">
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 border-b dark:border-emerald-900/40 pb-2 flex items-center gap-1.5">
+              <i class="fa-solid fa-calendar-check text-[#183327] dark:text-[#c5a880]"></i> รายละเอียดการยืม
             </h3>
 
             <div class="space-y-2.5 text-xs">
               <div>
-                <label class="block font-medium text-slate-700 mb-1">วันที่เริ่มยืม <span class="text-rose-500">*</span></label>
-                <input type="date" id="cartStartDate" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-medium" />
+                <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">วันที่เริ่มยืม <span class="text-rose-500">*</span></label>
+                <input type="date" id="cartStartDate" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-medium dark:text-slate-100" />
               </div>
               <div>
-                <label class="block font-medium text-slate-700 mb-1">วันที่กำหนดส่งคืน <span class="text-rose-500">*</span></label>
-                <input type="date" id="cartEndDate" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-medium" />
+                <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">วันที่กำหนดส่งคืน <span class="text-rose-500">*</span></label>
+                <input type="date" id="cartEndDate" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-medium dark:text-slate-100" />
               </div>
               <div>
-                <label class="block font-medium text-slate-700 mb-1">โครงการ / วัตถุประสงค์การใช้งาน <span class="text-rose-500">*</span></label>
-                <textarea id="cartUserNote" rows="2" placeholder="เช่น กิจกรรมค่ายเภสัชฯ..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs"></textarea>
+                <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">โครงการ / วัตถุประสงค์การใช้งาน <span class="text-rose-500">*</span></label>
+                <textarea id="cartUserNote" rows="2" placeholder="เช่น กิจกรรมค่ายเภสัชฯ..." class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs dark:text-slate-100"></textarea>
               </div>
             </div>
 
@@ -282,11 +312,11 @@
 
       <!-- TRACKING VIEW -->
       <section id="trackingView" class="hidden space-y-4">
-        <div class="flex items-center justify-between border-b pb-3">
-          <h2 class="text-base sm:text-lg font-bold text-[#10231a] flex items-center gap-2">
-            <i class="fa-solid fa-clipboard-list text-emerald-700"></i> ประวัติและสถานะใบยืมของคุณ
+        <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-3">
+          <h2 class="text-base sm:text-lg font-bold text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-list text-emerald-700 dark:text-emerald-400"></i> ประวัติและสถานะใบยืมของคุณ
           </h2>
-          <button onclick="showStoreView()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600">
+          <button onclick="showStoreView()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300">
             <i class="fa-solid fa-arrow-left mr-1"></i> หน้ารายการพัสดุ
           </button>
         </div>
@@ -295,15 +325,15 @@
 
       <!-- ADMIN DASHBOARD -->
       <section id="adminView" class="hidden space-y-4">
-        <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
+        <div class="bg-white dark:bg-[#12231b] p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between transition-colors">
           <div class="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
-            <button id="adminTabBorrow" onclick="switchAdminMode('BORROW')" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] text-white shadow-sm transition-all">
+            <button id="adminTabBorrow" onclick="switchAdminMode('BORROW')" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] dark:bg-emerald-900/70 text-white shadow-sm transition-all">
               คำขอยืมรอตรวจ <span id="adminPendingBadge" class="ml-1 px-1.5 py-0.2 bg-amber-400 text-slate-900 rounded-full text-[10px]">0</span>
             </button>
-            <button id="adminTabReturn" onclick="switchAdminMode('RETURN')" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">
+            <button id="adminTabReturn" onclick="switchAdminMode('RETURN')" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
               พัสดุอยู่ระหว่างยืม <span id="adminActiveBadge" class="ml-1 px-1.5 py-0.2 bg-emerald-600 text-white rounded-full text-[10px]">0</span>
             </button>
-            <button onclick="openLogoSettingModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f4ece1] hover:bg-[#ebdcc8] text-[#715329] border border-[#c5a880]/40 transition-all">
+            <button onclick="openLogoSettingModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f4ece1] dark:bg-amber-950/30 hover:bg-[#ebdcc8] dark:hover:bg-amber-900/40 text-[#715329] dark:text-[#e4cfb2] border border-[#c5a880]/40 transition-all">
               <i class="fa-solid fa-award mr-1"></i> ตราสโมสร
             </button>
             <button onclick="openAddEquipmentModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-700 to-emerald-800 text-white shadow-sm transition-all">
@@ -314,9 +344,9 @@
           <div class="flex items-center gap-2 w-full md:w-auto">
             <div class="relative flex-1 md:w-56">
               <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-              <input type="text" id="adminSearchInput" oninput="filterAdminCards()" placeholder="ค้นหาเลขบิล, ชื่อ หรือโครงการ..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border rounded-xl font-medium" />
+              <input type="text" id="adminSearchInput" oninput="filterAdminCards()" placeholder="ค้นหาเลขบิล, ชื่อ หรือโครงการ..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl font-medium dark:text-slate-100" />
             </div>
-            <button onclick="loadAdminData()" title="รีเฟรช" class="p-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
+            <button onclick="loadAdminData()" title="รีเฟรช" class="p-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold">
               <i class="fa-solid fa-rotate-right"></i>
             </button>
           </div>
@@ -329,62 +359,62 @@
   </div>
 
   <!-- MODAL: ITEM DETAIL (WITH ADMIN EDIT BUTTON) -->
-  <dialog id="itemDetailModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-lg w-[94vw] border border-slate-100">
-    <div class="p-4 sm:p-5 space-y-4 bg-white rounded-3xl">
-      <div class="flex items-center justify-between border-b pb-2.5">
-        <h3 class="font-bold text-sm sm:text-base text-[#10231a] flex items-center gap-1.5">
+  <dialog id="itemDetailModal" class="p-0 backdrop:bg-slate-900/75 rounded-3xl shadow-2xl max-w-lg w-[94vw] border border-slate-100 dark:border-emerald-900/60">
+    <div class="p-4 sm:p-5 space-y-4 bg-white dark:bg-[#12231b] rounded-3xl text-slate-800 dark:text-slate-100">
+      <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-2.5">
+        <h3 class="font-bold text-sm sm:text-base text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-1.5">
           <i class="fa-solid fa-circle-info text-[#c5a880]"></i> คุณลักษณะและสถานะพัสดุ
         </h3>
-        <button onclick="itemDetailModal.close()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
+        <button onclick="itemDetailModal.close()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold">✕</button>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-        <div class="w-full h-44 rounded-2xl bg-slate-50 border overflow-hidden flex items-center justify-center p-2 relative">
+        <div class="w-full h-44 rounded-2xl bg-slate-50 dark:bg-[#0a1510] border dark:border-emerald-900/50 overflow-hidden flex items-center justify-center p-2 relative">
           <img id="detailImg" src="" alt="พัสดุ" class="w-full h-full object-contain" />
         </div>
         <div class="space-y-1.5 self-center">
-          <h4 id="detailTitle" class="font-bold text-sm text-slate-800"></h4>
+          <h4 id="detailTitle" class="font-bold text-sm text-slate-800 dark:text-slate-100"></h4>
           <p id="detailId" class="text-slate-400 font-mono text-[11px]"></p>
-          <div class="pt-1 space-y-1 text-slate-600">
+          <div class="pt-1 space-y-1 text-slate-600 dark:text-slate-300">
             <p><b>🏷️ หมวดหมู่:</b> <span id="detailCategory">-</span></p>
             <p><b>🎨 สี/ลาย:</b> <span id="detailColor">-</span></p>
             <p><b>📏 ขนาด:</b> <span id="detailSize">-</span></p>
             <p><b>📦 ทั้งหมด:</b> <span id="detailTotal">-</span></p>
-            <p class="text-emerald-700 font-semibold"><b>🟢 พร้อมยืม:</b> <span id="detailStock">-</span></p>
-            <p class="text-amber-700 font-semibold"><b>🟠 ติดยืมอยู่:</b> <span id="detailBorrowed">-</span></p>
+            <p class="text-emerald-700 dark:text-emerald-400 font-semibold"><b>🟢 พร้อมยืม:</b> <span id="detailStock">-</span></p>
+            <p class="text-amber-700 dark:text-amber-400 font-semibold"><b>🟠 ติดยืมอยู่:</b> <span id="detailBorrowed">-</span></p>
           </div>
         </div>
       </div>
 
-      <div class="border-t pt-3 space-y-2">
-        <h5 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+      <div class="border-t dark:border-emerald-900/40 pt-3 space-y-2">
+        <h5 class="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
           <i class="fa-solid fa-users text-emerald-600"></i> ผู้ที่กำลังยืมอุปกรณ์นี้ขณะนี้
         </h5>
         <div id="borrowerListContainer" class="max-h-32 overflow-y-auto space-y-1.5 custom-scroll text-xs"></div>
       </div>
 
-      <div class="border-t pt-2.5 flex items-center justify-between">
-        <button id="btnAdminEditEquip" onclick="triggerEditFromDetail()" class="hidden px-3.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-300 text-xs flex items-center gap-1.5">
+      <div class="border-t dark:border-emerald-900/40 pt-2.5 flex items-center justify-between">
+        <button id="btnAdminEditEquip" onclick="triggerEditFromDetail()" class="hidden px-3.5 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 text-amber-800 dark:text-amber-300 font-bold border border-amber-300 dark:border-amber-700 text-xs flex items-center gap-1.5">
           <i class="fa-solid fa-pen-to-square"></i> <span>แก้ไขข้อมูลพัสดุนี้</span>
         </button>
-        <button onclick="itemDetailModal.close()" class="ml-auto px-4 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-medium">ปิด</button>
+        <button onclick="itemDetailModal.close()" class="ml-auto px-4 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium">ปิด</button>
       </div>
     </div>
   </dialog>
 
   <!-- MODAL: ADD / EDIT EQUIPMENT -->
-  <dialog id="addEquipmentModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-xl w-[95vw] border border-slate-100">
-    <div class="p-4 sm:p-6 space-y-4 bg-white rounded-3xl max-h-[92vh] flex flex-col justify-between">
-      <div class="flex items-center justify-between border-b pb-3 shrink-0">
-        <h3 id="equipModalTitle" class="font-bold text-sm sm:text-base text-[#10231a] flex items-center gap-2">
+  <dialog id="addEquipmentModal" class="p-0 backdrop:bg-slate-900/75 rounded-3xl shadow-2xl max-w-xl w-[95vw] border border-slate-100 dark:border-emerald-900/60">
+    <div class="p-4 sm:p-6 space-y-4 bg-white dark:bg-[#12231b] rounded-3xl max-h-[92vh] flex flex-col justify-between text-slate-800 dark:text-slate-100">
+      <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-3 shrink-0">
+        <h3 id="equipModalTitle" class="font-bold text-sm sm:text-base text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-2">
           <i class="fa-solid fa-box-open text-[#c5a880]"></i> <span>เพิ่มรายการพัสดุใหม่เข้าคลัง</span>
         </h3>
-        <button onclick="closeAddEquipmentModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
+        <button onclick="closeAddEquipmentModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold">✕</button>
       </div>
 
       <div class="flex-1 overflow-y-auto space-y-3.5 custom-scroll pr-1 text-xs">
-        <div class="bg-slate-50 p-3.5 rounded-2xl border border-dashed border-slate-300 space-y-3">
-          <label class="block font-semibold text-slate-700">รูปถ่ายพัสดุ / อุปกรณ์</label>
+        <div class="bg-slate-50 dark:bg-[#0a1510] p-3.5 rounded-2xl border border-dashed border-slate-300 dark:border-emerald-900/50 space-y-3">
+          <label class="block font-semibold text-slate-700 dark:text-slate-300">รูปถ่ายพัสดุ / อุปกรณ์</label>
           
           <div id="cameraLiveWrapper" class="hidden relative rounded-xl overflow-hidden bg-black aspect-[4/3] max-h-56 mx-auto">
             <video id="cameraVideo" autoplay playsinline class="w-full h-full object-cover"></video>
@@ -394,20 +424,20 @@
           </div>
 
           <div id="photoPreviewWrapper" class="flex items-center gap-3">
-            <div class="w-20 h-20 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 p-1 relative">
+            <div class="w-20 h-20 rounded-xl bg-white dark:bg-[#12231b] border border-slate-200 dark:border-emerald-900/60 overflow-hidden flex items-center justify-center shrink-0 p-1 relative">
               <img id="newEquipPhotoPreview" src="" alt="ตัวอย่างรูป" class="w-full h-full object-cover rounded-lg hidden" />
-              <i id="newEquipPhotoFallback" class="fa-solid fa-image text-3xl text-slate-300"></i>
+              <i id="newEquipPhotoFallback" class="fa-solid fa-image text-3xl text-slate-300 dark:text-slate-600"></i>
             </div>
             <div class="space-y-1.5 flex-1">
               <div class="flex flex-wrap gap-2">
-                <label class="cursor-pointer px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 flex items-center gap-1">
+                <label class="cursor-pointer px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800 flex items-center gap-1">
                   <i class="fa-solid fa-camera"></i> ถ่ายรูป/เลือกภาพ
                   <input type="file" id="cameraFileInput" accept="image/*" capture="environment" onchange="handleEquipPhotoFile(event)" class="hidden" />
                 </label>
-                <button type="button" id="btnToggleWebcam" onclick="toggleWebcam()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold border">
+                <button type="button" id="btnToggleWebcam" onclick="toggleWebcam()" class="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold border dark:border-emerald-900/50">
                   <i class="fa-solid fa-video mr-1"></i> เปิดกล้องสด
                 </button>
-                <button type="button" id="btnRemovePhoto" onclick="removeEquipPhoto()" class="hidden px-2.5 py-1.5 rounded-xl text-rose-600 hover:bg-rose-50 font-medium">ล้างรูป</button>
+                <button type="button" id="btnRemovePhoto" onclick="removeEquipPhoto()" class="hidden px-2.5 py-1.5 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 font-medium">ล้างรูป</button>
               </div>
               <p class="text-[10px] text-slate-400">รูปภาพจะถูกบีบอัดและอัปโหลดเข้าคลัง Google Drive ของสโมสร</p>
             </div>
@@ -417,47 +447,47 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">รหัสพัสดุ <span class="text-rose-500">*</span></label>
-            <input type="text" id="newEquipId" placeholder="เช่น EQ-015" class="w-full p-2 bg-slate-50 border rounded-xl font-mono text-xs" />
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">รหัสพัสดุ <span class="text-rose-500">*</span></label>
+            <input type="text" id="newEquipId" placeholder="เช่น EQ-015" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl font-mono text-xs text-slate-800 dark:text-slate-100" />
           </div>
           <div class="sm:col-span-2">
-            <label class="block font-semibold text-slate-700 mb-1">ชื่อรายการพัสดุ <span class="text-rose-500">*</span></label>
-            <input type="text" id="newEquipName" placeholder="เช่น ไมโครโฟนไร้สาย..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-medium" />
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ชื่อรายการพัสดุ <span class="text-rose-500">*</span></label>
+            <input type="text" id="newEquipName" placeholder="เช่น ไมโครโฟนไร้สาย..." class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-medium text-slate-800 dark:text-slate-100" />
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">หมวดหมู่ <span class="text-rose-500">*</span></label>
-            <select id="newEquipCategorySelect" onchange="handleCategorySelectChange(this.value)" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-medium"></select>
-            <input type="text" id="newEquipCustomCategory" placeholder="พิมพ์ชื่อหมวดหมู่ใหม่..." class="hidden w-full p-2 bg-amber-50/60 border border-amber-200 rounded-xl text-xs mt-1.5" />
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">หมวดหมู่ <span class="text-rose-500">*</span></label>
+            <select id="newEquipCategorySelect" onchange="handleCategorySelectChange(this.value)" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-medium text-slate-800 dark:text-slate-100"></select>
+            <input type="text" id="newEquipCustomCategory" placeholder="พิมพ์ชื่อหมวดหมู่ใหม่..." class="hidden w-full p-2 bg-amber-50/60 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl text-xs mt-1.5 text-slate-800 dark:text-slate-100" />
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">จำนวนทั้งหมด <span class="text-rose-500">*</span></label>
-              <input type="number" id="newEquipTotalQty" min="1" value="1" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-bold text-center text-emerald-800" />
+              <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">จำนวนทั้งหมด <span class="text-rose-500">*</span></label>
+              <input type="number" id="newEquipTotalQty" min="1" value="1" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-bold text-center text-emerald-800 dark:text-emerald-300" />
             </div>
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">หน่วยนับ</label>
-              <input type="text" id="newEquipUnit" value="ชิ้น" class="w-full p-2 bg-slate-50 border rounded-xl text-xs text-center" />
+              <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">หน่วยนับ</label>
+              <input type="text" id="newEquipUnit" value="ชิ้น" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs text-center text-slate-800 dark:text-slate-100" />
             </div>
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2.5">
           <div>
-            <label class="block font-medium text-slate-700 mb-1">สี / ลวดลาย</label>
-            <input type="text" id="newEquipColor" placeholder="เช่น ดำ..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs" />
+            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">สี / ลวดลาย</label>
+            <input type="text" id="newEquipColor" placeholder="เช่น ดำ..." class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs text-slate-800 dark:text-slate-100" />
           </div>
           <div>
-            <label class="block font-medium text-slate-700 mb-1">ขนาด / สเปก</label>
-            <input type="text" id="newEquipSize" placeholder="เช่น 10 เมตร..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs" />
+            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ขนาด / สเปก</label>
+            <input type="text" id="newEquipSize" placeholder="เช่น 10 เมตร..." class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs text-slate-800 dark:text-slate-100" />
           </div>
         </div>
       </div>
 
-      <div class="border-t pt-3 flex items-center justify-end gap-2 shrink-0">
-        <button type="button" onclick="closeAddEquipmentModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs">ยกเลิก</button>
+      <div class="border-t dark:border-emerald-900/40 pt-3 flex items-center justify-end gap-2 shrink-0">
+        <button type="button" onclick="closeAddEquipmentModal()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-xs">ยกเลิก</button>
         <button type="button" id="btnSaveNewEquipment" onclick="saveEquipmentData()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-[#10231a] to-[#204434] hover:brightness-110 text-white font-bold text-xs shadow-md flex items-center gap-1.5">
           <i class="fa-solid fa-cloud-arrow-up"></i> <span id="btnSaveEquipText">บันทึกพัสดุเข้าคลัง</span>
         </button>
@@ -466,61 +496,61 @@
   </dialog>
 
   <!-- MODAL: ADMIN BILL DETAIL -->
-  <dialog id="billManageModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-3xl w-[95vw] border border-slate-100">
-    <div class="p-4 sm:p-6 space-y-4 bg-white rounded-3xl max-h-[90vh] flex flex-col justify-between">
-      <div class="flex items-center justify-between border-b pb-3 shrink-0">
+  <dialog id="billManageModal" class="p-0 backdrop:bg-slate-900/75 rounded-3xl shadow-2xl max-w-3xl w-[95vw] border border-slate-100 dark:border-emerald-900/60">
+    <div class="p-4 sm:p-6 space-y-4 bg-white dark:bg-[#12231b] rounded-3xl max-h-[90vh] flex flex-col justify-between text-slate-800 dark:text-slate-100">
+      <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-3 shrink-0">
         <div>
           <div class="flex items-center gap-2">
-            <span id="billManageBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">รอดำเนินการ</span>
-            <h3 id="billManageTitle" class="font-bold text-sm sm:text-base text-[#10231a]"></h3>
+            <span id="billManageBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">รอดำเนินการ</span>
+            <h3 id="billManageTitle" class="font-bold text-sm sm:text-base text-[#10231a] dark:text-[#f0e4cf]"></h3>
           </div>
           <p id="billManageSub" class="text-[11px] text-slate-400 font-mono mt-0.5"></p>
         </div>
-        <button onclick="billManageModal.close()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
+        <button onclick="billManageModal.close()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold">✕</button>
       </div>
 
-      <div id="billManageMeta" class="bg-slate-50 p-3 rounded-2xl text-xs text-slate-600 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shrink-0 border border-slate-100"></div>
+      <div id="billManageMeta" class="bg-slate-50 dark:bg-[#0a1510] p-3 rounded-2xl text-xs text-slate-600 dark:text-slate-300 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shrink-0 border border-slate-100 dark:border-emerald-950/80"></div>
       <div class="flex-1 overflow-y-auto space-y-2.5 custom-scroll py-1 pr-1" id="billManageItemsContainer"></div>
-      <div id="billManageFooter" class="border-t pt-3 shrink-0 flex flex-col sm:flex-row gap-2 items-center justify-between"></div>
+      <div id="billManageFooter" class="border-t dark:border-emerald-900/40 pt-3 shrink-0 flex flex-col sm:flex-row gap-2 items-center justify-between"></div>
     </div>
   </dialog>
 
   <!-- MODAL: BRANDING / LOGO CONFIG -->
-  <dialog id="logoModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-md w-[94vw] border border-slate-100">
-    <div class="p-5 space-y-4 bg-white rounded-3xl">
-      <div class="flex items-center justify-between border-b pb-2.5">
-        <h3 class="font-bold text-sm sm:text-base text-[#10231a] flex items-center gap-1.5">
+  <dialog id="logoModal" class="p-0 backdrop:bg-slate-900/75 rounded-3xl shadow-2xl max-w-md w-[94vw] border border-slate-100 dark:border-emerald-900/60">
+    <div class="p-5 space-y-4 bg-white dark:bg-[#12231b] rounded-3xl text-slate-800 dark:text-slate-100">
+      <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-2.5">
+        <h3 class="font-bold text-sm sm:text-base text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-1.5">
           <i class="fa-solid fa-award text-[#c5a880]"></i> ตั้งค่าตราสัญลักษณ์สโมสร
         </h3>
-        <button onclick="logoModal.close()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
+        <button onclick="logoModal.close()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold">✕</button>
       </div>
 
       <div class="space-y-3 text-xs">
-        <div class="flex flex-col items-center justify-center p-4 bg-slate-50 border border-dashed rounded-2xl">
-          <div class="w-20 h-20 rounded-2xl bg-white border shadow-sm p-1.5 flex items-center justify-center overflow-hidden mb-2 relative">
+        <div class="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-[#0a1510] border border-dashed dark:border-emerald-900/50 rounded-2xl">
+          <div class="w-20 h-20 rounded-2xl bg-white dark:bg-[#12231b] border dark:border-emerald-900/60 shadow-sm p-1.5 flex items-center justify-center overflow-hidden mb-2 relative">
             <img id="logoModalPreview" src="" alt="ตัวอย่างตราสโมสร" class="w-full h-full object-contain hidden" />
-            <i id="logoModalFallback" class="fa-solid fa-image text-3xl text-slate-300"></i>
+            <i id="logoModalFallback" class="fa-solid fa-image text-3xl text-slate-300 dark:text-slate-600"></i>
           </div>
           <p class="text-[11px] text-slate-400">ใช้แสดงในระบบและหัวกระดาษพิมพ์ใบยืมพัสดุ</p>
         </div>
 
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">ลิงก์ URL รูปภาพ (Direct Link หรือ Google Drive)</label>
-          <input type="text" id="logoUrlInput" oninput="previewLogoFromUrl(this.value)" placeholder="https://..." class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs" />
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ลิงก์ URL รูปภาพ (Direct Link หรือ Google Drive)</label>
+          <input type="text" id="logoUrlInput" oninput="previewLogoFromUrl(this.value)" placeholder="https://..." class="w-full p-2.5 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs text-slate-800 dark:text-slate-100" />
         </div>
 
         <div class="text-center font-bold text-slate-400 text-[11px]">หรืออัปโหลดไฟล์</div>
 
         <div>
-          <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoFileUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-emerald-50 file:text-emerald-800" />
+          <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoFileUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-emerald-50 dark:file:bg-emerald-950/60 file:text-emerald-800 dark:file:text-emerald-300" />
         </div>
       </div>
 
-      <div class="border-t pt-3 flex items-center justify-between gap-2">
-        <button onclick="resetToDefaultLogo()" class="px-3 py-2 rounded-xl text-xs font-medium text-rose-600 hover:bg-rose-50">ล้างค่าเริ่มต้น</button>
+      <div class="border-t dark:border-emerald-900/40 pt-3 flex items-center justify-between gap-2">
+        <button onclick="resetToDefaultLogo()" class="px-3 py-2 rounded-xl text-xs font-medium text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40">ล้างค่าเริ่มต้น</button>
         <div class="flex items-center gap-2">
-          <button onclick="logoModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold">ยกเลิก</button>
-          <button onclick="saveLogoSettings()" class="px-5 py-2 rounded-xl bg-emerald-800 text-white font-bold text-xs shadow-md">บันทึก</button>
+          <button onclick="logoModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold">ยกเลิก</button>
+          <button onclick="saveLogoSettings()" class="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">บันทึก</button>
         </div>
       </div>
     </div>
@@ -537,6 +567,37 @@
   <!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw9DjdFBpgcobqpR_uzGNeLHgImVHDYImXyuhkWALACLWHxqlMtVXRo_a0BpsQnnP3Q/exec";
+
+    // --- DARK MODE LOGIC ---
+    function initTheme() {
+      var saved = localStorage.getItem('smo_rx_theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = saved === 'dark' || (!saved && prefersDark);
+      applyTheme(isDark);
+    }
+
+    function applyTheme(isDark) {
+      var html = document.documentElement;
+      var icon = document.getElementById('themeToggleIcon');
+      if (isDark) {
+        html.classList.add('dark');
+        localStorage.setItem('smo_rx_theme', 'dark');
+        if (icon) {
+          icon.className = 'fa-solid fa-sun text-amber-300 text-sm';
+        }
+      } else {
+        html.classList.remove('dark');
+        localStorage.setItem('smo_rx_theme', 'light');
+        if (icon) {
+          icon.className = 'fa-solid fa-moon text-emerald-200 text-sm';
+        }
+      }
+    }
+
+    function toggleTheme() {
+      var isDark = document.documentElement.classList.contains('dark');
+      applyTheme(!isDark);
+    }
 
     window.google = {
       script: {
@@ -600,6 +661,7 @@
     var currentFocusedDetailId = null;
 
     window.addEventListener('DOMContentLoaded', function() {
+      initTheme();
       currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=9';
       renderClubLogo(currentClubLogo);
 
@@ -714,13 +776,13 @@
       var formReg = document.getElementById('gateRegisterForm');
 
       if (mode === 'LOGIN') {
-        tabLogin.className = 'flex-1 py-2 rounded-xl bg-white shadow-sm text-[#183327] font-bold transition-all';
-        tabReg.className = 'flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-medium transition-all';
+        tabLogin.className = 'flex-1 py-2 rounded-xl bg-white dark:bg-[#1b3327] shadow-sm text-[#183327] dark:text-[#f2e6d0] font-bold transition-all';
+        tabReg.className = 'flex-1 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-all';
         formLogin.classList.remove('hidden');
         formReg.classList.add('hidden');
       } else {
-        tabReg.className = 'flex-1 py-2 rounded-xl bg-white shadow-sm text-[#183327] font-bold transition-all';
-        tabLogin.className = 'flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-medium transition-all';
+        tabReg.className = 'flex-1 py-2 rounded-xl bg-white dark:bg-[#1b3327] shadow-sm text-[#183327] dark:text-[#f2e6d0] font-bold transition-all';
+        tabLogin.className = 'flex-1 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-all';
         formReg.classList.remove('hidden');
         formLogin.classList.add('hidden');
       }
@@ -936,25 +998,25 @@
         var img = cleanDriveUrl(item['รูปภาพ']) || 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
         var cartItem = cart.find(function(c) { return c.id === id; });
 
-        var badgeClass = inStock > 0 ? 'bg-emerald-600 text-white' : 'bg-slate-300 text-slate-600';
+        var badgeClass = inStock > 0 ? 'bg-emerald-600 text-white' : 'bg-slate-300 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
         var badgeText = inStock > 0 ? 'เหลือ ' + inStock : 'หมด';
 
         var card = document.createElement('div');
         card.id = 'card-' + id;
-        card.className = 'bg-white rounded-2xl p-2.5 sm:p-3 border border-slate-200/90 shadow-sm flex flex-col justify-between hover:shadow-md transition-all relative ' + (cartItem ? 'ring-2 ring-emerald-600' : '');
+        card.className = 'bg-white dark:bg-[#12231b] rounded-2xl p-2.5 sm:p-3 border border-slate-200/90 dark:border-emerald-950/80 shadow-sm flex flex-col justify-between hover:shadow-md transition-all relative ' + (cartItem ? 'ring-2 ring-emerald-600' : '');
 
         card.innerHTML = 
           '<div class="cursor-pointer" onclick="openItemDetails(\'' + id + '\')">' +
-            '<div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-50 mb-2 relative border border-slate-100 flex items-center justify-center p-1">' +
+            '<div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-50 dark:bg-[#0a1510] mb-2 relative border border-slate-100 dark:border-emerald-950 flex items-center justify-center p-1">' +
               '<img src="' + img + '" alt="' + name + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-full h-full object-cover rounded-lg" />' +
               '<span class="text-[9px] font-bold px-2 py-0.5 rounded-md absolute top-1.5 right-1.5 shadow-sm ' + badgeClass + '">' + badgeText + '</span>' +
             '</div>' +
             '<div class="space-y-0.5 text-left">' +
-              '<h3 class="font-bold text-xs sm:text-sm text-slate-800 truncate" title="' + name + '">' + name + '</h3>' +
+              '<h3 class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 truncate" title="' + name + '">' + name + '</h3>' +
               '<p class="text-[10px] text-slate-400 font-mono">ID: ' + id + '</p>' +
             '</div>' +
           '</div>' +
-          '<div id="cardAction-' + id + '" class="mt-2.5 pt-1 border-t border-slate-100">' +
+          '<div id="cardAction-' + id + '" class="mt-2.5 pt-1 border-t border-slate-100 dark:border-emerald-900/40">' +
             renderCardButtonHtml(id, inStock, cartItem) +
           '</div>';
 
@@ -964,13 +1026,13 @@
 
     function renderCardButtonHtml(id, inStock, cartItem) {
       if (inStock <= 0) {
-        return '<button disabled class="w-full py-1.5 rounded-lg bg-slate-100 text-slate-400 text-[11px] font-medium">ของหมด</button>';
+        return '<button disabled class="w-full py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 text-[11px] font-medium">ของหมด</button>';
       }
       if (cartItem) {
-        return '<div class="flex items-center justify-between bg-emerald-50 rounded-lg p-0.5 border border-emerald-200">' +
-          '<button onclick="changeCartQty(\'' + id + '\', -1)" class="w-7 h-6 rounded bg-white text-emerald-800 font-bold hover:bg-emerald-600 hover:text-white transition-colors text-xs">-</button>' +
-          '<span class="font-bold text-emerald-800 text-xs">' + cartItem.qty + '</span>' +
-          '<button onclick="changeCartQty(\'' + id + '\', 1)" class="w-7 h-6 rounded bg-white text-emerald-800 font-bold hover:bg-emerald-600 hover:text-white transition-colors text-xs">+</button>' +
+        return '<div class="flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/40 rounded-lg p-0.5 border border-emerald-200 dark:border-emerald-800">' +
+          '<button onclick="changeCartQty(\'' + id + '\', -1)" class="w-7 h-6 rounded bg-white dark:bg-[#12231b] text-emerald-800 dark:text-emerald-300 font-bold hover:bg-emerald-600 hover:text-white transition-colors text-xs">-</button>' +
+          '<span class="font-bold text-emerald-800 dark:text-emerald-300 text-xs">' + cartItem.qty + '</span>' +
+          '<button onclick="changeCartQty(\'' + id + '\', 1)" class="w-7 h-6 rounded bg-white dark:bg-[#12231b] text-emerald-800 dark:text-emerald-300 font-bold hover:bg-emerald-600 hover:text-white transition-colors text-xs">+</button>' +
         '</div>';
       }
       return '<button onclick="addToCart(\'' + id + '\')" class="w-full py-1.5 rounded-lg bg-gradient-to-r from-[#10231a] to-[#204434] hover:brightness-110 text-white font-semibold text-[11px] shadow-sm transition-all">' +
@@ -1066,30 +1128,30 @@
 
       if (cart.length === 0) {
         list.innerHTML = 
-          '<div class="bg-white p-8 rounded-2xl border border-slate-200 text-center space-y-2">' +
-            '<i class="fa-solid fa-cart-arrow-down text-3xl text-slate-300"></i>' +
-            '<p class="text-xs text-slate-500 font-medium">ยังไม่มีรายการพัสดุในตะกร้าของคุณ</p>' +
-            '<button onclick="showStoreView()" class="mt-2 text-xs font-bold text-emerald-700 hover:underline">← กลับไปเลือกพัสดุ</button>' +
+          '<div class="bg-white dark:bg-[#12231b] p-8 rounded-2xl border border-slate-200 dark:border-emerald-950/80 text-center space-y-2">' +
+            '<i class="fa-solid fa-cart-arrow-down text-3xl text-slate-300 dark:text-slate-600"></i>' +
+            '<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">ยังไม่มีรายการพัสดุในตะกร้าของคุณ</p>' +
+            '<button onclick="showStoreView()" class="mt-2 text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline">← กลับไปเลือกพัสดุ</button>' +
           '</div>';
         return;
       }
 
       cart.forEach(function(item) {
         var row = document.createElement('div');
-        row.className = 'bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between gap-3 text-xs';
+        row.className = 'bg-white dark:bg-[#12231b] p-3 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm flex items-center justify-between gap-3 text-xs';
         row.innerHTML = 
           '<div class="flex items-center gap-3 min-w-0">' +
-            '<img src="' + item.img + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-12 h-12 rounded-xl object-cover border shrink-0 bg-slate-50" />' +
+            '<img src="' + item.img + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-12 h-12 rounded-xl object-cover border dark:border-emerald-900/40 shrink-0 bg-slate-50 dark:bg-[#0a1510]" />' +
             '<div class="truncate">' +
-              '<h4 class="font-bold text-slate-800 truncate">' + item.name + '</h4>' +
+              '<h4 class="font-bold text-slate-800 dark:text-slate-100 truncate">' + item.name + '</h4>' +
               '<p class="text-[10px] text-slate-400 font-mono">ID: ' + item.id + '</p>' +
             '</div>' +
           '</div>' +
           '<div class="flex items-center gap-2 shrink-0">' +
-            '<div class="flex items-center bg-slate-50 rounded-lg border px-1">' +
-              '<button onclick="changeCartQty(\'' + item.id + '\', -1)" class="w-6 h-6 text-slate-600 font-bold hover:text-emerald-700">-</button>' +
-              '<span class="w-8 text-center font-bold text-slate-800">' + item.qty + '</span>' +
-              '<button onclick="changeCartQty(\'' + item.id + '\', 1)" class="w-6 h-6 text-slate-600 font-bold hover:text-emerald-700">+</button>' +
+            '<div class="flex items-center bg-slate-50 dark:bg-[#0a1510] rounded-lg border dark:border-emerald-900/40 px-1">' +
+              '<button onclick="changeCartQty(\'' + item.id + '\', -1)" class="w-6 h-6 text-slate-600 dark:text-slate-300 font-bold hover:text-emerald-700 dark:hover:text-emerald-400">-</button>' +
+              '<span class="w-8 text-center font-bold text-slate-800 dark:text-slate-100">' + item.qty + '</span>' +
+              '<button onclick="changeCartQty(\'' + item.id + '\', 1)" class="w-6 h-6 text-slate-600 dark:text-slate-300 font-bold hover:text-emerald-700 dark:hover:text-emerald-400">+</button>' +
             '</div>' +
             '<button onclick="changeCartQty(\'' + item.id + '\', -999)" class="text-slate-300 hover:text-rose-600 p-1.5"><i class="fa-solid fa-trash-can"></i></button>' +
           '</div>';
@@ -1164,9 +1226,9 @@
 
       if (!requests || requests.length === 0) {
         container.innerHTML = 
-          '<div class="col-span-full bg-white p-8 rounded-3xl border text-center space-y-2 max-w-sm mx-auto">' +
-            '<i class="fa-solid fa-receipt text-3xl text-slate-300"></i>' +
-            '<h4 class="font-bold text-xs text-slate-700">ไม่มีประวัติคำขอยืมในระบบ</h4>' +
+          '<div class="col-span-full bg-white dark:bg-[#12231b] p-8 rounded-3xl border dark:border-emerald-950/80 text-center space-y-2 max-w-sm mx-auto">' +
+            '<i class="fa-solid fa-receipt text-3xl text-slate-300 dark:text-slate-600"></i>' +
+            '<h4 class="font-bold text-xs text-slate-700 dark:text-slate-200">ไม่มีประวัติคำขอยืมในระบบ</h4>' +
             '<p class="text-[11px] text-slate-400">เมื่อคุณส่งคำขอยืม รายการจะแสดงขึ้นที่นี่</p>' +
           '</div>';
         return;
@@ -1190,7 +1252,7 @@
       Object.keys(groups).forEach(function(tx) {
         var bill = groups[tx];
         var card = document.createElement('div');
-        card.className = 'bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3 text-xs';
+        card.className = 'bg-white dark:bg-[#12231b] p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm space-y-3 text-xs';
 
         var itemsHtml = bill.items.map(function(item) {
           var st = item.Status || 'รอดำเนินการ';
@@ -1198,13 +1260,19 @@
           var isApproved = !isRejected && st.indexOf('อนุมัติ') !== -1;
           var isReturned = st.indexOf('คืน') !== -1;
 
-          var stColor = isApproved ? 'bg-emerald-100 text-emerald-800' : (isReturned ? 'bg-blue-100 text-blue-800' : (isRejected ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'));
-          var commentHtml = item.AdminComment ? '<p class="text-[10px] text-slate-500 mt-0.5"><b>ความเห็น:</b> ' + item.AdminComment + '</p>' : '';
+          var stColor = isApproved 
+            ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300' 
+            : (isReturned 
+              ? 'bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300' 
+              : (isRejected 
+                ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-300' 
+                : 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300'));
+          var commentHtml = item.AdminComment ? '<p class="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5"><b>ความเห็น:</b> ' + item.AdminComment + '</p>' : '';
           
-          return '<div class="py-1.5 border-b border-slate-50 last:border-none">' +
+          return '<div class="py-1.5 border-b border-slate-50 dark:border-emerald-900/30 last:border-none">' +
             '<div class="flex items-center justify-between">' +
               '<div class="truncate pr-2">' +
-                '<span class="font-semibold text-slate-700 truncate block">' + item.EquipmentName + '</span>' +
+                '<span class="font-semibold text-slate-700 dark:text-slate-200 truncate block">' + item.EquipmentName + '</span>' +
                 '<span class="text-[10px] text-slate-400 font-mono">จำนวน: ' + item.Quantity + ' ' + item.EquipmentUnit + '</span>' +
               '</div>' +
               '<span class="text-[9px] px-2 py-0.5 rounded-full font-bold ' + stColor + ' shrink-0">' + st + '</span>' +
@@ -1214,19 +1282,19 @@
         }).join('');
 
         card.innerHTML = 
-          '<div class="flex items-center justify-between border-b pb-2">' +
+          '<div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-2">' +
             '<div>' +
-              '<h4 class="font-bold text-sm text-[#10231a] flex items-center gap-1.5">' +
+              '<h4 class="font-bold text-sm text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-1.5">' +
                 '<i class="fa-solid fa-folder-closed text-[#c5a880]"></i> โครงการ: ' + bill.project +
               '</h4>' +
               '<p class="text-[10px] text-slate-400 font-mono mt-0.5">เลขที่บิล: ' + bill.txId + '</p>' +
             '</div>' +
-            '<button onclick="printA4Receipt(\'' + bill.txId + '\')" class="p-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition-colors">' +
+            '<button onclick="printA4Receipt(\'' + bill.txId + '\')" class="p-1.5 px-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-[11px] transition-colors">' +
               '<i class="fa-solid fa-print mr-1"></i> พิมพ์ A4' +
             '</button>' +
           '</div>' +
           '<div class="space-y-1">' + itemsHtml + '</div>' +
-          '<div class="bg-slate-50 p-2.5 rounded-xl text-[10px] text-slate-500 space-y-0.5">' +
+          '<div class="bg-slate-50 dark:bg-[#0a1510] p-2.5 rounded-xl text-[10px] text-slate-500 dark:text-slate-400 space-y-0.5 border border-slate-100 dark:border-emerald-950/80">' +
             '<p><b>🗓️ กำหนดการ:</b> ' + bill.borrowDate + ' ถึง ' + bill.returnDate + '</p>' +
             '<p class="truncate"><b>✍️ เหตุผล:</b> ' + bill.userNote + '</p>' +
           '</div>';
@@ -1241,11 +1309,11 @@
       var tabReturn = document.getElementById('adminTabReturn');
 
       if (mode === 'BORROW') {
-        tabBorrow.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] text-white shadow-sm transition-all';
-        tabReturn.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all';
+        tabBorrow.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] dark:bg-emerald-900/70 text-white shadow-sm transition-all';
+        tabReturn.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all';
       } else {
-        tabReturn.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] text-white shadow-sm transition-all';
-        tabBorrow.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all';
+        tabReturn.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] dark:bg-emerald-900/70 text-white shadow-sm transition-all';
+        tabBorrow.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all';
       }
       renderAdminCards();
     }
@@ -1316,14 +1384,14 @@
       });
 
       if (txKeys.length === 0) {
-        container.innerHTML = '<div class="col-span-full bg-white p-8 rounded-3xl border text-center text-xs text-slate-400">ไม่มีบิลในหมวดหมู่นี้</div>';
+        container.innerHTML = '<div class="col-span-full bg-white dark:bg-[#12231b] p-8 rounded-3xl border dark:border-emerald-950/80 text-center text-xs text-slate-400">ไม่มีบิลในหมวดหมู่นี้</div>';
         return;
       }
 
       txKeys.forEach(function(tx) {
         var b = bills[tx];
         var card = document.createElement('div');
-        card.className = 'bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all space-y-2.5 text-xs flex flex-col justify-between cursor-pointer';
+        card.className = 'bg-white dark:bg-[#12231b] p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm hover:shadow-md transition-all space-y-2.5 text-xs flex flex-col justify-between cursor-pointer';
         card.onclick = function(e) {
           if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
             openBillManageModal(b.txId);
@@ -1338,24 +1406,24 @@
 
         card.innerHTML = 
           '<div>' +
-            '<div class="flex items-start justify-between border-b pb-2">' +
+            '<div class="flex items-start justify-between border-b dark:border-emerald-900/40 pb-2">' +
               '<div class="pr-2 truncate">' +
-                '<span class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold">' + b.txId + '</span>' +
-                '<h4 class="font-bold text-sm text-[#10231a] truncate mt-1">' + b.project + '</h4>' +
+                '<span class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold">' + b.txId + '</span>' +
+                '<h4 class="font-bold text-sm text-[#10231a] dark:text-[#f0e4cf] truncate mt-1">' + b.project + '</h4>' +
               '</div>' +
-              '<span class="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ' + (currentAdminMode === 'BORROW' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800') + '">' +
+              '<span class="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ' + (currentAdminMode === 'BORROW' ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300' : 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300') + '">' +
                 (currentAdminMode === 'BORROW' ? 'รอดำเนินการ' : 'อยู่ระหว่างยืม') +
               '</span>' +
             '</div>' +
-            '<div class="pt-2 space-y-1 text-slate-600 text-[11px]">' +
+            '<div class="pt-2 space-y-1 text-slate-600 dark:text-slate-300 text-[11px]">' +
               '<p class="truncate">👤 <b>ผู้ยืม:</b> ' + b.borrowerName + ' <span class="text-slate-400 font-mono">(' + b.borrowerId + ')</span></p>' +
               '<p>🗓️ <b>กำหนดส่ง:</b> ' + b.returnDate + '</p>' +
-              '<p class="text-emerald-800 font-medium">📦 <b>พัสดุ:</b> ' + relevantItems.length + ' ชนิด (' + totalQty + ' รายการ)</p>' +
+              '<p class="text-emerald-800 dark:text-emerald-400 font-medium">📦 <b>พัสดุ:</b> ' + relevantItems.length + ' ชนิด (' + totalQty + ' รายการ)</p>' +
             '</div>' +
           '</div>' +
-          '<div class="border-t pt-2.5 flex items-center justify-between gap-2 mt-1">' +
-            '<button onclick="printA4Receipt(\'' + b.txId + '\')" class="p-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition-colors"><i class="fa-solid fa-print mr-1"></i> พิมพ์</button>' +
-            '<button onclick="openBillManageModal(\'' + b.txId + '\')" class="flex-1 py-1.5 px-3 rounded-xl bg-[#10231a] hover:bg-[#204434] text-white font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">' +
+          '<div class="border-t dark:border-emerald-900/40 pt-2.5 flex items-center justify-between gap-2 mt-1">' +
+            '<button onclick="printA4Receipt(\'' + b.txId + '\')" class="p-1.5 px-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-[11px] transition-colors"><i class="fa-solid fa-print mr-1"></i> พิมพ์</button>' +
+            '<button onclick="openBillManageModal(\'' + b.txId + '\')" class="flex-1 py-1.5 px-3 rounded-xl bg-[#10231a] dark:bg-emerald-900/80 hover:bg-[#204434] text-white font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">' +
               '<span>' + (currentAdminMode === 'BORROW' ? 'ตรวจบิล' : 'รับคืนพัสดุ') + '</span>' +
               '<i class="fa-solid fa-chevron-right text-[10px]"></i>' +
             '</button>' +
@@ -1391,7 +1459,7 @@
       
       var badge = document.getElementById('billManageBadge');
       badge.innerText = isBorrowMode ? 'คำขอยืมรอดำเนินการ' : 'อยู่ระหว่างการยืม';
-      badge.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full ' + (isBorrowMode ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800');
+      badge.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full ' + (isBorrowMode ? 'bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300' : 'bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300');
 
       var meta = document.getElementById('billManageMeta');
       meta.innerHTML = 
@@ -1403,53 +1471,53 @@
 
       billItems.forEach(function(item) {
         var row = document.createElement('div');
-        row.className = 'bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3';
+        row.className = 'bg-slate-50 dark:bg-[#0a1510] p-3 rounded-2xl border border-slate-200 dark:border-emerald-950/80 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3';
         var imgUrl = cleanDriveUrl(item.EquipmentImage) || 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
 
         if (isBorrowMode) {
           row.innerHTML = 
             '<div class="flex items-center gap-3 min-w-0 flex-1">' +
-              '<div class="w-14 h-14 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center p-1">' +
+              '<div class="w-14 h-14 rounded-xl bg-white dark:bg-[#12231b] border border-slate-200 dark:border-emerald-900/60 overflow-hidden shrink-0 flex items-center justify-center p-1">' +
                 '<img src="' + imgUrl + '" alt="' + item.EquipmentName + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-full h-full object-cover rounded-lg" />' +
               '</div>' +
               '<div class="min-w-0">' +
-                '<h5 class="font-bold text-slate-800 truncate">' + item.EquipmentName + '</h5>' +
+                '<h5 class="font-bold text-slate-800 dark:text-slate-100 truncate">' + item.EquipmentName + '</h5>' +
                 '<p class="text-[10px] text-slate-400 font-mono">รหัส: ' + item.EquipmentID + ' | สี: ' + (item.EquipmentColor || '-') + '</p>' +
-                '<p class="text-[11px] text-emerald-800 font-medium mt-0.5">ขอยืม: <b>' + item.Quantity + '</b> ' + item.EquipmentUnit + ' <span class="text-slate-400">(เหลือในคลัง: ' + item.EquipmentInStock + ')</span></p>' +
+                '<p class="text-[11px] text-emerald-800 dark:text-emerald-400 font-medium mt-0.5">ขอยืม: <b>' + item.Quantity + '</b> ' + item.EquipmentUnit + ' <span class="text-slate-400">(เหลือในคลัง: ' + item.EquipmentInStock + ')</span></p>' +
               '</div>' +
             '</div>' +
             '<div class="flex flex-wrap items-center gap-2 w-full sm:w-auto shrink-0">' +
-              '<div class="flex items-center gap-1 bg-white p-1 rounded-xl border">' +
-                '<span class="text-slate-500 font-medium text-[11px] pl-1">อนุมัติ:</span>' +
-                '<input type="number" id="approveQty-' + item.rowIndex + '" value="' + item.Quantity + '" min="1" max="' + item.EquipmentInStock + '" class="w-12 p-1 text-center font-bold text-emerald-800 rounded text-xs bg-slate-50" />' +
+              '<div class="flex items-center gap-1 bg-white dark:bg-[#12231b] p-1 rounded-xl border dark:border-emerald-900/60">' +
+                '<span class="text-slate-500 dark:text-slate-400 font-medium text-[11px] pl-1">อนุมัติ:</span>' +
+                '<input type="number" id="approveQty-' + item.rowIndex + '" value="' + item.Quantity + '" min="1" max="' + item.EquipmentInStock + '" class="w-12 p-1 text-center font-bold text-emerald-800 dark:text-emerald-300 rounded text-xs bg-slate-50 dark:bg-[#0a1510]" />' +
               '</div>' +
-              '<select id="approveStatus-' + item.rowIndex + '" onchange="handleApproveStatusChange(' + item.rowIndex + ', this.value)" class="p-1.5 bg-white border rounded-xl text-xs font-semibold text-slate-700">' +
+              '<select id="approveStatus-' + item.rowIndex + '" onchange="handleApproveStatusChange(' + item.rowIndex + ', this.value)" class="p-1.5 bg-white dark:bg-[#12231b] border dark:border-emerald-900/60 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200">' +
                 '<option value="อนุมัติ" selected>🟢 อนุมัติ</option>' +
                 '<option value="ไม่อนุมัติ">🔴 ไม่อนุมัติ</option>' +
                 '<option value="รอดำเนินการ">🟡 รอไว้ก่อน</option>' +
               '</select>' +
-              '<input type="text" id="approveComment-' + item.rowIndex + '" placeholder="หมายเหตุ..." class="p-1.5 bg-white border rounded-xl text-xs w-32 sm:w-44 transition-all" />' +
+              '<input type="text" id="approveComment-' + item.rowIndex + '" placeholder="หมายเหตุ..." class="p-1.5 bg-white dark:bg-[#12231b] border dark:border-emerald-900/60 rounded-xl text-xs w-32 sm:w-44 text-slate-800 dark:text-slate-100 transition-all" />' +
             '</div>';
         } else {
           row.innerHTML = 
             '<div class="flex items-center gap-3 min-w-0 flex-1">' +
-              '<div class="w-14 h-14 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center p-1">' +
+              '<div class="w-14 h-14 rounded-xl bg-white dark:bg-[#12231b] border border-slate-200 dark:border-emerald-900/60 overflow-hidden shrink-0 flex items-center justify-center p-1">' +
                 '<img src="' + imgUrl + '" alt="' + item.EquipmentName + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-full h-full object-cover rounded-lg" />' +
               '</div>' +
               '<div class="min-w-0">' +
-                '<h5 class="font-bold text-slate-800 truncate">' + item.EquipmentName + '</h5>' +
+                '<h5 class="font-bold text-slate-800 dark:text-slate-100 truncate">' + item.EquipmentName + '</h5>' +
                 '<p class="text-[10px] text-slate-400 font-mono">รหัส: ' + item.EquipmentID + ' | สี: ' + (item.EquipmentColor || '-') + '</p>' +
-                '<p class="text-[11px] text-blue-800 font-medium mt-0.5">ยอดที่ยืมอยู่: <b>' + item.Quantity + '</b> ' + item.EquipmentUnit + '</p>' +
+                '<p class="text-[11px] text-blue-800 dark:text-blue-400 font-medium mt-0.5">ยอดที่ยืมอยู่: <b>' + item.Quantity + '</b> ' + item.EquipmentUnit + '</p>' +
               '</div>' +
             '</div>' +
             '<div class="flex items-center gap-2.5 shrink-0 w-full sm:w-auto justify-end">' +
-              '<div class="bg-emerald-50 border border-emerald-200 p-1 rounded-xl text-center">' +
-                '<span class="block text-[9px] font-bold text-emerald-800">คืนสมบูรณ์:</span>' +
-                '<input type="number" id="returnGood-' + item.rowIndex + '" value="' + item.Quantity + '" min="0" max="' + item.Quantity + '" class="w-12 p-0.5 text-center bg-white border rounded font-bold text-emerald-800 text-xs" />' +
+              '<div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-1 rounded-xl text-center">' +
+                '<span class="block text-[9px] font-bold text-emerald-800 dark:text-emerald-300">คืนสมบูรณ์:</span>' +
+                '<input type="number" id="returnGood-' + item.rowIndex + '" value="' + item.Quantity + '" min="0" max="' + item.Quantity + '" class="w-12 p-0.5 text-center bg-white dark:bg-[#0a1510] border dark:border-emerald-900/60 rounded font-bold text-emerald-800 dark:text-emerald-300 text-xs" />' +
               '</div>' +
-              '<div class="bg-rose-50 border border-rose-200 p-1 rounded-xl text-center">' +
-                '<span class="block text-[9px] font-bold text-rose-700">ชำรุด/สูญหาย:</span>' +
-                '<input type="number" id="returnBad-' + item.rowIndex + '" value="0" min="0" max="' + item.Quantity + '" class="w-12 p-0.5 text-center bg-white border rounded font-bold text-rose-700 text-xs" />' +
+              '<div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 p-1 rounded-xl text-center">' +
+                '<span class="block text-[9px] font-bold text-rose-700 dark:text-rose-400">ชำรุด/สูญหาย:</span>' +
+                '<input type="number" id="returnBad-' + item.rowIndex + '" value="0" min="0" max="' + item.Quantity + '" class="w-12 p-0.5 text-center bg-white dark:bg-[#0a1510] border dark:border-rose-900/60 rounded font-bold text-rose-700 dark:text-rose-400 text-xs" />' +
               '</div>' +
             '</div>';
         }
@@ -1460,11 +1528,11 @@
       var footer = document.getElementById('billManageFooter');
       if (isBorrowMode) {
         footer.innerHTML = 
-          '<button onclick="billManageModal.close()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs">ยกเลิก</button>' +
-          '<button onclick="submitBatchApprovalAction(\'' + txId + '\')" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-[#10231a] hover:bg-[#204434] text-white font-bold text-xs shadow-md">บันทึกการพิจารณาบิล</button>';
+          '<button onclick="billManageModal.close()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-xs">ยกเลิก</button>' +
+          '<button onclick="submitBatchApprovalAction(\'' + txId + '\')" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-[#10231a] dark:bg-emerald-900/80 hover:bg-[#204434] text-white font-bold text-xs shadow-md">บันทึกการพิจารณาบิล</button>';
       } else {
         footer.innerHTML = 
-          '<input type="text" id="returnGeneralComment" placeholder="หมายเหตุสรุปสภาพอุปกรณ์ตอนรับคืน..." class="w-full sm:flex-1 p-2 bg-slate-50 border rounded-xl text-xs" />' +
+          '<input type="text" id="returnGeneralComment" placeholder="หมายเหตุสรุปสภาพอุปกรณ์ตอนรับคืน..." class="w-full sm:flex-1 p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs dark:text-slate-100" />' +
           '<button onclick="submitBatchReturnAction(\'' + txId + '\')" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md shrink-0">บันทึกรับคืนพัสดุ</button>';
       }
 
@@ -1477,11 +1545,11 @@
 
       if (val === 'ไม่อนุมัติ') {
         commentInput.placeholder = '* ระบุเหตุผลที่ไม่อนุมัติ (จำเป็น)...';
-        commentInput.classList.add('border-rose-400', 'bg-rose-50');
+        commentInput.classList.add('border-rose-400', 'bg-rose-50', 'dark:bg-rose-950/30');
         commentInput.focus();
       } else {
         commentInput.placeholder = 'หมายเหตุ...';
-        commentInput.classList.remove('border-rose-400', 'bg-rose-50');
+        commentInput.classList.remove('border-rose-400', 'bg-rose-50', 'dark:bg-rose-950/30');
       }
     }
 
@@ -1594,9 +1662,9 @@
             return;
           }
           list.innerHTML = borrowers.map(function(b) {
-            return '<div class="p-2 bg-amber-50 rounded-xl border border-amber-100 flex items-center justify-between text-xs">' +
-              '<div><p class="font-bold text-amber-900">' + b.name + '</p><p class="text-[10px] text-slate-500">กำหนดคืน: ' + b.deadline + '</p></div>' +
-              '<span class="font-bold text-amber-800 text-[11px]">' + b.qty + ' รายการ</span>' +
+            return '<div class="p-2 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-100 dark:border-amber-900/50 flex items-center justify-between text-xs">' +
+              '<div><p class="font-bold text-amber-900 dark:text-amber-300">' + b.name + '</p><p class="text-[10px] text-slate-500 dark:text-slate-400">กำหนดคืน: ' + b.deadline + '</p></div>' +
+              '<span class="font-bold text-amber-800 dark:text-amber-400 text-[11px]">' + b.qty + ' รายการ</span>' +
             '</div>';
           }).join('');
         })
