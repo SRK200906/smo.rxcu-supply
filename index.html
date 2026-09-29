@@ -1,35 +1,23 @@
 <!DOCTYPE html>
 <html lang="th" class="h-full">
 <head>
-
-  <!-- Favicon ตราสโมสรนิสิตฯ -->
-<link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=7" />
-<link rel="shortcut icon" type="image/png" href="/favicon.png?v=7" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <!-- หัวข้อและรายละเอียดเมื่อแชร์ลิงก์บนแอปต่างๆ (Line, Facebook, etc.) -->
-  <title>ระบบคลังพัสดุ | สโมสรนิสิตเภสัชศาสตร์ จุฬาฯ</title>
-  <meta name="description" content="ระบบขอยืม-คืนพัสดุและอุปกรณ์ สำหรับนิสิตและโครงการภายในสโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย (Smo.RxCU)" />
-  
-  <!-- Open Graph / Social Media Preview Cards -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://smorxcu-supply.vercel.app/" />
-  <meta property="og:title" content="ระบบคลังพัสดุ | SMO.RxCU" />
-  <meta property="og:description" content="สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย" />
-  <meta property="og:image" content="/favicon.png" />
+  <meta charset="UTF-8" />
+  <link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=9" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>ระบบคลังพัสดุ | สโมสรนิสิตเภสัชศาสตร์ จุฬาฯ (SMO.RxCU)</title>
+  <meta name="description" content="ระบบขอยืม-คืนพัสดุและอุปกรณ์ สำหรับนิสิตและโครงการ สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย" />
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  
+
   <style>
     :root {
-      --emerald-dark: #12281e;
-      --emerald-primary: #1b382b;
-      --emerald-accent: #2d5a43;
-      --champagne-gold: #c5a880;
-      --gold-light: #f5eedc;
+      --rx-dark: #0f2018;
+      --rx-primary: #183327;
+      --rx-gold: #c5a880;
     }
     * {
       box-sizing: border-box;
@@ -37,22 +25,17 @@
     }
     body {
       font-family: 'Kanit', sans-serif;
-      background-color: #f8faf8;
+      background-color: #f7faf8;
       color: #1e293b;
-      overflow-x: hidden;
     }
     .luxury-glass {
-      background: linear-gradient(135deg, rgba(18, 40, 30, 0.94), rgba(35, 70, 52, 0.96));
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(197, 168, 128, 0.3);
+      background: linear-gradient(135deg, rgba(15, 32, 24, 0.95), rgba(24, 51, 39, 0.98));
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(197, 168, 128, 0.35);
     }
     .custom-scroll::-webkit-scrollbar {
       width: 5px;
       height: 5px;
-    }
-    .custom-scroll::-webkit-scrollbar-track {
-      background: transparent;
     }
     .custom-scroll::-webkit-scrollbar-thumb {
       background: #cbd5e1;
@@ -64,32 +47,32 @@
       margin: 0; 
     }
     input[type=number] {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
   </style>
 </head>
 <body class="min-h-full flex flex-col antialiased selection:bg-emerald-800 selection:text-white">
 
   <!-- AUTHENTICATION GATE -->
-  <section id="authGateSection" class="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 bg-gradient-to-br from-[#0a1812] via-[#12281e] to-[#1e4231] text-slate-800 relative z-50">
-    <div class="max-w-md w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-[#c5a880]/30 overflow-hidden transition-all duration-300">
+  <section id="authGateSection" class="min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-[#091510] via-[#12281e] to-[#1c3d2e] text-slate-800 relative z-50">
+    <div class="max-w-md w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-[#c5a880]/30 overflow-hidden">
       
-      <div class="bg-gradient-to-r from-[#12281e] to-[#1e4231] p-6 text-center text-white relative">
-        <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shadow-inner mb-3 overflow-hidden p-1">
+      <div class="bg-gradient-to-r from-[#10231a] to-[#1b3a2c] p-6 text-center text-white relative">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shadow-inner mb-3 overflow-hidden p-1.5">
           <img id="gateLogoPreview" src="" alt="ตราสโมสร" class="w-full h-full object-contain hidden" />
           <i id="gateLogoFallback" class="fa-solid fa-boxes-stacked text-2xl text-[#c5a880]"></i>
         </div>
         <h2 class="text-base sm:text-lg font-bold text-white tracking-wide">ระบบคลังพัสดุและอุปกรณ์</h2>
         <p class="text-xs text-emerald-200 mt-0.5 font-light">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>
         <span class="inline-block mt-2 text-[10px] bg-[#c5a880]/20 text-[#f5eedc] px-3 py-0.5 rounded-full font-medium border border-[#c5a880]/30">
-          Smo.RxCU Inventory Portal
+          SMO.RxCU Inventory Portal
         </span>
       </div>
 
       <div class="p-5 sm:p-6 space-y-4">
         <div class="flex bg-slate-100 p-1 rounded-2xl text-xs font-semibold">
-          <button id="gateTabLogin" onclick="switchGateAuthMode('LOGIN')" class="flex-1 py-2 rounded-xl bg-white shadow-sm text-[#1b382b] font-bold transition-all">
+          <button id="gateTabLogin" onclick="switchGateAuthMode('LOGIN')" class="flex-1 py-2 rounded-xl bg-white shadow-sm text-[#183327] font-bold transition-all">
             <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> เข้าสู่ระบบ
           </button>
           <button id="gateTabRegister" onclick="switchGateAuthMode('REGISTER')" class="flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-medium transition-all">
@@ -97,13 +80,13 @@
           </button>
         </div>
 
-        <!-- Mode 1: Login Form -->
+        <!-- Login Form -->
         <div id="gateLoginForm" class="space-y-3.5 text-xs">
           <div>
-            <label class="block font-semibold text-slate-700 mb-1">รหัสนิสิต / รหัสประจำตัวประชาชน <span class="text-rose-500">*</span></label>
+            <label class="block font-semibold text-slate-700 mb-1">รหัสนิสิต / ประจำตัวประชาชน <span class="text-rose-500">*</span></label>
             <div class="relative">
               <i class="fa-solid fa-id-card absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="text" id="gateLoginId" placeholder="เช่น 68xxxxxx33" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium text-slate-800 transition-colors" />
+              <input type="text" id="gateLoginId" placeholder="เช่น 68xxxxxx33" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium" />
             </div>
           </div>
 
@@ -111,21 +94,17 @@
             <label class="block font-semibold text-slate-700 mb-1">ชื่อจริง (ไม่ต้องระบุคำนำหน้า) <span class="text-rose-500">*</span></label>
             <div class="relative">
               <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="text" id="gateLoginName" placeholder="เช่น ธนชัย" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium text-slate-800 transition-colors" />
+              <input type="text" id="gateLoginName" placeholder="เช่น ภัทรพล" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium" />
             </div>
           </div>
 
-          <button id="btnGateLogin" onclick="executeGateLogin()" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#12281e] to-[#244c37] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-950/20 transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2">
+          <button id="btnGateLogin" onclick="executeGateLogin()" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#10231a] to-[#204434] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2">
             <span>เข้าสู่ระบบคลังพัสดุ</span>
             <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
-
-          <p class="text-[11px] text-center text-slate-400 pt-1">
-            ยังไม่เคยมีข้อมูลในระบบ? <a href="javascript:void(0)" onclick="switchGateAuthMode('REGISTER')" class="text-emerald-700 font-bold hover:underline">ลงทะเบียนผู้ยืมใหม่</a>
-          </p>
         </div>
 
-        <!-- Mode 2: Register Form -->
+        <!-- Register Form -->
         <div id="gateRegisterForm" class="hidden space-y-2.5 text-xs max-h-[55vh] overflow-y-auto pr-1 custom-scroll">
           <div class="grid grid-cols-3 gap-2">
             <div>
@@ -150,24 +129,24 @@
           </div>
 
           <div>
-            <label class="block font-medium text-slate-700 mb-1">รหัสนิสิต / รหัสประจำตัวประชาชน <span class="text-rose-500">*</span></label>
+            <label class="block font-medium text-slate-700 mb-1">รหัสนิสิต / ประจำตัวประชาชน <span class="text-rose-500">*</span></label>
             <input type="text" id="gateRegId" placeholder="เช่น 68xxxxxx33" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
               <label class="block font-medium text-slate-700 mb-1">ชั้นปี</label>
-              <input type="text" id="gateRegYear" placeholder="เช่น 2" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <input type="text" id="gateRegYear" placeholder="เช่น 3" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
             </div>
             <div>
               <label class="block font-medium text-slate-700 mb-1">ฝ่ายที่สังกัด</label>
-              <input type="text" id="gateRegDept" placeholder="เช่น ฝ่ายพัสดุและแสงเสียง" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+              <input type="text" id="gateRegDept" placeholder="เช่น ฝ่ายพัสดุฯ" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
             </div>
           </div>
 
           <div>
             <label class="block font-medium text-slate-700 mb-1">ในนามโครงการ / ชมรม</label>
-            <input type="text" id="gateRegProject" placeholder="เช่น สโมสรนิสิตฯ, ชมรมดนตรีสากล" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
+            <input type="text" id="gateRegProject" placeholder="เช่น สโมสรนิสิตฯ, ค่ายเภสัชฯ" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium text-xs" />
           </div>
 
           <div class="grid grid-cols-2 gap-2">
@@ -181,7 +160,7 @@
             </div>
           </div>
 
-          <button id="btnGateRegister" onclick="executeGateRegister()" class="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md transition-all active:scale-[0.98] mt-2">
+          <button id="btnGateRegister" onclick="executeGateRegister()" class="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md transition-all mt-2">
             บันทึกการลงทะเบียนและเข้าใช้งาน
           </button>
         </div>
@@ -190,64 +169,63 @@
     </div>
   </section>
 
-  <!-- MAIN APP INTERFACE -->
-  <div id="appMainWrapper" class="hidden min-h-screen flex flex-col pb-16 sm:pb-0">
+  <!-- MAIN APP WRAPPER -->
+  <div id="appMainWrapper" class="hidden min-h-screen flex flex-col">
 
-    <header class="luxury-glass sticky top-0 z-40 px-3 sm:px-6 py-2.5 text-white shadow-lg transition-all">
+    <!-- Top Navigation Bar -->
+    <header class="luxury-glass sticky top-0 z-40 px-3 sm:px-6 py-2.5 text-white shadow-lg">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
         
         <div class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer min-w-0" onclick="showStoreView()">
-          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shrink-0 shadow-inner overflow-hidden p-1">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white/10 border border-[#c5a880]/40 flex items-center justify-center shrink-0 shadow-inner overflow-hidden p-1">
             <img id="navLogoPreview" src="" alt="ตราสโมสร" class="w-full h-full object-contain hidden" />
             <i id="navLogoFallback" class="fa-solid fa-boxes-stacked text-[#c5a880] text-sm sm:text-base"></i>
           </div>
           <div class="truncate">
-            <h1 class="text-xs sm:text-base font-semibold tracking-tight text-white flex items-center gap-1.5 truncate">
+            <h1 class="text-xs sm:text-sm font-semibold tracking-tight text-white flex items-center gap-1.5 truncate">
               <span>คลังพัสดุ สโมสรนิสิตฯ</span>
-              <span class="hidden sm:inline-block text-[10px] bg-[#c5a880]/25 text-[#fcefdc] px-2 py-0.5 rounded-full font-normal border border-[#c5a880]/30">Home</span>
+              <span class="hidden sm:inline-block text-[10px] bg-[#c5a880]/25 text-[#fcefdc] px-2 py-0.5 rounded-full font-normal border border-[#c5a880]/30">SMO.RxCU</span>
             </h1>
-            <p id="userBarInfo" class="text-[11px] text-emerald-200/90 hover:text-white truncate transition-colors">
-              กำลังโหลดข้อมูลผู้ใช้...
-            </p>
+            <p id="userBarInfo" class="text-[11px] text-emerald-200/90 truncate"></p>
           </div>
         </div>
 
         <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
           <span id="globalLoadingBadge" class="hidden text-[11px] bg-white/10 text-emerald-100 border border-white/20 px-2.5 py-1 rounded-full animate-pulse">
-            <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> กำลังโหลด...
+            <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> โหลดข้อมูล...
           </span>
 
           <button id="btnTrackRequests" onclick="showTrackingView()" class="hidden px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all">
-            <i class="fa-solid fa-clock-rotate-left mr-1"></i> <span class="hidden sm:inline">ติดตามบิล</span>
+            <i class="fa-solid fa-clock-rotate-left mr-1"></i> <span class="hidden sm:inline">ประวัติใบยืม</span>
           </button>
 
-          <button id="btnAdminView" onclick="showAdminView()" class="hidden px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-gradient-to-r from-[#d8be98] to-[#c5a880] hover:brightness-105 text-[#12281e] font-bold shadow-md transition-all">
+          <button id="btnAdminView" onclick="showAdminView()" class="hidden px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-gradient-to-r from-[#dfc8a5] to-[#c5a880] hover:brightness-105 text-[#0f2018] font-bold shadow-md transition-all">
             <i class="fa-solid fa-shield-halved mr-1"></i> <span>เมนูแอดมิน</span>
           </button>
 
-          <button onclick="showCartView()" class="relative p-2 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600/70 hover:bg-emerald-600 border border-emerald-400/30 text-white transition-all flex items-center gap-1.5">
+          <button onclick="showCartView()" class="relative p-2 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600/80 hover:bg-emerald-600 border border-emerald-400/30 text-white transition-all flex items-center gap-1.5">
             <i class="fa-solid fa-bag-shopping text-sm sm:text-base"></i>
             <span class="hidden sm:inline text-xs font-medium">ตะกร้า</span>
-            <span id="cartBadgeCount" class="w-5 h-5 rounded-full bg-amber-400 text-slate-900 font-extrabold text-[10px] flex items-center justify-center shadow-sm">
-              0
-            </span>
+            <span id="cartBadgeCount" class="w-5 h-5 rounded-full bg-amber-400 text-slate-900 font-extrabold text-[10px] flex items-center justify-center shadow-sm">0</span>
           </button>
 
-          <button id="btnAuthTrigger" onclick="handleLogout()" title="ออกจากระบบ" class="px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-rose-500/20 hover:bg-rose-600 border border-rose-300/30 text-rose-200 hover:text-white transition-all">
+          <button onclick="handleLogout()" title="ออกจากระบบ" class="px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-rose-500/20 hover:bg-rose-600 border border-rose-300/30 text-rose-200 hover:text-white transition-all">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
           </button>
         </div>
+
       </div>
     </header>
 
+    <!-- Main Content Area -->
     <main class="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
       
-      <!-- STORE VIEW -->
-      <section id="storeView" class="space-y-4 sm:space-y-5">
-        <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row gap-2.5 sm:gap-3 items-center">
+      <!-- STORE CATALOG -->
+      <section id="storeView" class="space-y-4">
+        <div class="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row gap-2.5 items-center">
           <div class="relative w-full sm:flex-1">
             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ค้นหารหัสพัสดุ, ชื่ออุปกรณ์ หรือสี..." class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 transition-colors" />
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="ค้นหารหัสพัสดุ, ชื่ออุปกรณ์ หรือสี..." class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600" />
           </div>
           <div class="w-full sm:w-64 shrink-0">
             <select id="categoryFilter" onchange="applyFilters()" class="w-full py-2 px-3 text-xs sm:text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:border-emerald-600 font-medium text-slate-700">
@@ -256,46 +234,46 @@
           </div>
         </div>
 
-        <div id="equipmentGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4"></div>
+        <div id="equipmentGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3"></div>
       </section>
 
-      <!-- CART VIEW -->
+      <!-- CART & BORROW FORM -->
       <section id="cartView" class="hidden space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-          <h2 class="text-base sm:text-lg font-bold text-[#12281e] flex items-center gap-2">
-            <i class="fa-solid fa-cart-shopping text-emerald-700"></i> สรุปรายการขอยืมพัสดุในตะกร้า
+        <div class="flex items-center justify-between border-b pb-3">
+          <h2 class="text-base sm:text-lg font-bold text-[#10231a] flex items-center gap-2">
+            <i class="fa-solid fa-cart-shopping text-emerald-700"></i> สรุปรายการพัสดุในตะกร้า
           </h2>
-          <button onclick="showStoreView()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors">
+          <button onclick="showStoreView()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600">
             <i class="fa-solid fa-arrow-left mr-1"></i> เลือกพัสดุเพิ่ม
           </button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
           <div class="lg:col-span-2 space-y-3">
             <div id="cartItemsList" class="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1 custom-scroll"></div>
           </div>
 
           <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3.5">
             <h3 class="text-sm font-bold text-slate-800 border-b pb-2 flex items-center gap-1.5">
-              <i class="fa-solid fa-calendar-check text-[#244c37]"></i> ข้อมูลการใช้งานและกำหนดส่งคืน
+              <i class="fa-solid fa-calendar-check text-[#183327]"></i> รายละเอียดการยืม
             </h3>
 
             <div class="space-y-2.5 text-xs">
               <div>
-                <label class="block font-medium text-slate-700 mb-1">วันที่เริ่มยืมพัสดุ <span class="text-rose-500">*</span></label>
-                <input type="date" id="cartStartDate" class="w-full p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600 font-medium" />
+                <label class="block font-medium text-slate-700 mb-1">วันที่เริ่มยืม <span class="text-rose-500">*</span></label>
+                <input type="date" id="cartStartDate" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-medium" />
               </div>
               <div>
                 <label class="block font-medium text-slate-700 mb-1">วันที่กำหนดส่งคืน <span class="text-rose-500">*</span></label>
-                <input type="date" id="cartEndDate" class="w-full p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600 font-medium" />
+                <input type="date" id="cartEndDate" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-medium" />
               </div>
               <div>
-                <label class="block font-medium text-slate-700 mb-1">กิจกรรม / วัตถุประสงค์ความจำเป็น <span class="text-rose-500">*</span></label>
-                <textarea id="cartUserNote" rows="2" placeholder="เช่น งานปฐมนิเทศนิสิตใหม่..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600"></textarea>
+                <label class="block font-medium text-slate-700 mb-1">โครงการ / วัตถุประสงค์การใช้งาน <span class="text-rose-500">*</span></label>
+                <textarea id="cartUserNote" rows="2" placeholder="เช่น กิจกรรมค่ายเภสัชฯ..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs"></textarea>
               </div>
             </div>
 
-            <button id="btnSubmitBorrow" onclick="submitBorrowOrder()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#12281e] to-[#244c37] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-transform active:scale-[0.98]">
+            <button id="btnSubmitBorrow" onclick="submitBorrowOrder()" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#10231a] to-[#204434] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98]">
               ยืนยันส่งคำขอยืมอุปกรณ์
             </button>
           </div>
@@ -304,42 +282,41 @@
 
       <!-- TRACKING VIEW -->
       <section id="trackingView" class="hidden space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-          <h2 class="text-base sm:text-lg font-bold text-[#12281e] flex items-center gap-2">
+        <div class="flex items-center justify-between border-b pb-3">
+          <h2 class="text-base sm:text-lg font-bold text-[#10231a] flex items-center gap-2">
             <i class="fa-solid fa-clipboard-list text-emerald-700"></i> ประวัติและสถานะใบยืมของคุณ
           </h2>
           <button onclick="showStoreView()" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600">
-            <i class="fa-solid fa-arrow-left mr-1"></i> กลับหน้ารายการพัสดุ
+            <i class="fa-solid fa-arrow-left mr-1"></i> หน้ารายการพัสดุ
           </button>
         </div>
-
         <div id="trackingBillsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
       </section>
 
-      <!-- ADMIN VIEW (COMPACT) -->
+      <!-- ADMIN DASHBOARD -->
       <section id="adminView" class="hidden space-y-4">
         <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
           <div class="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
-            <button id="adminTabBorrow" onclick="switchAdminMode('BORROW')" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#12281e] text-white shadow-sm transition-all">
+            <button id="adminTabBorrow" onclick="switchAdminMode('BORROW')" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] text-white shadow-sm transition-all">
               คำขอยืมรอตรวจ <span id="adminPendingBadge" class="ml-1 px-1.5 py-0.2 bg-amber-400 text-slate-900 rounded-full text-[10px]">0</span>
             </button>
             <button id="adminTabReturn" onclick="switchAdminMode('RETURN')" class="flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">
               พัสดุอยู่ระหว่างยืม <span id="adminActiveBadge" class="ml-1 px-1.5 py-0.2 bg-emerald-600 text-white rounded-full text-[10px]">0</span>
             </button>
-            <button id="adminTabLogo" onclick="openLogoSettingModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f4ece1] hover:bg-[#ebdcc8] text-[#715329] border border-[#c5a880]/40 transition-all flex items-center gap-1">
-              <i class="fa-solid fa-award"></i> <span>ตั้งค่าตราสโมสร</span>
+            <button onclick="openLogoSettingModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f4ece1] hover:bg-[#ebdcc8] text-[#715329] border border-[#c5a880]/40 transition-all">
+              <i class="fa-solid fa-award mr-1"></i> ตราสโมสร
             </button>
-            <button onclick="openAddEquipmentModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-700 to-emerald-800 hover:brightness-110 text-white shadow-sm transition-all flex items-center gap-1.5">
-              <i class="fa-solid fa-plus"></i> <span>เพิ่มพัสดุใหม่</span>
+            <button onclick="openAddEquipmentModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-700 to-emerald-800 text-white shadow-sm transition-all">
+              <i class="fa-solid fa-plus mr-1"></i> เพิ่มพัสดุใหม่
             </button>
           </div>
 
           <div class="flex items-center gap-2 w-full md:w-auto">
             <div class="relative flex-1 md:w-56">
               <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-              <input type="text" id="adminSearchInput" oninput="filterAdminCards()" placeholder="ค้นหาเลขบิล, ชื่อ หรือโครงการ..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border rounded-xl focus:outline-none focus:border-emerald-600 font-medium" />
+              <input type="text" id="adminSearchInput" oninput="filterAdminCards()" placeholder="ค้นหาเลขบิล, ชื่อ หรือโครงการ..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border rounded-xl font-medium" />
             </div>
-            <button onclick="loadAdminData()" title="รีเฟรชข้อมูล" class="p-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold shrink-0">
+            <button onclick="loadAdminData()" title="รีเฟรช" class="p-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold">
               <i class="fa-solid fa-rotate-right"></i>
             </button>
           </div>
@@ -351,24 +328,25 @@
     </main>
   </div>
 
-  <!-- MODAL: ITEM DETAIL -->
+  <!-- MODAL: ITEM DETAIL (WITH ADMIN EDIT BUTTON) -->
   <dialog id="itemDetailModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-lg w-[94vw] border border-slate-100">
     <div class="p-4 sm:p-5 space-y-4 bg-white rounded-3xl">
       <div class="flex items-center justify-between border-b pb-2.5">
-        <h3 class="font-bold text-sm sm:text-base text-[#12281e] flex items-center gap-1.5">
+        <h3 class="font-bold text-sm sm:text-base text-[#10231a] flex items-center gap-1.5">
           <i class="fa-solid fa-circle-info text-[#c5a880]"></i> คุณลักษณะและสถานะพัสดุ
         </h3>
         <button onclick="itemDetailModal.close()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-        <div class="w-full h-44 sm:h-52 rounded-2xl bg-slate-50 border overflow-hidden flex items-center justify-center p-2">
+        <div class="w-full h-44 rounded-2xl bg-slate-50 border overflow-hidden flex items-center justify-center p-2">
           <img id="detailImg" src="" alt="พัสดุ" class="w-full h-full object-contain" />
         </div>
         <div class="space-y-1.5 self-center">
-          <h4 id="detailTitle" class="font-bold text-sm sm:text-base text-slate-800"></h4>
+          <h4 id="detailTitle" class="font-bold text-sm text-slate-800"></h4>
           <p id="detailId" class="text-slate-400 font-mono text-[11px]"></p>
           <div class="pt-1 space-y-1 text-slate-600">
+            <p><b>🏷️ หมวดหมู่:</b> <span id="detailCategory">-</span></p>
             <p><b>🎨 สี/ลาย:</b> <span id="detailColor">-</span></p>
             <p><b>📏 ขนาด:</b> <span id="detailSize">-</span></p>
             <p><b>📦 ทั้งหมด:</b> <span id="detailTotal">-</span></p>
@@ -382,93 +360,32 @@
         <h5 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
           <i class="fa-solid fa-users text-emerald-600"></i> ผู้ที่กำลังยืมอุปกรณ์นี้ขณะนี้
         </h5>
-        <div id="borrowerListContainer" class="max-h-36 overflow-y-auto space-y-1.5 custom-scroll text-xs"></div>
+        <div id="borrowerListContainer" class="max-h-32 overflow-y-auto space-y-1.5 custom-scroll text-xs"></div>
+      </div>
+
+      <div class="border-t pt-2.5 flex items-center justify-between">
+        <button id="btnAdminEditEquip" onclick="triggerEditFromDetail()" class="hidden px-3.5 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-300 text-xs flex items-center gap-1.5">
+          <i class="fa-solid fa-pen-to-square"></i> <span>แก้ไขข้อมูลพัสดุนี้</span>
+        </button>
+        <button onclick="itemDetailModal.close()" class="ml-auto px-4 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-medium">ปิด</button>
       </div>
     </div>
   </dialog>
 
-  <!-- MODAL: ADMIN BILL DETAIL WITH IMAGES -->
-  <dialog id="billManageModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-3xl w-[95vw] border border-slate-100">
-    <div class="p-4 sm:p-6 space-y-4 bg-white rounded-3xl max-h-[90vh] flex flex-col justify-between">
-      
-      <div class="flex items-center justify-between border-b pb-3 shrink-0">
-        <div>
-          <div class="flex items-center gap-2">
-            <span id="billManageBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">รอดำเนินการ</span>
-            <h3 id="billManageTitle" class="font-bold text-sm sm:text-base text-[#12281e]"></h3>
-          </div>
-          <p id="billManageSub" class="text-[11px] text-slate-400 font-mono mt-0.5"></p>
-        </div>
-        <button onclick="billManageModal.close()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold flex items-center justify-center transition-colors">✕</button>
-      </div>
-
-      <div id="billManageMeta" class="bg-slate-50 p-3 rounded-2xl text-xs text-slate-600 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shrink-0 border border-slate-100"></div>
-      <div class="flex-1 overflow-y-auto space-y-2.5 custom-scroll py-1 pr-1" id="billManageItemsContainer"></div>
-      <div id="billManageFooter" class="border-t pt-3 shrink-0 flex flex-col sm:flex-row gap-2 items-center justify-between"></div>
-    </div>
-  </dialog>
-
-  <!-- MODAL: CLUB LOGO CONFIG -->
-  <dialog id="logoModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-md w-[94vw] border border-slate-100">
-    <div class="p-5 space-y-4 bg-white rounded-3xl">
-      <div class="flex items-center justify-between border-b pb-2.5">
-        <h3 class="font-bold text-sm sm:text-base text-[#12281e] flex items-center gap-1.5">
-          <i class="fa-solid fa-award text-[#c5a880]"></i> ตั้งค่าตราสัญลักษณ์สโมสร
-        </h3>
-        <button onclick="logoModal.close()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <div class="flex flex-col items-center justify-center p-4 bg-slate-50 border border-dashed border-slate-300 rounded-2xl">
-          <div class="w-20 h-20 rounded-2xl bg-white border shadow-sm p-1.5 flex items-center justify-center overflow-hidden mb-2">
-            <img id="logoModalPreview" src="" alt="ตัวอย่างตราสโมสร" class="w-full h-full object-contain hidden" />
-            <i id="logoModalFallback" class="fa-solid fa-image text-3xl text-slate-300"></i>
-          </div>
-          <p class="text-[11px] text-slate-400">ตัวอย่างตราสโมสรที่จะนำไปใช้ในระบบและใบพิมพ์</p>
-        </div>
-
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">1. ใส่เป็น URL รูปภาพ (Direct Link หรือ Google Drive)</label>
-          <input type="text" id="logoUrlInput" oninput="previewLogoFromUrl(this.value)" placeholder="https://... หรือ Google Drive Link" class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600" />
-        </div>
-
-        <div class="text-center font-bold text-slate-400 text-[11px]">หรือ</div>
-
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">2. อัปโหลดไฟล์จากเครื่อง (PNG / JPG / WEBP)</label>
-          <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoFileUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-800 hover:file:bg-emerald-100" />
-        </div>
-      </div>
-
-      <div class="border-t pt-3 flex items-center justify-between gap-2">
-        <button onclick="resetToDefaultLogo()" class="px-3 py-2 rounded-xl text-xs font-medium text-rose-600 hover:bg-rose-50 transition-colors">ล้างค่าเริ่มต้น</button>
-        <div class="flex items-center gap-2">
-          <button onclick="logoModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold">ยกเลิก</button>
-          <button onclick="saveLogoSettings()" class="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-900 text-white font-bold text-xs shadow-md">บันทึกตราสโมสร</button>
-        </div>
-      </div>
-    </div>
-  </dialog>
-  <!-- MODAL: ADD NEW EQUIPMENT (WITH CAMERA & UPLOAD) -->
+  <!-- MODAL: ADD / EDIT EQUIPMENT -->
   <dialog id="addEquipmentModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-xl w-[95vw] border border-slate-100">
     <div class="p-4 sm:p-6 space-y-4 bg-white rounded-3xl max-h-[92vh] flex flex-col justify-between">
-      
-      <!-- Header -->
       <div class="flex items-center justify-between border-b pb-3 shrink-0">
-        <h3 class="font-bold text-sm sm:text-base text-[#12281e] flex items-center gap-2">
-          <i class="fa-solid fa-box-open text-[#c5a880]"></i> เพิ่มรายการพัสดุ/อุปกรณ์ใหม่เข้าคลัง
+        <h3 id="equipModalTitle" class="font-bold text-sm sm:text-base text-[#10231a] flex items-center gap-2">
+          <i class="fa-solid fa-box-open text-[#c5a880]"></i> <span>เพิ่มรายการพัสดุใหม่เข้าคลัง</span>
         </h3>
         <button onclick="closeAddEquipmentModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
       </div>
 
-      <!-- Form Body -->
       <div class="flex-1 overflow-y-auto space-y-3.5 custom-scroll pr-1 text-xs">
-        
-        <!-- Camera & Photo Capture Area -->
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-dashed border-slate-300 space-y-3">
           <label class="block font-semibold text-slate-700">รูปถ่ายพัสดุ / อุปกรณ์</label>
           
-          <!-- Live Camera View (Hidden by default) -->
           <div id="cameraLiveWrapper" class="hidden relative rounded-xl overflow-hidden bg-black aspect-[4/3] max-h-56 mx-auto">
             <video id="cameraVideo" autoplay playsinline class="w-full h-full object-cover"></video>
             <button type="button" onclick="takeSnapshot()" class="absolute bottom-3 left-1/2 -translate-x-1/2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-full font-bold shadow-lg flex items-center gap-1.5 active:scale-95">
@@ -476,7 +393,6 @@
             </button>
           </div>
 
-          <!-- Photo Preview Container -->
           <div id="photoPreviewWrapper" class="flex items-center gap-3">
             <div class="w-20 h-20 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center shrink-0 p-1">
               <img id="newEquipPhotoPreview" src="" alt="ตัวอย่างรูป" class="w-full h-full object-cover rounded-lg hidden" />
@@ -484,48 +400,37 @@
             </div>
             <div class="space-y-1.5 flex-1">
               <div class="flex flex-wrap gap-2">
-                <!-- Mobile & Desktop native camera button -->
                 <label class="cursor-pointer px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 flex items-center gap-1">
                   <i class="fa-solid fa-camera"></i> ถ่ายรูป/เลือกภาพ
                   <input type="file" id="cameraFileInput" accept="image/*" capture="environment" onchange="handleEquipPhotoFile(event)" class="hidden" />
                 </label>
-                <!-- Desktop live webcam button -->
                 <button type="button" id="btnToggleWebcam" onclick="toggleWebcam()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold border">
                   <i class="fa-solid fa-video mr-1"></i> เปิดกล้องสด
                 </button>
-                <button type="button" id="btnRemovePhoto" onclick="removeEquipPhoto()" class="hidden px-2.5 py-1.5 rounded-xl text-rose-600 hover:bg-rose-50 font-medium">
-                  ลบรูป
-                </button>
+                <button type="button" id="btnRemovePhoto" onclick="removeEquipPhoto()" class="hidden px-2.5 py-1.5 rounded-xl text-rose-600 hover:bg-rose-50 font-medium">ล้างรูป</button>
               </div>
-              <p class="text-[10px] text-slate-400">รองรับทั้งกดถ่ายจากกล้องมือถือ หรืออัปโหลดไฟล์ (ระบบบีบอัดภาพให้อัตโนมัติ)</p>
+              <p class="text-[10px] text-slate-400">รูปภาพจะถูกบีบอัดและอัปโหลดเข้าคลัง Google Drive ของสโมสร</p>
             </div>
           </div>
-          <!-- Hidden canvas for resizing -->
           <canvas id="photoCanvas" class="hidden"></canvas>
         </div>
 
-        <!-- Information Fields -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
           <div>
             <label class="block font-semibold text-slate-700 mb-1">รหัสพัสดุ <span class="text-rose-500">*</span></label>
-            <input type="text" id="newEquipId" placeholder="เช่น EQ-015" class="w-full p-2 bg-slate-50 border rounded-xl font-mono text-xs focus:outline-none focus:border-emerald-600" />
+            <input type="text" id="newEquipId" placeholder="เช่น EQ-015" class="w-full p-2 bg-slate-50 border rounded-xl font-mono text-xs" />
           </div>
           <div class="sm:col-span-2">
-            <label class="block font-semibold text-slate-700 mb-1">ชื่อรายการพัสดุ / อุปกรณ์ <span class="text-rose-500">*</span></label>
-            <input type="text" id="newEquipName" placeholder="เช่น กล้องถ่ายวิดีโอ 4K Sony..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600 font-medium" />
+            <label class="block font-semibold text-slate-700 mb-1">ชื่อรายการพัสดุ <span class="text-rose-500">*</span></label>
+            <input type="text" id="newEquipName" placeholder="เช่น ไมโครโฟนไร้สาย..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-medium" />
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
             <label class="block font-semibold text-slate-700 mb-1">หมวดหมู่ <span class="text-rose-500">*</span></label>
-            <div class="flex gap-1.5">
-              <select id="newEquipCategorySelect" onchange="handleCategorySelectChange(this.value)" class="flex-1 p-2 bg-slate-50 border rounded-xl text-xs focus:outline-none focus:border-emerald-600 font-medium">
-                <option value="">-- เลือกหมวดหมู่ --</option>
-                <!-- Injected via JS -->
-              </select>
-            </div>
-            <input type="text" id="newEquipCustomCategory" placeholder="พิมพ์ชื่อหมวดหมู่ใหม่..." class="hidden w-full p-2 bg-amber-50/60 border border-amber-200 rounded-xl text-xs mt-1.5 focus:outline-none" />
+            <select id="newEquipCategorySelect" onchange="handleCategorySelectChange(this.value)" class="w-full p-2 bg-slate-50 border rounded-xl text-xs font-medium"></select>
+            <input type="text" id="newEquipCustomCategory" placeholder="พิมพ์ชื่อหมวดหมู่ใหม่..." class="hidden w-full p-2 bg-amber-50/60 border border-amber-200 rounded-xl text-xs mt-1.5" />
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
@@ -534,7 +439,7 @@
             </div>
             <div>
               <label class="block font-semibold text-slate-700 mb-1">หน่วยนับ</label>
-              <input type="text" id="newEquipUnit" value="ชิ้น" placeholder="ชิ้น, เครื่อง..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs text-center" />
+              <input type="text" id="newEquipUnit" value="ชิ้น" class="w-full p-2 bg-slate-50 border rounded-xl text-xs text-center" />
             </div>
           </div>
         </div>
@@ -542,29 +447,86 @@
         <div class="grid grid-cols-2 gap-2.5">
           <div>
             <label class="block font-medium text-slate-700 mb-1">สี / ลวดลาย</label>
-            <input type="text" id="newEquipColor" placeholder="เช่น ดำ, น้ำเงิน..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs" />
+            <input type="text" id="newEquipColor" placeholder="เช่น ดำ..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs" />
           </div>
           <div>
             <label class="block font-medium text-slate-700 mb-1">ขนาด / สเปก</label>
-            <input type="text" id="newEquipSize" placeholder="เช่น ไซส์ L, 10 เมตร..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs" />
+            <input type="text" id="newEquipSize" placeholder="เช่น 10 เมตร..." class="w-full p-2 bg-slate-50 border rounded-xl text-xs" />
           </div>
         </div>
-
       </div>
 
-      <!-- Footer Buttons -->
       <div class="border-t pt-3 flex items-center justify-end gap-2 shrink-0">
-        <button type="button" onclick="closeAddEquipmentModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs transition-colors">
-          ยกเลิก
-        </button>
-        <button type="button" id="btnSaveNewEquipment" onclick="saveNewEquipment()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-[#12281e] to-[#244c37] hover:brightness-110 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5">
-          <i class="fa-solid fa-cloud-arrow-up"></i> <span>บันทึกพัสดุเข้าคลัง</span>
+        <button type="button" onclick="closeAddEquipmentModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs">ยกเลิก</button>
+        <button type="button" id="btnSaveNewEquipment" onclick="saveEquipmentData()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-[#10231a] to-[#204434] hover:brightness-110 text-white font-bold text-xs shadow-md flex items-center gap-1.5">
+          <i class="fa-solid fa-cloud-arrow-up"></i> <span id="btnSaveEquipText">บันทึกพัสดุเข้าคลัง</span>
         </button>
       </div>
-
     </div>
   </dialog>
-  <!-- TOAST -->
+
+  <!-- MODAL: ADMIN BILL DETAIL -->
+  <dialog id="billManageModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-3xl w-[95vw] border border-slate-100">
+    <div class="p-4 sm:p-6 space-y-4 bg-white rounded-3xl max-h-[90vh] flex flex-col justify-between">
+      <div class="flex items-center justify-between border-b pb-3 shrink-0">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="billManageBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">รอดำเนินการ</span>
+            <h3 id="billManageTitle" class="font-bold text-sm sm:text-base text-[#10231a]"></h3>
+          </div>
+          <p id="billManageSub" class="text-[11px] text-slate-400 font-mono mt-0.5"></p>
+        </div>
+        <button onclick="billManageModal.close()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
+      </div>
+
+      <div id="billManageMeta" class="bg-slate-50 p-3 rounded-2xl text-xs text-slate-600 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shrink-0 border border-slate-100"></div>
+      <div class="flex-1 overflow-y-auto space-y-2.5 custom-scroll py-1 pr-1" id="billManageItemsContainer"></div>
+      <div id="billManageFooter" class="border-t pt-3 shrink-0 flex flex-col sm:flex-row gap-2 items-center justify-between"></div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: BRANDING / LOGO CONFIG -->
+  <dialog id="logoModal" class="p-0 backdrop:bg-slate-900/60 rounded-3xl shadow-2xl max-w-md w-[94vw] border border-slate-100">
+    <div class="p-5 space-y-4 bg-white rounded-3xl">
+      <div class="flex items-center justify-between border-b pb-2.5">
+        <h3 class="font-bold text-sm sm:text-base text-[#10231a] flex items-center gap-1.5">
+          <i class="fa-solid fa-award text-[#c5a880]"></i> ตั้งค่าตราสัญลักษณ์สโมสร
+        </h3>
+        <button onclick="logoModal.close()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-700 text-xs font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="flex flex-col items-center justify-center p-4 bg-slate-50 border border-dashed rounded-2xl">
+          <div class="w-20 h-20 rounded-2xl bg-white border shadow-sm p-1.5 flex items-center justify-center overflow-hidden mb-2">
+            <img id="logoModalPreview" src="" alt="ตัวอย่างตราสโมสร" class="w-full h-full object-contain hidden" />
+            <i id="logoModalFallback" class="fa-solid fa-image text-3xl text-slate-300"></i>
+          </div>
+          <p class="text-[11px] text-slate-400">ใช้แสดงในระบบและหัวกระดาษพิมพ์ใบยืมพัสดุ</p>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">ลิงก์ URL รูปภาพ (Direct Link หรือ Google Drive)</label>
+          <input type="text" id="logoUrlInput" oninput="previewLogoFromUrl(this.value)" placeholder="https://..." class="w-full p-2.5 bg-slate-50 border rounded-xl text-xs" />
+        </div>
+
+        <div class="text-center font-bold text-slate-400 text-[11px]">หรืออัปโหลดไฟล์</div>
+
+        <div>
+          <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoFileUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-emerald-50 file:text-emerald-800" />
+        </div>
+      </div>
+
+      <div class="border-t pt-3 flex items-center justify-between gap-2">
+        <button onclick="resetToDefaultLogo()" class="px-3 py-2 rounded-xl text-xs font-medium text-rose-600 hover:bg-rose-50">ล้างค่าเริ่มต้น</button>
+        <div class="flex items-center gap-2">
+          <button onclick="logoModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold">ยกเลิก</button>
+          <button onclick="saveLogoSettings()" class="px-5 py-2 rounded-xl bg-emerald-800 text-white font-bold text-xs shadow-md">บันทึก</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- TOAST NOTIFICATION -->
   <div id="toastNotification" class="fixed bottom-4 right-4 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 max-w-sm w-full px-3">
     <div id="toastInner" class="p-3.5 rounded-2xl shadow-xl font-medium text-xs flex items-center justify-between text-white bg-slate-800">
       <span id="toastMsg">แจ้งเตือน</span>
@@ -572,11 +534,11 @@
     </div>
   </div>
 
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
-    
-    // REST API Wrapper: จำลอง google.script.run ให้เรียกผ่าน fetch API แทน
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw9DjdFBpgcobqpR_uzGNeLHgImVHDYImXyuhkWALACLWHxqlMtVXRo_a0BpsQnnP3Q/exec";
 
+    // Dynamic API Runner พร้อม credentials: 'omit' เพื่อแก้ปัญหา Google Multiple Accounts Echo 404
     window.google = {
       script: {
         run: (function createRunner(successHandler, failureHandler) {
@@ -589,51 +551,34 @@
                 var args = Array.prototype.slice.call(arguments);
                 var payload = {};
 
-                if (actionName === 'verifyLogin') {
-                  payload = { loginId: args[0], firstName: args[1], userType: args[2] };
-                } else if (actionName === 'registerNewUser') {
-                  payload = args[0];
-                } else if (actionName === 'submitCartRequest') {
-                  payload = { cartItems: args[0], userInfo: args[1], userNote: args[2] };
-                } else if (actionName === 'getAdminRequests') {
-                  payload = { userIdFilter: args[0] };
-                } else if (actionName === 'processBatchApproval') {
-                  payload = { billActionsList: args[0] };
-                } else if (actionName === 'processBatchReturn') {
-                  payload = { returnList: args[0], generalComment: args[1] };
-                } else if (actionName === 'getEquipmentBorrowers') {
-                  payload = { eqId: args[0] };
-                }
+                if (actionName === 'verifyLogin') payload = { loginId: args[0], firstName: args[1], userType: args[2] };
+                else if (actionName === 'registerNewUser') payload = args[0];
+                else if (actionName === 'submitCartRequest') payload = { cartItems: args[0], userInfo: args[1], userNote: args[2] };
+                else if (actionName === 'getAdminRequests') payload = { userIdFilter: args[0] };
+                else if (actionName === 'processBatchApproval') payload = { billActionsList: args[0] };
+                else if (actionName === 'processBatchReturn') payload = { returnList: args[0], generalComment: args[1] };
+                else if (actionName === 'getEquipmentBorrowers') payload = { eqId: args[0] };
+                else if (actionName === 'addNewEquipment') payload = args[0];
+                else if (actionName === 'updateEquipment') payload = args[0];
 
                 fetch(GAS_API_URL, {
                   method: 'POST',
                   headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                   body: JSON.stringify({ action: actionName, payload: payload }),
-                  redirect: 'follow'
+                  redirect: 'follow',
+                  credentials: 'omit'
                 })
                 .then(function(res) {
-                  if (!res.ok) {
-                    throw new Error("HTTP Status " + res.status);
-                  }
-                  return res.text();
+                  if (!res.ok) throw new Error("HTTP Status " + res.status);
+                  return res.json();
                 })
-                .then(function(text) {
-                  try {
-                    var data = JSON.parse(text);
-                    if (successHandler) successHandler(data);
-                  } catch (e) {
-                    throw new Error("Invalid JSON: " + text.substring(0, 100));
-                  }
+                .then(function(data) {
+                  if (successHandler) successHandler(data);
                 })
                 .catch(function(err) {
                   console.error("API Call Error:", err);
                   showLoading(false);
-                  var loginBtn = document.getElementById('btnGateLogin');
-                  if (loginBtn) {
-                    loginBtn.disabled = false;
-                    loginBtn.innerText = 'เข้าสู่ระบบคลังพัสดุ';
-                  }
-                  showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ (ตรวจสอบสิทธิ์การ Deploy ของ Google Script)', 'error');
+                  showToast('การเชื่อมต่อขัดข้อง กรุณาลองใหม่อีกครั้ง', 'error');
                   if (failureHandler) failureHandler(err);
                 });
               };
@@ -648,13 +593,16 @@
     var cart = [];
     var adminRequests = [];
     var currentAdminMode = 'BORROW';
-    var activeCategory = 'ALL';
     var currentClubLogo = '';
     var tempUploadedLogo = '';
+    var mediaStream = null;
+    var capturedPhotoBase64 = '';
+    var currentEditingItemId = null;
+    var currentFocusedDetailId = null;
 
     window.addEventListener('DOMContentLoaded', function() {
-  currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=7';
-  renderClubLogo(currentClubLogo);
+      currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=9';
+      renderClubLogo(currentClubLogo);
 
       var session = localStorage.getItem('smo_rx_user');
       if (session) {
@@ -665,14 +613,7 @@
           currentUser = null;
         }
       }
-function updateFavicon(iconUrl) {
-  var favicon = document.getElementById('dynamicFavicon');
-  if (favicon) {
-    favicon.href = iconUrl ? cleanDriveUrl(iconUrl) : 'logo.png';
-  }
-  // ถ้ามีการตั้งค่าตราสโมสร ให้ใช้ตราสโมสรเป็น Favicon ถ้าไม่มีให้ใช้รูป Default
-  favicon.href = iconUrl ? cleanDriveUrl(iconUrl) : 'https://placehold.co/64x64/1b382b/ffffff?text=RxCU';
-}
+
       if (currentUser && currentUser.id) {
         unlockAppInterface();
       } else {
@@ -685,7 +626,23 @@ function updateFavicon(iconUrl) {
       if (startDateEl) startDateEl.value = today;
       if (endDateEl) endDateEl.value = today;
     });
-function updateFavicon(iconUrl) {
+
+    function cleanDriveUrl(url) {
+      var fallback = 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
+      if (!url) return fallback;
+      url = url.toString().trim();
+      if (url.indexOf('data:image') === 0) return url;
+      if (url.indexOf('drive.google.com') !== -1) {
+        var match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/[?&]id=([a-zA-Z0-9-_]+)/);
+        if (match && match[1]) return 'https://lh3.googleusercontent.com/d/' + match[1];
+      }
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        return fallback;
+      }
+      return url || fallback;
+    }
+
+    function updateFavicon(iconUrl) {
       var favicon = document.getElementById('dynamicFavicon');
       if (!favicon) {
         favicon = document.createElement('link');
@@ -693,102 +650,29 @@ function updateFavicon(iconUrl) {
         favicon.rel = 'icon';
         document.head.appendChild(favicon);
       }
-      if (iconUrl) {
-        favicon.href = cleanDriveUrl(iconUrl);
-      }
+      favicon.href = iconUrl ? cleanDriveUrl(iconUrl) : '/favicon.png?v=9';
     }
+
     function renderClubLogo(url) {
       var clean = cleanDriveUrl(url);
       var hasLogo = !!url;
-
-      if (typeof updateFavicon === 'function') {
-        updateFavicon(url);
-      }
+      updateFavicon(url);
 
       var gateImg = document.getElementById('gateLogoPreview');
       var gateFallback = document.getElementById('gateLogoFallback');
-      if (hasLogo) {
+      if (gateImg && gateFallback) {
         gateImg.src = clean;
-        gateImg.classList.remove('hidden');
-        gateFallback.classList.add('hidden');
-      } else {
-        gateImg.classList.add('hidden');
-        gateFallback.classList.remove('hidden');
+        gateImg.classList.toggle('hidden', !hasLogo);
+        gateFallback.classList.toggle('hidden', hasLogo);
       }
 
       var navImg = document.getElementById('navLogoPreview');
       var navFallback = document.getElementById('navLogoFallback');
-      if (hasLogo) {
+      if (navImg && navFallback) {
         navImg.src = clean;
-        navImg.classList.remove('hidden');
-        navFallback.classList.add('hidden');
-      } else {
-        navImg.classList.add('hidden');
-        navFallback.classList.remove('hidden');
+        navImg.classList.toggle('hidden', !hasLogo);
+        navFallback.classList.toggle('hidden', hasLogo);
       }
-    }
-
-    function openLogoSettingModal() {
-      tempUploadedLogo = '';
-      document.getElementById('logoUrlInput').value = currentClubLogo.indexOf('data:image') === 0 ? '' : currentClubLogo;
-      document.getElementById('logoFileInput').value = '';
-      previewLogoModal(currentClubLogo);
-      logoModal.showModal();
-    }
-
-    function previewLogoFromUrl(val) {
-      tempUploadedLogo = '';
-      previewLogoModal(val.trim());
-    }
-
-    function handleLogoFileUpload(e) {
-      var file = e.target.files[0];
-      if (!file) return;
-      if (file.size > 2 * 1024 * 1024) {
-        showToast('ขนาดไฟล์ภาพต้องไม่เกิน 2MB', 'warning');
-        return;
-      }
-      var reader = new FileReader();
-      reader.onload = function(evt) {
-        tempUploadedLogo = evt.target.result;
-        previewLogoModal(tempUploadedLogo);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function previewLogoModal(src) {
-      var img = document.getElementById('logoModalPreview');
-      var fb = document.getElementById('logoModalFallback');
-      var clean = cleanDriveUrl(src);
-      if (src) {
-        img.src = clean;
-        img.classList.remove('hidden');
-        fb.classList.add('hidden');
-      } else {
-        img.classList.add('hidden');
-        fb.classList.remove('hidden');
-      }
-    }
-
-    function saveLogoSettings() {
-      var finalLogo = tempUploadedLogo || document.getElementById('logoUrlInput').value.trim();
-      currentClubLogo = finalLogo;
-      if (finalLogo) {
-        localStorage.setItem('smo_rx_logo', finalLogo);
-        showToast('บันทึกตราสัญลักษณ์เรียบร้อย', 'success');
-      } else {
-        localStorage.removeItem('smo_rx_logo');
-        showToast('รีเซ็ตเป็นค่าเริ่มต้นแล้ว', 'info');
-      }
-      renderClubLogo(currentClubLogo);
-      logoModal.close();
-    }
-
-    function resetToDefaultLogo() {
-      tempUploadedLogo = '';
-      document.getElementById('logoUrlInput').value = '';
-      document.getElementById('logoFileInput').value = '';
-      previewLogoModal('');
     }
 
     function lockToAuthGate() {
@@ -811,12 +695,12 @@ function updateFavicon(iconUrl) {
       var formReg = document.getElementById('gateRegisterForm');
 
       if (mode === 'LOGIN') {
-        tabLogin.className = 'flex-1 py-2 rounded-xl bg-white shadow-sm text-[#12281e] font-bold transition-all';
+        tabLogin.className = 'flex-1 py-2 rounded-xl bg-white shadow-sm text-[#183327] font-bold transition-all';
         tabReg.className = 'flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-medium transition-all';
         formLogin.classList.remove('hidden');
         formReg.classList.add('hidden');
       } else {
-        tabReg.className = 'flex-1 py-2 rounded-xl bg-white shadow-sm text-[#12281e] font-bold transition-all';
+        tabReg.className = 'flex-1 py-2 rounded-xl bg-white shadow-sm text-[#183327] font-bold transition-all';
         tabLogin.className = 'flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 font-medium transition-all';
         formReg.classList.remove('hidden');
         formLogin.classList.add('hidden');
@@ -830,13 +714,13 @@ function updateFavicon(iconUrl) {
 
       var btn = document.getElementById('btnGateLogin');
       btn.disabled = true;
-      btn.innerText = 'กำลังตรวจสอบข้อมูล...';
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> ตรวจสอบข้อมูล...';
       showLoading(true);
 
       google.script.run
         .withSuccessHandler(function(res) {
           btn.disabled = false;
-          btn.innerText = 'เข้าสู่ระบบคลังพัสดุ';
+          btn.innerHTML = '<span>เข้าสู่ระบบคลังพัสดุ</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
           showLoading(false);
 
           if (res && res.success) {
@@ -857,9 +741,8 @@ function updateFavicon(iconUrl) {
         })
         .withFailureHandler(function() {
           btn.disabled = false;
-          btn.innerText = 'เข้าสู่ระบบคลังพัสดุ';
+          btn.innerHTML = '<span>เข้าสู่ระบบคลังพัสดุ</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
           showLoading(false);
-          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
         })
         .verifyLogin(id, name, 'ภายใน');
     }
@@ -906,7 +789,6 @@ function updateFavicon(iconUrl) {
           btn.disabled = false;
           btn.innerText = 'บันทึกการลงทะเบียนและเข้าใช้งาน';
           showLoading(false);
-          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
         })
         .registerNewUser(payload);
     }
@@ -929,11 +811,7 @@ function updateFavicon(iconUrl) {
 
       var role = (currentUser.role || '').toLowerCase();
       var isAdmin = role.indexOf('แอดมิน') !== -1 || role.indexOf('พัสดุ') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1;
-      if (isAdmin) {
-        document.getElementById('btnAdminView').classList.remove('hidden');
-      } else {
-        document.getElementById('btnAdminView').classList.add('hidden');
-      }
+      document.getElementById('btnAdminView').classList.toggle('hidden', !isAdmin);
     }
 
     function showStoreView() {
@@ -997,18 +875,6 @@ function updateFavicon(iconUrl) {
       toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
     }
 
-    function cleanDriveUrl(url) {
-      var fallback = 'https://placehold.co/300x200/1e4231/ffffff?text=RxCU+Supply';
-      if (!url) return fallback;
-      url = url.toString().trim();
-      if (url.indexOf('data:image') === 0) return url;
-      if (url.indexOf('drive.google.com') !== -1) {
-        var match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/[?&]id=([a-zA-Z0-9-_]+)/);
-        if (match && match[1]) return 'https://lh3.googleusercontent.com/d/' + match[1];
-      }
-      return url || fallback;
-    }
-
     function fetchCategories() {
       google.script.run
         .withSuccessHandler(function(cats) {
@@ -1031,7 +897,6 @@ function updateFavicon(iconUrl) {
         })
         .withFailureHandler(function() {
           showLoading(false);
-          showToast('ไม่สามารถดึงข้อมูลพัสดุได้', 'error');
         })
         .getEquipmentData();
     }
@@ -1089,8 +954,8 @@ function updateFavicon(iconUrl) {
           '<button onclick="changeCartQty(\'' + id + '\', 1)" class="w-7 h-6 rounded bg-white text-emerald-800 font-bold hover:bg-emerald-600 hover:text-white transition-colors text-xs">+</button>' +
         '</div>';
       }
-      return '<button onclick="addToCart(\'' + id + '\')" class="w-full py-1.5 rounded-lg bg-gradient-to-r from-[#12281e] to-[#244c37] hover:brightness-110 text-white font-semibold text-[11px] shadow-sm transition-all">' +
-        '<i class="fa-solid fa-plus mr-1"></i> ยืมพัสดุ' +
+      return '<button onclick="addToCart(\'' + id + '\')" class="w-full py-1.5 rounded-lg bg-gradient-to-r from-[#10231a] to-[#204434] hover:brightness-110 text-white font-semibold text-[11px] shadow-sm transition-all">' +
+        '<i class="fa-solid fa-plus mr-1"></i> ขอยืม' +
       '</button>';
     }
 
@@ -1133,7 +998,7 @@ function updateFavicon(iconUrl) {
       }
       updateCartState();
       updateSingleCard(id);
-      showToast('เพิ่ม ' + item['รายการ'] + ' ลงตะกร้าแล้ว', 'success');
+      showToast('เพิ่ม ' + item['รายการ'] + ' ในตะกร้าแล้ว', 'success');
     }
 
     function changeCartQty(id, delta) {
@@ -1254,7 +1119,6 @@ function updateFavicon(iconUrl) {
           btn.disabled = false;
           btn.innerText = 'ยืนยันส่งคำขอยืมอุปกรณ์';
           showLoading(false);
-          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
         })
         .submitCartRequest(payloadItems, currentUser, note);
     }
@@ -1271,7 +1135,6 @@ function updateFavicon(iconUrl) {
         })
         .withFailureHandler(function() {
           showLoading(false);
-          container.innerHTML = '<p class="col-span-full text-center text-xs text-rose-500 py-10">เกิดข้อผิดพลาดในการโหลดข้อมูล</p>';
         })
         .getAdminRequests(currentUser ? currentUser.id : null);
     }
@@ -1312,20 +1175,25 @@ function updateFavicon(iconUrl) {
 
         var itemsHtml = bill.items.map(function(item) {
           var st = item.Status;
-          var stColor = st.indexOf('อนุมัติ') !== -1 ? 'bg-emerald-100 text-emerald-800' : (st.indexOf('คืน') !== -1 ? 'bg-blue-100 text-blue-800' : 'bg-amber-100 text-amber-800');
-          return '<div class="flex items-center justify-between py-1.5 border-b border-slate-50 last:border-none">' +
-            '<div class="truncate pr-2">' +
-              '<span class="font-semibold text-slate-700 truncate block">' + item.EquipmentName + '</span>' +
-              '<span class="text-[10px] text-slate-400 font-mono">จำนวน: ' + item.Quantity + ' ' + item.EquipmentUnit + '</span>' +
+          var stColor = st.indexOf('อนุมัติ') !== -1 ? 'bg-emerald-100 text-emerald-800' : (st.indexOf('คืน') !== -1 ? 'bg-blue-100 text-blue-800' : (st.indexOf('ไม่อนุมัติ') !== -1 ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'));
+          var commentHtml = item.AdminComment ? '<p class="text-[10px] text-slate-500 mt-0.5"><b>ความเห็น:</b> ' + item.AdminComment + '</p>' : '';
+          
+          return '<div class="py-1.5 border-b border-slate-50 last:border-none">' +
+            '<div class="flex items-center justify-between">' +
+              '<div class="truncate pr-2">' +
+                '<span class="font-semibold text-slate-700 truncate block">' + item.EquipmentName + '</span>' +
+                '<span class="text-[10px] text-slate-400 font-mono">จำนวน: ' + item.Quantity + ' ' + item.EquipmentUnit + '</span>' +
+              '</div>' +
+              '<span class="text-[9px] px-2 py-0.5 rounded-full font-bold ' + stColor + ' shrink-0">' + st + '</span>' +
             '</div>' +
-            '<span class="text-[9px] px-2 py-0.5 rounded-full font-bold ' + stColor + ' shrink-0">' + st + '</span>' +
+            commentHtml +
           '</div>';
         }).join('');
 
         card.innerHTML = 
           '<div class="flex items-center justify-between border-b pb-2">' +
             '<div>' +
-              '<h4 class="font-bold text-sm text-[#12281e] flex items-center gap-1.5">' +
+              '<h4 class="font-bold text-sm text-[#10231a] flex items-center gap-1.5">' +
                 '<i class="fa-solid fa-folder-closed text-[#c5a880]"></i> โครงการ: ' + bill.project +
               '</h4>' +
               '<p class="text-[10px] text-slate-400 font-mono mt-0.5">เลขที่บิล: ' + bill.txId + '</p>' +
@@ -1350,10 +1218,10 @@ function updateFavicon(iconUrl) {
       var tabReturn = document.getElementById('adminTabReturn');
 
       if (mode === 'BORROW') {
-        tabBorrow.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#12281e] text-white shadow-sm transition-all';
+        tabBorrow.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] text-white shadow-sm transition-all';
         tabReturn.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all';
       } else {
-        tabReturn.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#12281e] text-white shadow-sm transition-all';
+        tabReturn.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] text-white shadow-sm transition-all';
         tabBorrow.className = 'flex-1 sm:flex-none px-3.5 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all';
       }
       renderAdminCards();
@@ -1373,7 +1241,7 @@ function updateFavicon(iconUrl) {
         })
         .withFailureHandler(function() {
           showLoading(false);
-          showToast('โหลดข้อมูลแอดมินล้มเหลว', 'error');
+          showToast('โหลดข้อมูลล้มเหลว', 'error');
         })
         .getAdminRequests(null);
     }
@@ -1391,7 +1259,6 @@ function updateFavicon(iconUrl) {
     function renderAdminCards() {
       var container = document.getElementById('adminCardsContainer');
       container.innerHTML = '';
-
       var query = document.getElementById('adminSearchInput').value.toLowerCase().trim();
 
       var bills = {};
@@ -1419,8 +1286,8 @@ function updateFavicon(iconUrl) {
         var hasPending = b.items.some(function(i) { return i.Status.indexOf('รอ') !== -1; });
         var hasBorrowing = b.items.some(function(i) { return i.Status.indexOf('อนุมัติ') !== -1; });
 
-        if (currentAdminMode === 'BORROW') return hasPending;
-        return hasBorrowing;
+        // กรองการแสดงผลตามโหมดแอดมิน
+        return currentAdminMode === 'BORROW' ? hasPending : hasBorrowing;
       });
 
       if (txKeys.length === 0) {
@@ -1431,21 +1298,25 @@ function updateFavicon(iconUrl) {
       txKeys.forEach(function(tx) {
         var b = bills[tx];
         var card = document.createElement('div');
-        card.className = 'bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all space-y-2.5 text-xs flex flex-col justify-between cursor-pointer group';
+        card.className = 'bg-white p-4 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all space-y-2.5 text-xs flex flex-col justify-between cursor-pointer';
         card.onclick = function(e) {
           if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) {
             openBillManageModal(b.txId);
           }
         };
 
-        var totalQty = b.items.reduce(function(acc, cur) { return acc + cur.Quantity; }, 0);
+        var relevantItems = currentAdminMode === 'BORROW' 
+          ? b.items.filter(function(i) { return i.Status.indexOf('รอ') !== -1; })
+          : b.items.filter(function(i) { return i.Status.indexOf('อนุมัติ') !== -1; });
+
+        var totalQty = relevantItems.reduce(function(acc, cur) { return acc + cur.Quantity; }, 0);
 
         card.innerHTML = 
           '<div>' +
             '<div class="flex items-start justify-between border-b pb-2">' +
               '<div class="pr-2 truncate">' +
                 '<span class="text-[9px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold">' + b.txId + '</span>' +
-                '<h4 class="font-bold text-sm text-[#12281e] truncate mt-1 group-hover:text-emerald-800 transition-colors">' + b.project + '</h4>' +
+                '<h4 class="font-bold text-sm text-[#10231a] truncate mt-1">' + b.project + '</h4>' +
               '</div>' +
               '<span class="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full ' + (currentAdminMode === 'BORROW' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800') + '">' +
                 (currentAdminMode === 'BORROW' ? 'รอดำเนินการ' : 'อยู่ระหว่างยืม') +
@@ -1454,12 +1325,12 @@ function updateFavicon(iconUrl) {
             '<div class="pt-2 space-y-1 text-slate-600 text-[11px]">' +
               '<p class="truncate">👤 <b>ผู้ยืม:</b> ' + b.borrowerName + ' <span class="text-slate-400 font-mono">(' + b.borrowerId + ')</span></p>' +
               '<p>🗓️ <b>กำหนดส่ง:</b> ' + b.returnDate + '</p>' +
-              '<p class="text-emerald-800 font-medium">📦 <b>พัสดุรวม:</b> ' + b.items.length + ' ชนิด (' + totalQty + ' รายการ)</p>' +
+              '<p class="text-emerald-800 font-medium">📦 <b>พัสดุ:</b> ' + relevantItems.length + ' ชนิด (' + totalQty + ' รายการ)</p>' +
             '</div>' +
           '</div>' +
           '<div class="border-t pt-2.5 flex items-center justify-between gap-2 mt-1">' +
-            '<button onclick="printA4Receipt(\'' + b.txId + '\')" class="p-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition-colors"><i class="fa-solid fa-print mr-1"></i> พิมพ์บิล</button>' +
-            '<button onclick="openBillManageModal(\'' + b.txId + '\')" class="flex-1 py-1.5 px-3 rounded-xl bg-[#12281e] hover:bg-[#244c37] text-white font-bold text-xs shadow-sm transition-all flex items-center justify-center gap-1.5">' +
+            '<button onclick="printA4Receipt(\'' + b.txId + '\')" class="p-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-[11px] transition-colors"><i class="fa-solid fa-print mr-1"></i> พิมพ์</button>' +
+            '<button onclick="openBillManageModal(\'' + b.txId + '\')" class="flex-1 py-1.5 px-3 rounded-xl bg-[#10231a] hover:bg-[#204434] text-white font-bold text-xs shadow-sm flex items-center justify-center gap-1.5">' +
               '<span>' + (currentAdminMode === 'BORROW' ? 'ตรวจบิล' : 'รับคืนพัสดุ') + '</span>' +
               '<i class="fa-solid fa-chevron-right text-[10px]"></i>' +
             '</button>' +
@@ -1474,11 +1345,21 @@ function updateFavicon(iconUrl) {
     }
 
     function openBillManageModal(txId) {
-      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
-      if (billItems.length === 0) return;
+      var allBillItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
+      if (allBillItems.length === 0) return;
 
-      var first = billItems[0];
+      var first = allBillItems[0];
       var isBorrowMode = currentAdminMode === 'BORROW';
+
+      // ถ้าเป็นโหมดรับคืน ให้กรองเฉพาะรายการที่อนุมัติ/ยืมอยู่จริงเท่านั้น
+      var billItems = isBorrowMode 
+        ? allBillItems.filter(function(r) { return r.Status.indexOf('รอ') !== -1; })
+        : allBillItems.filter(function(r) { return r.Status.indexOf('อนุมัติ') !== -1; });
+
+      if (billItems.length === 0) {
+        showToast('ไม่มีรายการพัสดุสำหรับโหมดนี้', 'info');
+        return;
+      }
 
       document.getElementById('billManageTitle').innerText = 'โครงการ: ' + first.ProjectGroup;
       document.getElementById('billManageSub').innerText = 'เลขที่บิล: ' + txId + ' | รหัสนิสิต: ' + first.BorrowerID;
@@ -1489,8 +1370,8 @@ function updateFavicon(iconUrl) {
 
       var meta = document.getElementById('billManageMeta');
       meta.innerHTML = 
-        '<div><p><b>👤 ผู้ขอยืม:</b> ' + first.BorrowerName + '</p><p><b>🗓️ ระยะเวลายืม:</b> ' + first.BorrowDate + ' ถึง ' + first.ReturnDate + '</p></div>' +
-        '<div><p class="truncate"><b>✍️ เหตุผล/กิจกรรม:</b> ' + (first.UserNote || '-') + '</p><p><b>📦 จำนวนชนิดอุปกรณ์:</b> ' + billItems.length + ' ชนิด</p></div>';
+        '<div><p><b>👤 ผู้ขอยืม:</b> ' + first.BorrowerName + '</p><p><b>🗓️️ ระยะเวลายืม:</b> ' + first.BorrowDate + ' ถึง ' + first.ReturnDate + '</p></div>' +
+        '<div><p class="truncate"><b>✍️ เหตุผล/กิจกรรม:</b> ' + (first.UserNote || '-') + '</p><p><b>📦 รายการในบิล:</b> ' + billItems.length + ' ชนิด</p></div>';
 
       var container = document.getElementById('billManageItemsContainer');
       container.innerHTML = '';
@@ -1498,7 +1379,6 @@ function updateFavicon(iconUrl) {
       billItems.forEach(function(item) {
         var row = document.createElement('div');
         row.className = 'bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3';
-
         var imgUrl = cleanDriveUrl(item.EquipmentImage);
 
         if (isBorrowMode) {
@@ -1508,7 +1388,7 @@ function updateFavicon(iconUrl) {
                 '<img src="' + imgUrl + '" alt="' + item.EquipmentName + '" class="w-full h-full object-cover rounded-lg" />' +
               '</div>' +
               '<div class="min-w-0">' +
-                '<h5 class="font-bold text-slate-800 truncate" title="' + item.EquipmentName + '">' + item.EquipmentName + '</h5>' +
+                '<h5 class="font-bold text-slate-800 truncate">' + item.EquipmentName + '</h5>' +
                 '<p class="text-[10px] text-slate-400 font-mono">รหัส: ' + item.EquipmentID + ' | สี: ' + (item.EquipmentColor || '-') + '</p>' +
                 '<p class="text-[11px] text-emerald-800 font-medium mt-0.5">ขอยืม: <b>' + item.Quantity + '</b> ' + item.EquipmentUnit + ' <span class="text-slate-400">(เหลือในคลัง: ' + item.EquipmentInStock + ')</span></p>' +
               '</div>' +
@@ -1516,14 +1396,14 @@ function updateFavicon(iconUrl) {
             '<div class="flex flex-wrap items-center gap-2 w-full sm:w-auto shrink-0">' +
               '<div class="flex items-center gap-1 bg-white p-1 rounded-xl border">' +
                 '<span class="text-slate-500 font-medium text-[11px] pl-1">อนุมัติ:</span>' +
-                '<input type="number" id="approveQty-' + item.rowIndex + '" value="' + item.Quantity + '" min="1" max="' + item.EquipmentInStock + '" class="w-12 p-1 text-center font-bold text-emerald-800 rounded text-xs bg-slate-50 focus:bg-white" />' +
+                '<input type="number" id="approveQty-' + item.rowIndex + '" value="' + item.Quantity + '" min="1" max="' + item.EquipmentInStock + '" class="w-12 p-1 text-center font-bold text-emerald-800 rounded text-xs bg-slate-50" />' +
               '</div>' +
-              '<select id="approveStatus-' + item.rowIndex + '" class="p-1.5 bg-white border rounded-xl text-xs font-semibold text-slate-700">' +
+              '<select id="approveStatus-' + item.rowIndex + '" onchange="handleApproveStatusChange(' + item.rowIndex + ', this.value)" class="p-1.5 bg-white border rounded-xl text-xs font-semibold text-slate-700">' +
                 '<option value="อนุมัติ" selected>🟢 อนุมัติ</option>' +
                 '<option value="ไม่อนุมัติ">🔴 ไม่อนุมัติ</option>' +
                 '<option value="รอดำเนินการ">🟡 รอไว้ก่อน</option>' +
               '</select>' +
-              '<input type="text" id="approveComment-' + item.rowIndex + '" placeholder="หมายเหตุ..." class="p-1.5 bg-white border rounded-xl text-xs w-28 sm:w-36" />' +
+              '<input type="text" id="approveComment-' + item.rowIndex + '" placeholder="หมายเหตุ..." class="p-1.5 bg-white border rounded-xl text-xs w-32 sm:w-44 transition-all" />' +
             '</div>';
         } else {
           row.innerHTML = 
@@ -1555,28 +1435,51 @@ function updateFavicon(iconUrl) {
       var footer = document.getElementById('billManageFooter');
       if (isBorrowMode) {
         footer.innerHTML = 
-          '<button onclick="billManageModal.close()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs transition-colors">ยกเลิก</button>' +
-          '<button onclick="submitBatchApprovalAction(\'' + txId + '\')" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-[#12281e] hover:bg-[#244c37] text-white font-bold text-xs shadow-md transition-all">บันทึกการอนุมัติบิล</button>';
+          '<button onclick="billManageModal.close()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs">ยกเลิก</button>' +
+          '<button onclick="submitBatchApprovalAction(\'' + txId + '\')" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-[#10231a] hover:bg-[#204434] text-white font-bold text-xs shadow-md">บันทึกการพิจารณาบิล</button>';
       } else {
         footer.innerHTML = 
           '<input type="text" id="returnGeneralComment" placeholder="หมายเหตุสรุปสภาพอุปกรณ์ตอนรับคืน..." class="w-full sm:flex-1 p-2 bg-slate-50 border rounded-xl text-xs" />' +
-          '<button onclick="submitBatchReturnAction(\'' + txId + '\')" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md shrink-0 transition-all">บันทึกรับคืนพัสดุ</button>';
+          '<button onclick="submitBatchReturnAction(\'' + txId + '\')" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md shrink-0">บันทึกรับคืนพัสดุ</button>';
       }
 
       billManageModal.showModal();
     }
 
+    function handleApproveStatusChange(rIdx, val) {
+      var commentInput = document.getElementById('approveComment-' + rIdx);
+      if (!commentInput) return;
+
+      if (val === 'ไม่อนุมัติ') {
+        commentInput.placeholder = '* ระบุเหตุผลที่ไม่อนุมัติ (จำเป็น)...';
+        commentInput.classList.add('border-rose-400', 'bg-rose-50');
+        commentInput.focus();
+      } else {
+        commentInput.placeholder = 'หมายเหตุ...';
+        commentInput.classList.remove('border-rose-400', 'bg-rose-50');
+      }
+    }
+
     function submitBatchApprovalAction(txId) {
-      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
+      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId && r.Status.indexOf('รอ') !== -1; });
       var actions = [];
 
-      billItems.forEach(function(item) {
+      for (var i = 0; i < billItems.length; i++) {
+        var item = billItems[i];
         var r = item.rowIndex;
         var q = document.getElementById('approveQty-' + r).value;
         var act = document.getElementById('approveStatus-' + r).value;
         var comment = document.getElementById('approveComment-' + r).value.trim();
+
+        // ตรวจสอบ: หากเลือกไม่อนุมัติ บังคับให้เขียนเหตุผล
+        if (act === 'ไม่อนุมัติ' && !comment) {
+          showToast('กรุณาระบุเหตุผลที่ไม่อนุมัติสำหรับ "' + item.EquipmentName + '"', 'warning');
+          document.getElementById('approveComment-' + r).focus();
+          return;
+        }
+
         actions.push({ rowIndex: r, action: act, quantity: q, comment: comment });
-      });
+      }
 
       showLoading(true);
       billManageModal.close();
@@ -1594,13 +1497,12 @@ function updateFavicon(iconUrl) {
         })
         .withFailureHandler(function() {
           showLoading(false);
-          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
         })
         .processBatchApproval(actions);
     }
 
     function submitBatchReturnAction(txId) {
-      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
+      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId && r.Status.indexOf('อนุมัติ') !== -1; });
       var returns = [];
 
       for (var i = 0; i < billItems.length; i++) {
@@ -1609,7 +1511,7 @@ function updateFavicon(iconUrl) {
         var bad = Number(document.getElementById('returnBad-' + r).value || 0);
 
         if ((good + bad) !== billItems[i].Quantity) {
-          return showToast('ผลรวมการตรวจคืนของ ' + billItems[i].EquipmentName + ' ต้องเท่ากับยอดที่ยืม (' + billItems[i].Quantity + ')', 'warning');
+          return showToast('ผลรวมของ ' + billItems[i].EquipmentName + ' ต้องเท่ากับยอดที่ยืม (' + billItems[i].Quantity + ')', 'warning');
         }
         returns.push({ rowIndex: r, returnQty: good, consumedQty: bad });
       }
@@ -1631,27 +1533,32 @@ function updateFavicon(iconUrl) {
         })
         .withFailureHandler(function() {
           showLoading(false);
-          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
         })
         .processBatchReturn(returns, note);
     }
 
     function openItemDetails(id) {
+      currentFocusedDetailId = id;
       var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === id; });
       if (!item) return;
 
       document.getElementById('detailTitle').innerText = item['รายการ'] || '-';
       document.getElementById('detailId').innerText = 'รหัสพัสดุ: ' + id;
       document.getElementById('detailImg').src = cleanDriveUrl(item['รูปภาพ']);
+      document.getElementById('detailCategory').innerText = item['หมวดหมู่'] || '-';
       document.getElementById('detailColor').innerText = item['สี/ลาย'] || '-';
       document.getElementById('detailSize').innerText = item['ขนาด'] || '-';
       document.getElementById('detailTotal').innerText = (item['จำนวนทั้งหมด'] || 0) + ' ' + (item['หน่วย'] || 'ชิ้น');
       document.getElementById('detailStock').innerText = (item['จำนวนคงเหลือปัจจุบัน'] || 0) + ' ' + (item['หน่วย'] || 'ชิ้น');
       document.getElementById('detailBorrowed').innerText = (item['จำนวนที่ติดยืมปัจจุบัน'] || 0) + ' ' + (item['หน่วย'] || 'ชิ้น');
 
+      // ตรวจสอบสิทธิ์เพื่อแสดงปุ่มแก้ไขพัสดุ
+      var role = (currentUser && currentUser.role ? currentUser.role : '').toLowerCase();
+      var isAdmin = role.indexOf('แอดมิน') !== -1 || role.indexOf('พัสดุ') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1;
+      document.getElementById('btnAdminEditEquip').classList.toggle('hidden', !isAdmin);
+
       var list = document.getElementById('borrowerListContainer');
       list.innerHTML = '<p class="text-slate-400 text-center py-2">กำลังดึงข้อมูลผู้ยืม...</p>';
-
       itemDetailModal.showModal();
 
       google.script.run
@@ -1670,13 +1577,18 @@ function updateFavicon(iconUrl) {
         .getEquipmentBorrowers(id);
     }
 
+    function triggerEditFromDetail() {
+      if (!currentFocusedDetailId) return;
+      itemDetailModal.close();
+      openEditEquipmentModal(currentFocusedDetailId);
+    }
+
     function printA4Receipt(txId) {
       var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
       if (billItems.length === 0) return showToast('ไม่พบข้อมูลบิลสำหรับพิมพ์', 'warning');
 
       var first = billItems[0];
       var logoSrc = cleanDriveUrl(currentClubLogo);
-
       var printWin = window.open('', '_blank', 'width=850,height=900');
       if (!printWin) return showToast('กรุณาอนุญาตป๊อปอัปเพื่อเปิดหน้าพิมพ์เอกสาร', 'warning');
 
@@ -1686,10 +1598,10 @@ function updateFavicon(iconUrl) {
       doc.write('<style>');
       doc.write('@page { size: A4 portrait; margin: 15mm; }');
       doc.write('body { font-family: "Kanit", sans-serif; font-size: 13px; color: #111; margin: 0; padding: 10px; line-height: 1.6; }');
-      doc.write('.header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1b382b; padding-bottom: 10px; margin-bottom: 14px; }');
+      doc.write('.header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #183327; padding-bottom: 10px; margin-bottom: 14px; }');
       doc.write('.logo-box { width: 55px; height: 55px; object-fit: contain; margin-right: 12px; }');
       doc.write('.brand-title { display: flex; align-items: center; }');
-      doc.write('.tx-box { border: 1.5px solid #1b382b; padding: 4px 10px; font-weight: bold; font-family: monospace; font-size: 13px; border-radius: 4px; }');
+      doc.write('.tx-box { border: 1.5px solid #183327; padding: 4px 10px; font-weight: bold; font-family: monospace; font-size: 13px; border-radius: 4px; }');
       doc.write('table { width: 100%; border-collapse: collapse; margin: 14px 0; }');
       doc.write('th, td { border: 1px solid #94a3b8; padding: 7px 10px; font-size: 12px; text-align: left; }');
       doc.write('th { background-color: #f1f5f9; text-align: center; font-weight: bold; }');
@@ -1701,7 +1613,7 @@ function updateFavicon(iconUrl) {
       if (currentClubLogo) {
         doc.write('<img src="' + logoSrc + '" class="logo-box" alt="ตราสโมสร" />');
       }
-      doc.write('<div><h2 style="margin:0; font-size:18px; color:#1b382b;">ใบยืม - คืน พัสดุอุปกรณ์</h2><p style="margin:0; font-size:12px; color:#475569;">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p></div>');
+      doc.write('<div><h2 style="margin:0; font-size:18px; color:#183327;">ใบยืม - คืน พัสดุอุปกรณ์</h2><p style="margin:0; font-size:12px; color:#475569;">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p></div>');
       doc.write('</div>');
       doc.write('<div class="tx-box">ที่ ' + txId + '</div>');
       doc.write('</div>');
@@ -1728,7 +1640,6 @@ function updateFavicon(iconUrl) {
       doc.write('</tbody></table>');
 
       doc.write('<p style="font-size:11px; margin-top:8px; color:#475569;">* ข้าพเจ้าขอรับรองว่าจะดูแลรักษาพัสดุอุปกรณ์ให้อยู่ในสภาพสมบูรณ์ หากเกิดการชำรุด เสียหาย หรือสูญหาย ยินดีรับผิดชอบชดใช้ตามระเบียบงานคลังพัสดุ สโมสรนิสิตฯ ทุกประการ</p>');
-
       doc.write('<div class="sig-grid">');
       doc.write('<div><p>ลงชื่อ ........................................................... ผู้ยืม</p><p>( ' + first.BorrowerName + ' )</p><p>วันที่ ......./......./...........</p></div>');
       doc.write('<div><p>ลงชื่อ ........................................................... เจ้าหน้าที่คลังพัสดุ</p><p>( กรรมการฝ่ายพัสดุและสถานที่ สโมสรนิสิตฯ )</p><p>วันที่ ......./......./...........</p></div>');
@@ -1743,12 +1654,13 @@ function updateFavicon(iconUrl) {
         printWin.close();
       }, 400);
     }
-    // --- NEW EQUIPMENT & CAMERA CAPTURE LOGIC ---
-    var mediaStream = null;
-    var capturedPhotoBase64 = '';
 
+    // Modal & Camera Logic
     function openAddEquipmentModal() {
-      // Auto-suggest Next ID
+      currentEditingItemId = null;
+      document.getElementById('equipModalTitle').innerHTML = '<i class="fa-solid fa-box-open text-[#c5a880]"></i> <span>เพิ่มรายการพัสดุใหม่เข้าคลัง</span>';
+      document.getElementById('btnSaveEquipText').innerText = 'บันทึกพัสดุเข้าคลัง';
+
       var maxNum = 0;
       allItems.forEach(function(i) {
         var id = (i['รหัสพัสดุ'] || '').toUpperCase();
@@ -1757,7 +1669,10 @@ function updateFavicon(iconUrl) {
       });
       var nextId = 'EQ-' + ('00' + (maxNum + 1)).slice(-3);
 
-      document.getElementById('newEquipId').value = nextId;
+      var idInput = document.getElementById('newEquipId');
+      idInput.value = nextId;
+      idInput.disabled = false;
+
       document.getElementById('newEquipName').value = '';
       document.getElementById('newEquipTotalQty').value = 1;
       document.getElementById('newEquipUnit').value = 'ชิ้น';
@@ -1766,7 +1681,53 @@ function updateFavicon(iconUrl) {
       document.getElementById('newEquipCustomCategory').value = '';
       document.getElementById('newEquipCustomCategory').classList.add('hidden');
       
-      // Populate category options
+      populateCategorySelect('');
+      removeEquipPhoto();
+      addEquipmentModal.showModal();
+    }
+
+    function openEditEquipmentModal(id) {
+      currentEditingItemId = id;
+      var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === id; });
+      if (!item) return;
+
+      document.getElementById('equipModalTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-[#c5a880]"></i> <span>แก้ไขรายละเอียดพัสดุ (' + id + ')</span>';
+      document.getElementById('btnSaveEquipText').innerText = 'บันทึกการแก้ไขข้อมูล';
+
+      var idInput = document.getElementById('newEquipId');
+      idInput.value = id;
+      idInput.disabled = true; // ป้องกันการแก้ ID ซ้ำซ้อน
+
+      document.getElementById('newEquipName').value = item['รายการ'] || '';
+      document.getElementById('newEquipTotalQty').value = Number(item['จำนวนทั้งหมด'] || 1);
+      document.getElementById('newEquipUnit').value = item['หน่วย'] || 'ชิ้น';
+      document.getElementById('newEquipColor').value = item['สี/ลาย'] || '';
+      document.getElementById('newEquipSize').value = item['ขนาด'] || '';
+      document.getElementById('newEquipCustomCategory').value = '';
+      document.getElementById('newEquipCustomCategory').classList.add('hidden');
+
+      populateCategorySelect(item['หมวดหมู่'] || '');
+
+      // พรีวิวรูปเดิม
+      capturedPhotoBase64 = '';
+      var preview = document.getElementById('newEquipPhotoPreview');
+      var fallback = document.getElementById('newEquipPhotoFallback');
+      var removeBtn = document.getElementById('btnRemovePhoto');
+      var existingImg = cleanDriveUrl(item['รูปภาพ']);
+
+      if (item['รูปภาพ']) {
+        preview.src = existingImg;
+        preview.classList.remove('hidden');
+        fallback.classList.add('hidden');
+        removeBtn.classList.remove('hidden');
+      } else {
+        removeEquipPhoto();
+      }
+
+      addEquipmentModal.showModal();
+    }
+
+    function populateCategorySelect(selectedCat) {
       var catSelect = document.getElementById('newEquipCategorySelect');
       catSelect.innerHTML = '<option value="">-- เลือกหมวดหมู่ --</option>';
       var existingCats = [];
@@ -1774,13 +1735,18 @@ function updateFavicon(iconUrl) {
         var c = item['หมวดหมู่'];
         if (c && existingCats.indexOf(c) === -1) existingCats.push(c);
       });
-      existingCats.forEach(function(cat) {
-        catSelect.insertAdjacentHTML('beforeend', '<option value="' + cat + '">' + cat + '</option>');
-      });
-      catSelect.insertAdjacentHTML('beforeend', '<option value="__NEW__">➕ เพิ่มหมวดหมู่ใหม่...</option>');
 
-      removeEquipPhoto();
-      addEquipmentModal.showModal();
+      var found = false;
+      existingCats.forEach(function(cat) {
+        var isSel = cat === selectedCat;
+        if (isSel) found = true;
+        catSelect.insertAdjacentHTML('beforeend', '<option value="' + cat + '" ' + (isSel ? 'selected' : '') + '>' + cat + '</option>');
+      });
+
+      if (selectedCat && !found) {
+        catSelect.insertAdjacentHTML('beforeend', '<option value="' + selectedCat + '" selected>' + selectedCat + '</option>');
+      }
+      catSelect.insertAdjacentHTML('beforeend', '<option value="__NEW__">➕ เพิ่มหมวดหมู่ใหม่...</option>');
     }
 
     function closeAddEquipmentModal() {
@@ -1798,7 +1764,6 @@ function updateFavicon(iconUrl) {
       }
     }
 
-    // Camera Stream (Webcam / Live Device Camera)
     async function toggleWebcam() {
       var wrapper = document.getElementById('cameraLiveWrapper');
       var btn = document.getElementById('btnToggleWebcam');
@@ -1818,7 +1783,7 @@ function updateFavicon(iconUrl) {
         wrapper.classList.remove('hidden');
         btn.innerHTML = '<i class="fa-solid fa-video-slash mr-1"></i> ปิดกล้องสด';
       } catch (err) {
-        showToast('ไม่สามารถเข้าถึงกล้องได้ กรุณาใช้ปุ่มถ่ายรูป/เลือกภาพแทน', 'warning');
+        showToast('ไม่สามารถเปิดกล้องได้ กรุณาใช้ปุ่มถ่ายรูป/เลือกภาพแทน', 'warning');
       }
     }
 
@@ -1833,7 +1798,6 @@ function updateFavicon(iconUrl) {
       if (btn) btn.innerHTML = '<i class="fa-solid fa-video mr-1"></i> เปิดกล้องสด';
     }
 
-    // Take snapshot from Live Webcam
     function takeSnapshot() {
       var video = document.getElementById('cameraVideo');
       var canvas = document.getElementById('photoCanvas');
@@ -1842,12 +1806,10 @@ function updateFavicon(iconUrl) {
       canvas.width = video.videoWidth || 800;
       canvas.height = video.videoHeight || 600;
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
       compressAndSetPhoto(canvas.toDataURL('image/jpeg', 0.8));
       stopWebcam();
     }
 
-    // Handle Image from Native Camera / File Picker
     function handleEquipPhotoFile(e) {
       var file = e.target.files[0];
       if (!file) return;
@@ -1856,10 +1818,9 @@ function updateFavicon(iconUrl) {
       reader.onload = function(evt) {
         var img = new Image();
         img.onload = function() {
-          // Client-side auto resize for fast upload (Max 900px)
           var canvas = document.getElementById('photoCanvas');
           var ctx = canvas.getContext('2d');
-          var maxDim = 900;
+          var maxDim = 850;
           var width = img.width;
           var height = img.height;
 
@@ -1874,7 +1835,7 @@ function updateFavicon(iconUrl) {
           canvas.width = width;
           canvas.height = height;
           ctx.drawImage(img, 0, 0, width, height);
-          compressAndSetPhoto(canvas.toDataURL('image/jpeg', 0.78));
+          compressAndSetPhoto(canvas.toDataURL('image/jpeg', 0.8));
         };
         img.src = evt.target.result;
       };
@@ -1907,8 +1868,8 @@ function updateFavicon(iconUrl) {
       if (fileInput) fileInput.value = '';
     }
 
-    // Submit New Equipment
-    function saveNewEquipment() {
+    function saveEquipmentData() {
+      var isEdit = !!currentEditingItemId;
       var id = document.getElementById('newEquipId').value.trim();
       var name = document.getElementById('newEquipName').value.trim();
       var catSelect = document.getElementById('newEquipCategorySelect').value;
@@ -1922,9 +1883,10 @@ function updateFavicon(iconUrl) {
       if (!id || !name) return showToast('กรุณาระบุรหัสพัสดุและชื่อรายการ', 'warning');
       if (!category) return showToast('กรุณาเลือกหรือระบุหมวดหมู่พัสดุ', 'warning');
 
-      // Check Duplicate ID
-      var isDuplicate = allItems.some(function(i) { return (i['รหัสพัสดุ'] || '').toUpperCase() === id.toUpperCase(); });
-      if (isDuplicate) return showToast('รหัสพัสดุ ' + id + ' มีอยู่ในระบบแล้ว', 'warning');
+      if (!isEdit) {
+        var isDuplicate = allItems.some(function(i) { return (i['รหัสพัสดุ'] || '').toUpperCase() === id.toUpperCase(); });
+        if (isDuplicate) return showToast('รหัสพัสดุ ' + id + ' มีอยู่ในระบบแล้ว', 'warning');
+      }
 
       var payload = {
         id: id,
@@ -1939,37 +1901,92 @@ function updateFavicon(iconUrl) {
 
       var btn = document.getElementById('btnSaveNewEquipment');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> กำลังบันทึกข้อมูลและอัปโหลดรูป...';
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> กำลังบันทึกข้อมูล...';
       showLoading(true);
 
-      // Call API (will route through google.script.run wrapper to Apps Script)
-      fetch(GAS_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'addNewEquipment', payload: payload }),
-        redirect: 'follow'
-      })
-      .then(function(res) { return res.json(); })
-      .then(function(data) {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> <span>บันทึกพัสดุเข้าคลัง</span>';
-        showLoading(false);
+      var action = isEdit ? 'updateEquipment' : 'addNewEquipment';
 
-        if (data && data.success) {
-          showToast('เพิ่มรายการพัสดุ ' + name + ' เรียบร้อยแล้ว', 'success');
-          closeAddEquipmentModal();
-          fetchCategories();
-          fetchCatalogData();
-        } else {
-          showToast(data ? data.message : 'เกิดข้อผิดพลาดในการบันทึก', 'error');
-        }
-      })
-      .catch(function(err) {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> <span>บันทึกพัสดุเข้าคลัง</span>';
-        showLoading(false);
-        showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้', 'error');
-      });
+      google.script.run
+        .withSuccessHandler(function(res) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> <span id="btnSaveEquipText">' + (isEdit ? 'บันทึกการแก้ไขข้อมูล' : 'บันทึกพัสดุเข้าคลัง') + '</span>';
+          showLoading(false);
+
+          if (res && res.success) {
+            showToast((isEdit ? 'แก้ไขข้อมูลพัสดุ ' : 'เพิ่มรายการพัสดุ ') + name + ' เรียบร้อยแล้ว', 'success');
+            closeAddEquipmentModal();
+            fetchCategories();
+            fetchCatalogData();
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการบันทึก', 'error');
+          }
+        })
+        .withFailureHandler(function() {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-1"></i> <span id="btnSaveEquipText">' + (isEdit ? 'บันทึกการแก้ไขข้อมูล' : 'บันทึกพัสดุเข้าคลัง') + '</span>';
+          showLoading(false);
+        })[action](payload);
+    }
+
+    // Logo Modal Handlers
+    function openLogoSettingModal() {
+      tempUploadedLogo = '';
+      document.getElementById('logoUrlInput').value = currentClubLogo.indexOf('data:image') === 0 ? '' : currentClubLogo;
+      document.getElementById('logoFileInput').value = '';
+      previewLogoModal(currentClubLogo);
+      logoModal.showModal();
+    }
+
+    function previewLogoFromUrl(val) {
+      tempUploadedLogo = '';
+      previewLogoModal(val.trim());
+    }
+
+    function handleLogoFileUpload(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) return showToast('ขนาดไฟล์ภาพต้องไม่เกิน 2MB', 'warning');
+      var reader = new FileReader();
+      reader.onload = function(evt) {
+        tempUploadedLogo = evt.target.result;
+        previewLogoModal(tempUploadedLogo);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewLogoModal(src) {
+      var img = document.getElementById('logoModalPreview');
+      var fb = document.getElementById('logoModalFallback');
+      var clean = cleanDriveUrl(src);
+      if (src) {
+        img.src = clean;
+        img.classList.remove('hidden');
+        fb.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        fb.classList.remove('hidden');
+      }
+    }
+
+    function saveLogoSettings() {
+      var finalLogo = tempUploadedLogo || document.getElementById('logoUrlInput').value.trim();
+      currentClubLogo = finalLogo;
+      if (finalLogo) {
+        localStorage.setItem('smo_rx_logo', finalLogo);
+        showToast('บันทึกตราสัญลักษณ์เรียบร้อย', 'success');
+      } else {
+        localStorage.removeItem('smo_rx_logo');
+        showToast('รีเซ็ตเป็นค่าเริ่มต้นแล้ว', 'info');
+      }
+      renderClubLogo(currentClubLogo);
+      logoModal.close();
+    }
+
+    function resetToDefaultLogo() {
+      tempUploadedLogo = '';
+      document.getElementById('logoUrlInput').value = '';
+      document.getElementById('logoFileInput').value = '';
+      previewLogoModal('');
     }
   </script>
 </body>
