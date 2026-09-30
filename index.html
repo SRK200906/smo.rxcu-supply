@@ -1727,16 +1727,16 @@
         doc.write('<td style="text-align:center;">' + (idx + 1) + '</td>');
         doc.write('<td>' + item.EquipmentName + ' (' + (item.EquipmentColor || '-') + ')</td>');
         doc.write('<td style="text-align:center;">' + item.Quantity + ' ' + item.EquipmentUnit + '</td>');
-        doc.write('<td style="text-align:center;">[ &nbsp; ]</td>');
-        doc.write('<td style="text-align:center;">[ &nbsp; ]</td>');
+        doc.write('<td style="text-align:center;"> </td>');
+        doc.write('<td style="text-align:center;"> </td>');
         doc.write('</tr>');
       });
       doc.write('</tbody></table>');
 
       doc.write('<p style="font-size:11px; margin-top:8px; color:#475569;">* ข้าพเจ้าขอรับรองว่าจะดูแลรักษาพัสดุอุปกรณ์ให้อยู่ในสภาพสมบูรณ์ หากเกิดการชำรุด เสียหาย หรือสูญหาย ยินดีรับผิดชอบชดใช้ตามระเบียบงานคลังพัสดุ สโมสรนิสิตฯ ทุกประการ</p>');
       doc.write('<div class="sig-grid">');
-      doc.write('<div><p>ลงชื่อ ........................................................... ผู้ยืม</p><p>( ' + first.BorrowerName + ' )</p><p>วันที่ ......./......./...........</p></div>');
-      doc.write('<div><p>ลงชื่อ ........................................................... เจ้าหน้าที่คลังพัสดุ</p><p>( กรรมการฝ่ายพัสดุและสถานที่ สโมสรนิสิตฯ )</p><p>วันที่ ......./......./...........</p></div>');
+      doc.write('<div><p>ลงชื่อ ................................................. ผู้ยืม</p><p>วันที่ ......./......./...........</p></div>');
+      doc.write('<div><p>ลงชื่อ ................................................. เจ้าหน้าที่</p><p>( กรรมการฝ่ายพัสดุและสถานที่ สโมสรนิสิตฯ )</p><p>วันที่ ......./......./...........</p></div>');
       doc.write('</div>');
 
       doc.write('</body></html>');
