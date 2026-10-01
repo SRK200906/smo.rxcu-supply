@@ -198,11 +198,11 @@
   </section>
 
   <!-- ================= MAIN APP WRAPPER ================= -->
-  <div id="appMainWrapper" class="hidden min-h-screen flex flex-col">
+  <div id="appMainWrapper" class="hidden min-h-screen flex flex-col pb-20 sm:pb-0">
 
-    <!-- Top Navigation Bar -->
-    <header class="luxury-glass sticky top-0 z-40 px-3 sm:px-6 py-2.5 text-white shadow-lg">
-      <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+    <!-- Top Navigation Bar (Clean & Responsive) -->
+    <header class="luxury-glass sticky top-0 z-40 px-3.5 sm:px-6 py-2.5 text-white shadow-lg">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
         
         <!-- Logo & Brand (คลิกแล้วกลับหน้า Home Dashboard เสมอ) -->
         <div class="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer min-w-0" onclick="showHomeView()">
@@ -213,47 +213,52 @@
           <div class="truncate">
             <h1 class="text-xs sm:text-sm font-semibold tracking-tight text-white flex items-center gap-1.5 truncate">
               <span>คลังพัสดุ สโมสรนิสิตฯ</span>
-              <span class="hidden sm:inline-block text-[10px] bg-[#c5a880]/25 text-[#fcefdc] px-2 py-0.5 rounded-full font-normal border border-[#c5a880]/30">SMO.RxCU</span>
+              <span class="text-[10px] bg-[#c5a880]/25 text-[#fcefdc] px-2 py-0.5 rounded-full font-normal border border-[#c5a880]/30 shrink-0">SMO.RxCU</span>
             </h1>
             <p id="userBarInfo" class="text-[11px] text-emerald-200/90 truncate"></p>
           </div>
         </div>
 
-        <!-- Navigation Action Buttons -->
+        <!-- Navigation Action Buttons (Desktop Navigation + Global Controls) -->
         <div class="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-          <span id="globalLoadingBadge" class="hidden text-[11px] bg-white/10 text-emerald-100 border border-white/20 px-2.5 py-1 rounded-full animate-pulse">
-            <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> โหลดข้อมูล...
+          <span id="globalLoadingBadge" class="hidden text-[10px] sm:text-[11px] bg-white/10 text-emerald-100 border border-white/20 px-2 sm:px-2.5 py-1 rounded-full animate-pulse">
+            <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> <span class="hidden sm:inline">โหลด...</span>
           </span>
 
+          <!-- Desktop Only Navigation Buttons -->
+          <div class="hidden sm:flex items-center space-x-1.5">
+            <button id="btnHomeView" onclick="showHomeView()" class="nav-desktop-btn px-3 py-1.5 text-xs font-medium rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all">
+              <i class="fa-solid fa-house mr-1"></i> หน้าแรก
+            </button>
+
+            <button id="btnStoreViewNav" onclick="showStoreView()" class="nav-desktop-btn px-3 py-1.5 text-xs font-medium rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all">
+              <i class="fa-solid fa-boxes-stacked mr-1"></i> คลังพัสดุ
+            </button>
+
+            <button id="btnTrackRequests" onclick="showTrackingView()" class="hidden nav-desktop-btn px-3 py-1.5 text-xs font-medium rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all">
+              <i class="fa-solid fa-clock-rotate-left mr-1"></i> ประวัติใบยืม
+            </button>
+
+            <button id="btnAdminView" onclick="showAdminView()" class="hidden px-3 py-1.5 text-xs font-medium rounded-xl bg-gradient-to-r from-[#dfc8a5] to-[#c5a880] hover:brightness-105 text-[#0f2018] font-bold shadow-md transition-all">
+              <i class="fa-solid fa-shield-halved mr-1"></i> เมนูแอดมิน
+            </button>
+
+            <button onclick="showCartView()" class="relative p-2 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600/80 hover:bg-emerald-600 border border-emerald-400/30 text-white transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-bag-shopping text-sm"></i>
+              <span class="text-xs font-medium">ตะกร้า</span>
+              <span id="cartBadgeCount" class="w-5 h-5 rounded-full bg-amber-400 text-slate-900 font-extrabold text-[10px] flex items-center justify-center shadow-sm">0</span>
+            </button>
+          </div>
+
           <!-- THEME TOGGLE BUTTON -->
-          <button id="themeToggleBtn" onclick="toggleTheme()" title="สลับโหมดมืด/สว่าง" class="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all flex items-center justify-center">
-            <i id="themeToggleIcon" class="fa-solid fa-moon text-sm text-emerald-200"></i>
+          <button id="themeToggleBtn" onclick="toggleTheme()" title="สลับโหมดมืด/สว่าง" class="p-2 sm:px-2.5 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all flex items-center justify-center">
+            <i id="themeToggleIcon" class="fa-solid fa-moon text-xs sm:text-sm text-emerald-200"></i>
           </button>
 
-          <button id="btnHomeView" onclick="showHomeView()" class="px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all">
-            <i class="fa-solid fa-house mr-1"></i> <span class="hidden sm:inline">หน้าแรก</span>
-          </button>
-
-          <button id="btnStoreViewNav" onclick="showStoreView()" class="px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all">
-            <i class="fa-solid fa-boxes-stacked mr-1"></i> <span class="hidden sm:inline">คลังพัสดุ</span>
-          </button>
-
-          <button id="btnTrackRequests" onclick="showTrackingView()" class="hidden px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all">
-            <i class="fa-solid fa-clock-rotate-left mr-1"></i> <span class="hidden sm:inline">ประวัติใบยืม</span>
-          </button>
-
-          <button id="btnAdminView" onclick="showAdminView()" class="hidden px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-gradient-to-r from-[#dfc8a5] to-[#c5a880] hover:brightness-105 text-[#0f2018] font-bold shadow-md transition-all">
-            <i class="fa-solid fa-shield-halved mr-1"></i> <span>เมนูแอดมิน</span>
-          </button>
-
-          <button onclick="showCartView()" class="relative p-2 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600/80 hover:bg-emerald-600 border border-emerald-400/30 text-white transition-all flex items-center gap-1.5">
-            <i class="fa-solid fa-bag-shopping text-sm sm:text-base"></i>
-            <span class="hidden sm:inline text-xs font-medium">ตะกร้า</span>
-            <span id="cartBadgeCount" class="w-5 h-5 rounded-full bg-amber-400 text-slate-900 font-extrabold text-[10px] flex items-center justify-center shadow-sm">0</span>
-          </button>
-
-          <button onclick="handleLogout()" title="ออกจากระบบ" class="px-2.5 py-1.5 sm:px-3 text-xs font-medium rounded-xl bg-rose-500/20 hover:bg-rose-600 border border-rose-300/30 text-rose-200 hover:text-white transition-all">
+          <!-- LOGOUT BUTTON -->
+          <button onclick="handleLogout()" title="ออกจากระบบ" class="p-2 sm:px-3 sm:py-1.5 text-xs font-medium rounded-xl bg-rose-500/20 hover:bg-rose-600 border border-rose-300/30 text-rose-200 hover:text-white transition-all flex items-center gap-1">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span class="hidden sm:inline">ออก</span>
           </button>
         </div>
 
@@ -535,6 +540,47 @@
       </section>
 
     </main>
+
+    <!-- ================= MOBILE APP-STYLE BOTTOM NAVIGATION DOCK ================= -->
+    <nav id="mobileBottomNav" class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0c1813]/95 backdrop-blur-xl border-t border-slate-200/90 dark:border-emerald-900/60 shadow-2xl px-2 py-1.5">
+      <div class="max-w-md mx-auto grid grid-cols-5 items-center text-center">
+        
+        <!-- Tab 1: หน้าแรก -->
+        <button id="mTabHome" onclick="showHomeView()" class="flex flex-col items-center justify-center py-1 rounded-xl text-[#c5a880] transition-all">
+          <i class="fa-solid fa-house text-base"></i>
+          <span class="text-[10px] font-medium mt-0.5">หน้าแรก</span>
+        </button>
+
+        <!-- Tab 2: คลังพัสดุ -->
+        <button id="mTabStore" onclick="showStoreView()" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 dark:text-slate-500 transition-all">
+          <i class="fa-solid fa-boxes-stacked text-base"></i>
+          <span class="text-[10px] font-medium mt-0.5">คลังพัสดุ</span>
+        </button>
+
+        <!-- Tab 3: ประวัติใบยืม -->
+        <button id="mTabTrack" onclick="showTrackingView()" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 dark:text-slate-500 transition-all">
+          <i class="fa-solid fa-clock-rotate-left text-base"></i>
+          <span class="text-[10px] font-medium mt-0.5">ประวัติยืม</span>
+        </button>
+
+        <!-- Tab 4: ตะกร้าพัสดุ (พร้อม Badge ตัวเลข) -->
+        <button id="mTabCart" onclick="showCartView()" class="flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 dark:text-slate-500 transition-all relative">
+          <div class="relative">
+            <i class="fa-solid fa-bag-shopping text-base"></i>
+            <span id="cartBadgeCountMobile" class="absolute -top-1.5 -right-2.5 w-4 h-4 rounded-full bg-amber-400 text-slate-900 font-extrabold text-[9px] flex items-center justify-center shadow-sm">0</span>
+          </div>
+          <span class="text-[10px] font-medium mt-0.5">ตะกร้า</span>
+        </button>
+
+        <!-- Tab 5: แอดมิน (แสดงเมื่อเป็นแอดมินเท่านั้น) -->
+        <button id="mTabAdmin" onclick="showAdminView()" class="hidden flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 dark:text-slate-500 transition-all">
+          <i class="fa-solid fa-shield-halved text-base"></i>
+          <span class="text-[10px] font-medium mt-0.5">แอดมิน</span>
+        </button>
+
+      </div>
+    </nav>
+
   </div>
 
   <!-- ================= MODAL: ITEM DETAIL ================= -->
@@ -1075,9 +1121,41 @@
       var role = (currentUser.role || '').toLowerCase();
       var isAdmin = role.indexOf('แอดมิน') !== -1 || role.indexOf('พัสดุ') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1;
       document.getElementById('btnAdminView').classList.toggle('hidden', !isAdmin);
+      
+      // อัปเดตการแสดงผลปุ่มแท็บแอดมินใน Mobile Bottom Bar
+      var mTabAdmin = document.getElementById('mTabAdmin');
+      if (mTabAdmin) {
+        mTabAdmin.classList.toggle('hidden', !isAdmin);
+        // ปรับจำนวนคอลัมน์ของ bottom dock ตามสิทธิ์
+        var dockGrid = mTabAdmin.parentElement;
+        if (dockGrid) {
+          dockGrid.className = isAdmin 
+            ? 'max-w-md mx-auto grid grid-cols-5 items-center text-center' 
+            : 'max-w-md mx-auto grid grid-cols-4 items-center text-center';
+        }
+      }
     }
 
-    // --- NAVIGATION LOGIC ---
+    // --- NAVIGATION LOGIC & MOBILE TAB SYNC ---
+    function setActiveNavTab(tabName) {
+      var mobileTabs = {
+        'HOME': document.getElementById('mTabHome'),
+        'STORE': document.getElementById('mTabStore'),
+        'TRACK': document.getElementById('mTabTrack'),
+        'CART': document.getElementById('mTabCart'),
+        'ADMIN': document.getElementById('mTabAdmin')
+      };
+
+      var activeClass = 'flex flex-col items-center justify-center py-1 rounded-xl text-[#c5a880] dark:text-[#dfc8a5] font-bold transition-all scale-105';
+      var inactiveClass = 'flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium transition-all';
+
+      Object.keys(mobileTabs).forEach(function(key) {
+        var el = mobileTabs[key];
+        if (el) {
+          el.className = (key === tabName) ? activeClass : inactiveClass;
+        }
+      });
+    }
 
     function showHomeView() {
       document.getElementById('homeView').classList.remove('hidden');
@@ -1085,6 +1163,7 @@
       document.getElementById('cartView').classList.add('hidden');
       document.getElementById('trackingView').classList.add('hidden');
       document.getElementById('adminView').classList.add('hidden');
+      setActiveNavTab('HOME');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       refreshHomeDashboard();
     }
@@ -1095,6 +1174,7 @@
       document.getElementById('cartView').classList.add('hidden');
       document.getElementById('trackingView').classList.add('hidden');
       document.getElementById('adminView').classList.add('hidden');
+      setActiveNavTab('STORE');
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
       if (filterCategory) {
@@ -1113,6 +1193,7 @@
       document.getElementById('cartView').classList.remove('hidden');
       document.getElementById('trackingView').classList.add('hidden');
       document.getElementById('adminView').classList.add('hidden');
+      setActiveNavTab('CART');
       renderCartPage();
     }
 
@@ -1123,6 +1204,7 @@
       document.getElementById('cartView').classList.add('hidden');
       document.getElementById('trackingView').classList.remove('hidden');
       document.getElementById('adminView').classList.add('hidden');
+      setActiveNavTab('TRACK');
       loadTrackingData();
     }
 
@@ -1133,6 +1215,7 @@
       document.getElementById('cartView').classList.add('hidden');
       document.getElementById('trackingView').classList.add('hidden');
       document.getElementById('adminView').classList.remove('hidden');
+      setActiveNavTab('ADMIN');
       loadAdminData();
     }
 
@@ -1443,7 +1526,10 @@
 
     function updateCartState() {
       var count = cart.reduce(function(acc, c) { return acc + c.qty; }, 0);
-      document.getElementById('cartBadgeCount').innerText = count;
+      var badgeDesk = document.getElementById('cartBadgeCount');
+      var badgeMob = document.getElementById('cartBadgeCountMobile');
+      if (badgeDesk) badgeDesk.innerText = count;
+      if (badgeMob) badgeMob.innerText = count;
     }
 
     function renderCartPage() {
