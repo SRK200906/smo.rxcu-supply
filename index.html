@@ -213,7 +213,6 @@
           <div class="truncate">
             <h1 class="text-xs sm:text-sm font-semibold tracking-tight text-white flex items-center gap-1.5 truncate">
               <span>คลังพัสดุ สโมสรนิสิตฯ</span>
-
             </h1>
             <div class="flex items-center gap-1.5">
               <p id="userBarInfo" class="text-[11px] text-emerald-200/90 truncate"></p>
@@ -2286,29 +2285,72 @@
       var container = document.getElementById('homeQuickCategories');
       if (!container) return;
 
-      var cats = [];
+      // ⚙️️ 1. รายชื่อหมวดหมู่ที่คุณต้องการ "ปักหมุด" ให้แสดงบนหน้าแรกตามลำดับ (แก้ไขตรงนี้ได้ตามใจชอบ)
+      var PINNED_CATEGORIES = [
+        'วัสดุสำนักงาน',
+        'เครื่องแต่งกาย-พร็อพ',
+        'เภสัชกรรม',
+        'เครื่องเสียงและแสงไฟ'
+      ];
+
+      // 2. รวบรวมหมวดหมู่ทั้งหมดที่มีอยู่จริงในระบบ พร้อมนับจำนวนอุปกรณ์ในแต่ละหมวด
+      var categoryCounts = {};
       allItems.forEach(function(i) {
-        var c = i['หมวดหมู่'];
-        if (c && cats.indexOf(c) === -1) cats.push(c);
+        var c = (i['หมวดหมู่'] || '').trim();
+        // กรองหมวดที่ว่างเปล่า หรือหมวดทดสอบออก
+        if (c && !c.toLowerCase().includes('test') && !c.includes('ทดสอบ')) {
+          categoryCounts[c] = (categoryCounts[c] || 0) + 1;
+        }
       });
 
+      var displayCats = [];
+
+      // 3. นำหมวดที่ปักหมุดไว้มาใส่ก่อน (หากมีอยู่ในระบบ)
+      PINNED_CATEGORIES.forEach(function(pinned) {
+        var matched = Object.keys(categoryCounts).find(function(c) {
+          return c.toLowerCase() === pinned.toLowerCase() || c.includes(pinned) || pinned.includes(c);
+        });
+        if (matched && displayCats.indexOf(matched) === -1) {
+          displayCats.push(matched);
+        }
+      });
+
+      // 4. หากยังไม่ครบ 4 หมวด ให้ดึงหมวดที่มีจำนวนอุปกรณ์เยอะที่สุดมาเติมให้เต็ม
+      if (displayCats.length < 4) {
+        var sortedCats = Object.keys(categoryCounts).sort(function(a, b) {
+          return categoryCounts[b] - categoryCounts[a];
+        });
+        sortedCats.forEach(function(c) {
+          if (displayCats.length < 4 && displayCats.indexOf(c) === -1) {
+            displayCats.push(c);
+          }
+        });
+      }
+
+      // Fallback กรณีในคลังยังไม่มีข้อมูลอุปกรณ์เลย
+      if (displayCats.length === 0) {
+        displayCats = ['ประกอบกิจกรรม', 'เครื่องแต่งกาย-พร็อพ', 'รับน้อง', 'เครื่องเสียง'];
+      }
+
+      // 5. จับคู่ไอคอน Font Awesome ให้ตรงกับประเภทหมวดหมู่อย่างสวยงาม
       var iconMap = {
         'เครื่องเสียง': 'fa-volume-high',
         'แสง': 'fa-lightbulb',
-        'กิจกรรม': 'fa-masks-theater',
+        'ไฟ': 'fa-lightbulb',
+        'กิจกรรม': 'fa-puzzle-piece',
+        'พร็อพ': 'fa-masks-theater',
+        'แต่งกาย': 'fa-shirt',
+        'รับน้อง': 'fa-people-group',
         'สันทนาการ': 'fa-gamepad',
         'โต๊ะ': 'fa-chair',
         'เก้าอี้': 'fa-chair',
         'เครื่องเขียน': 'fa-pen-ruler',
         'ป้าย': 'fa-signs-post',
-        'ประกอบกิจกรรม': 'fa-puzzle-piece'
+        'กล้อง': 'fa-camera',
+        'สาย': 'fa-plug'
       };
 
       container.innerHTML = '';
-      var displayCats = cats.slice(0, 4);
-      if (displayCats.length === 0) {
-        displayCats = ['ประกอบกิจกรรม', 'เครื่องเสียงและไฟ', 'อุปกรณ์สันทนาการ', 'โต๊ะและเก้าอี้'];
-      }
 
       displayCats.forEach(function(cat) {
         var iconClass = 'fa-boxes-stacked';
