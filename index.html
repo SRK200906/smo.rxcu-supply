@@ -2,7 +2,19 @@
 <html lang="th" class="h-full">
 <head>
   <meta charset="UTF-8" />
+  
+  <!-- Favicon & Touch Icon สำหรับหน้าจอโฮมมือถือ -->
   <link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=10" />
+  <link id="dynamicAppleTouchIcon" rel="apple-touch-icon" href="/favicon.png?v=10" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=10" />
+  
+  <!-- การตั้งค่า PWA / Web Clip สำหรับ iOS & Android -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="RxCU Supply" />
+  <meta name="application-name" content="RxCU Supply" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>ระบบคลังพัสดุ | สโมสรนิสิตเภสัชศาสตร์ จุฬาฯ (SMO.RxCU)</title>
   <meta name="description" content="ระบบขอยืม-คืนพัสดุและอุปกรณ์ สำหรับนิสิตและโครงการ สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย" />
@@ -355,6 +367,26 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Add to Home Screen Banner Guide -->
+        <div class="bg-gradient-to-r from-emerald-900/10 via-amber-500/10 to-emerald-900/10 border border-[#c5a880]/40 rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-[#10231a] text-[#dfc8a5] flex items-center justify-center text-lg shrink-0 shadow-sm border border-[#c5a880]/30">
+              <i class="fa-solid fa-mobile-screen-button"></i>
+            </div>
+            <div>
+              <h4 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                <span>ติดตั้งแอปลงหน้าจอมือถือ</span>
+                <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-medium px-2 py-0.2 rounded-full">แนะนำ</span>
+              </h4>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">เปิดใช้งานได้สะดวกรวดเร็วโดยไม่ต้องเข้าเบราว์เซอร์ใหม่ทุกครั้ง</p>
+            </div>
+          </div>
+          <button onclick="openAddToHomeModal()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#dfc8a5] to-[#c5a880] text-[#0f2018] font-bold text-xs shadow-sm hover:brightness-105 shrink-0 flex items-center gap-1.5 transition-all">
+            <i class="fa-solid fa-circle-question text-[11px]"></i>
+            <span>ดูวิธีติดตั้ง</span>
+          </button>
         </div>
 
         <!-- Borrowing Workflow Guide (4 Steps) -->
@@ -753,8 +785,8 @@
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">จำนวนทั้งหมด <span class="text-rose-500">*</span></label>
-              <input type="number" id="newEquipTotalQty" min="1" value="1" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-bold text-center text-emerald-800 dark:text-emerald-300" />
+              <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">จำนวนคงเหลือพร้อมยืม <span class="text-rose-500">*</span></label>
+              <input type="number" id="newEquipStockQty" min="0" value="1" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-bold text-center text-emerald-800 dark:text-emerald-300" />
             </div>
             <div>
               <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">หน่วยนับ</label>
@@ -799,8 +831,113 @@
       </div>
 
       <div id="billManageMeta" class="bg-slate-50 dark:bg-[#0a1510] p-3 rounded-2xl text-xs text-slate-600 dark:text-slate-300 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shrink-0 border border-slate-100 dark:border-emerald-950/80"></div>
+      
+      <!-- Admin Add Item To Bill Button -->
+      <div id="billManageAddArea" class="hidden flex items-center justify-between bg-emerald-50/70 dark:bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-200/80 dark:border-emerald-900/60">
+        <span class="text-xs text-emerald-900 dark:text-emerald-300 font-medium">จัดการรายการในบิลคำขอ:</span>
+        <button type="button" onclick="openAdminAddItemModal()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-plus text-[10px]"></i>
+          <span>เพิ่มพัสดุเข้าบิลนี้</span>
+        </button>
+      </div>
+
       <div class="flex-1 overflow-y-auto space-y-2.5 custom-scroll py-1 pr-1" id="billManageItemsContainer"></div>
       <div id="billManageFooter" class="border-t dark:border-emerald-900/40 pt-3 shrink-0 flex flex-col sm:flex-row gap-2 items-center justify-between"></div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: ADMIN ADD ITEM DIRECTLY TO BILL -->
+  <dialog id="adminAddItemModal" class="p-0 backdrop:bg-slate-900/75 rounded-3xl shadow-2xl max-w-md w-[92vw] border border-slate-100 dark:border-emerald-900/60 z-50">
+    <div class="p-5 space-y-4 bg-white dark:bg-[#12231b] rounded-3xl text-slate-800 dark:text-slate-100">
+      <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-2.5">
+        <h3 class="font-bold text-sm sm:text-base text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-1.5">
+          <i class="fa-solid fa-cart-plus text-emerald-600"></i> เพิ่มพัสดุเข้าบิลของผู้ยืม
+        </h3>
+        <button onclick="adminAddItemModal.close()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">เลือกรายการพัสดุ <span class="text-rose-500">*</span></label>
+          <select id="adminAddSelectEquipment" onchange="updateAdminAddStockHint()" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs dark:text-slate-100"></select>
+          <p id="adminAddStockHint" class="text-[11px] text-slate-400 mt-1">คงเหลือในคลัง: -</p>
+        </div>
+        <div>
+          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">จำนวนที่ต้องการเพิ่ม <span class="text-rose-500">*</span></label>
+          <input type="number" id="adminAddQuantity" min="1" value="1" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-bold text-center dark:text-slate-100" />
+        </div>
+      </div>
+
+      <div class="border-t dark:border-emerald-900/40 pt-3 flex items-center justify-end gap-2">
+        <button onclick="adminAddItemModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs">ยกเลิก</button>
+        <button onclick="executeAdminAddItemToBill()" class="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">ยืนยันเพิ่มรายการ</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: ADD TO HOME SCREEN GUIDE -->
+  <dialog id="addToHomeModal" class="p-0 backdrop:bg-slate-900/75 rounded-3xl shadow-2xl max-w-md w-[92vw] border border-slate-100 dark:border-emerald-900/60">
+    <div class="p-5 space-y-4 bg-white dark:bg-[#12231b] rounded-3xl text-slate-800 dark:text-slate-100">
+      <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-2.5">
+        <h3 class="font-bold text-sm sm:text-base text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-1.5">
+          <i class="fa-solid fa-mobile-screen-button text-[#c5a880]"></i> วิธีติดตั้งแอปลงหน้าจอโฮม
+        </h3>
+        <button onclick="addToHomeModal.close()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold">✕</button>
+      </div>
+
+      <!-- Segmented OS Tabs -->
+      <div class="flex bg-slate-100 dark:bg-[#0a1510] p-1 rounded-xl text-xs font-bold border border-slate-200 dark:border-emerald-900/40">
+        <button id="tabOsIos" onclick="switchOsGuide('IOS')" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-emerald-900 text-[#10231a] dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5">
+          <i class="fa-brands fa-apple text-sm"></i> <span>iPhone / iPad (iOS)</span>
+        </button>
+        <button id="tabOsAndroid" onclick="switchOsGuide('ANDROID')" class="flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center justify-center gap-1.5">
+          <i class="fa-brands fa-android text-sm text-emerald-600"></i> <span>Android</span>
+        </button>
+      </div>
+
+      <!-- iOS Instructions -->
+      <div id="guideIos" class="space-y-3 text-xs leading-relaxed">
+        <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
+          <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
+          <p>เปิดเว็บไซต์นี้ด้วยเบราว์เซอร์ <b>Safari</b></p>
+        </div>
+        <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
+          <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
+          <p>กดปุ่ม <b>แชร์ (Share) <i class="fa-solid fa-arrow-up-from-bracket text-blue-500 mx-1"></i></b> ที่แถบเมนูด้านล่างของ Safari</p>
+        </div>
+        <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
+          <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">3</span>
+          <p>เลื่อนลงแล้วเลือก <b>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen) <i class="fa-regular fa-square-plus text-slate-600 dark:text-slate-300 mx-1"></i></b></p>
+        </div>
+        <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
+          <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">4</span>
+          <p>กด <b>"เพิ่ม" (Add)</b> ที่มุมขวาบน จะได้ไอคอนแอปสโมสรบนหน้าจอทันที</p>
+        </div>
+      </div>
+
+      <!-- Android Instructions -->
+      <div id="guideAndroid" class="hidden space-y-3 text-xs leading-relaxed">
+        <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
+          <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
+          <p>เปิดเว็บไซต์นี้ด้วยเบราว์เซอร์ <b>Google Chrome</b></p>
+        </div>
+        <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
+          <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
+          <p>กดปุ่ม <b>จุดสามจุด (⋮)</b> ที่มุมขวาบนของหน้าต่าง Chrome</p>
+        </div>
+        <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
+          <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">3</span>
+          <p>เลือกเมนู <b>"ติดตั้งแอป" (Install app)</b> หรือ <b>"เพิ่มลงในหน้าจอหลัก" (Add to Home screen)</b></p>
+        </div>
+        <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
+          <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">4</span>
+          <p>กด <b>"ติดตั้ง"</b> เพื่อสร้างไอคอนลงบนหน้าจอหลัก</p>
+        </div>
+      </div>
+
+      <div class="border-t dark:border-emerald-900/40 pt-2.5 flex justify-end">
+        <button onclick="addToHomeModal.close()" class="px-4 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs">ปิดคำแนะนำ</button>
+      </div>
     </div>
   </dialog>
 
@@ -915,6 +1052,8 @@
                 else if (actionName === 'getEquipmentBorrowers') payload = { eqId: args[0] };
                 else if (actionName === 'addNewEquipment') payload = args[0];
                 else if (actionName === 'updateEquipment') payload = args[0];
+                else if (actionName === 'adminRemoveItemFromBill') payload = { rowIndex: args[0] };
+                else if (actionName === 'adminAddItemToBill') payload = { transactionId: args[0], equipmentId: args[1], quantity: args[2] };
 
                 fetch(GAS_API_URL, {
                   method: 'POST',
@@ -955,6 +1094,7 @@
     var capturedPhotoBase64 = '';
     var currentEditingItemId = null;
     var currentFocusedDetailId = null;
+    var currentManagingTxId = null;
 
     window.addEventListener('DOMContentLoaded', function() {
       initTheme();
@@ -993,7 +1133,7 @@
       return role.indexOf('แอดมิน') !== -1 || role.indexOf('admin') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1 || (role.indexOf('พัสดุ') !== -1 && role.indexOf('นิสิต') === -1);
     }
 
-    // --- LOGO & FAVICON UTILITIES ---
+    // --- LOGO, FAVICON & TOUCH ICON UTILITIES ---
     function cleanDriveUrl(url) {
       if (!url) return '';
       url = url.toString().trim();
@@ -1016,8 +1156,18 @@
         favicon.rel = 'icon';
         document.head.appendChild(favicon);
       }
+      var appleIcon = document.getElementById('dynamicAppleTouchIcon');
+      if (!appleIcon) {
+        appleIcon = document.createElement('link');
+        appleIcon.id = 'dynamicAppleTouchIcon';
+        appleIcon.rel = 'apple-touch-icon';
+        document.head.appendChild(appleIcon);
+      }
+
       var clean = cleanDriveUrl(iconUrl);
-      favicon.href = clean ? clean : '/favicon.png?v=10';
+      var finalUrl = clean ? clean : '/favicon.png?v=10';
+      favicon.href = finalUrl;
+      appleIcon.href = finalUrl;
     }
 
     function renderClubLogo(url) {
@@ -1372,8 +1522,8 @@
 
       google.script.run
         .withSuccessHandler(function(requests) {
-          var activeCount = 0;
-          var pendingCount = 0;
+          var activeCategoryCount = 0; // นับเป็นประเภท/ชนิด
+          var pendingBillsSet = {};
           var nearestDate = null;
 
           (requests || []).forEach(function(r) {
@@ -1384,7 +1534,7 @@
             var isPending = st.indexOf('รอ') !== -1;
 
             if (isApproved && !isReturned) {
-              activeCount += Number(r.Quantity || 1);
+              activeCategoryCount++; // อุปกรณ์ 1 แถว/ชนิด = 1 รายการ
               if (r.ReturnDate && r.ReturnDate !== '-') {
                 var retDate = new Date(r.ReturnDate);
                 if (!isNaN(retDate.getTime())) {
@@ -1394,7 +1544,7 @@
                 }
               }
             } else if (isPending) {
-              pendingCount++;
+              pendingBillsSet[r.TransactionID] = true;
             }
           });
 
@@ -1402,8 +1552,8 @@
           var pendingEl = document.getElementById('homeStatPendingBills');
           var returnEl = document.getElementById('homeStatNearestReturn');
 
-          if (activeEl) activeEl.innerText = activeCount + ' รายการ';
-          if (pendingEl) pendingEl.innerText = pendingCount + ' บิล';
+          if (activeEl) activeEl.innerText = activeCategoryCount + ' รายการ';
+          if (pendingEl) pendingEl.innerText = Object.keys(pendingBillsSet).length + ' บิล';
           if (returnEl) {
             if (nearestDate) {
               var y = nearestDate.getFullYear();
@@ -1411,13 +1561,38 @@
               var d = ('0' + nearestDate.getDate()).slice(-2);
               returnEl.innerText = d + '/' + m + '/' + y;
             } else {
-              returnEl.innerText = activeCount > 0 ? 'ตามที่ระบุในบิล' : 'ไม่มีอุปกรณ์ค้างคืน';
+              returnEl.innerText = activeCategoryCount > 0 ? 'ตามที่ระบุในบิล' : 'ไม่มีอุปกรณ์ค้างคืน';
             }
           }
         })
         .getAdminRequests(currentUser.id);
 
       renderQuickCategories();
+    }
+
+    // --- ADD TO HOME SCREEN GUIDE CONTROLS ---
+    function openAddToHomeModal() {
+      switchOsGuide('IOS');
+      addToHomeModal.showModal();
+    }
+
+    function switchOsGuide(os) {
+      var tabIos = document.getElementById('tabOsIos');
+      var tabAndroid = document.getElementById('tabOsAndroid');
+      var guideIos = document.getElementById('guideIos');
+      var guideAndroid = document.getElementById('guideAndroid');
+
+      if (os === 'IOS') {
+        tabIos.className = 'flex-1 py-1.5 rounded-lg bg-white dark:bg-emerald-900 text-[#10231a] dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5';
+        tabAndroid.className = 'flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center justify-center gap-1.5';
+        guideIos.classList.remove('hidden');
+        guideAndroid.classList.add('hidden');
+      } else {
+        tabAndroid.className = 'flex-1 py-1.5 rounded-lg bg-white dark:bg-emerald-900 text-[#10231a] dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5';
+        tabIos.className = 'flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center justify-center gap-1.5';
+        guideAndroid.classList.remove('hidden');
+        guideIos.classList.add('hidden');
+      }
     }
 
     function renderQuickCategories() {
@@ -1678,7 +1853,7 @@
         var row = document.createElement('div');
         row.className = 'bg-white dark:bg-[#12231b] p-3 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm flex items-center justify-between gap-3 text-xs';
         row.innerHTML = 
-          '<div class="flex items-center gap-3 min-w-0">' +
+          '<div class="flex items-center gap-3 min-w-0 flex-1">' +
             '<img src="' + item.img + '" onerror="this.onerror=null;this.src=\'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply\';" class="w-12 h-12 rounded-xl object-cover border dark:border-emerald-900/40 shrink-0 bg-slate-50 dark:bg-[#0a1510]" />' +
             '<div class="truncate">' +
               '<h4 class="font-bold text-slate-800 dark:text-slate-100 truncate">' + item.name + '</h4>' +
@@ -1941,8 +2116,6 @@
           ? b.items.filter(function(i) { return i.Status.indexOf('รอ') !== -1; })
           : b.items.filter(function(i) { return i.Status.indexOf('อนุมัติ') !== -1 && i.Status.indexOf('ไม่อนุมัติ') === -1; });
 
-        var totalQty = relevantItems.reduce(function(acc, cur) { return acc + cur.Quantity; }, 0);
-
         card.innerHTML = 
           '<div>' +
             '<div class="flex items-start justify-between border-b dark:border-emerald-900/40 pb-2">' +
@@ -1957,7 +2130,7 @@
             '<div class="pt-2 space-y-1 text-slate-600 dark:text-slate-300 text-[11px]">' +
               '<p class="truncate">👤 <b>ผู้ยืม:</b> ' + b.borrowerName + ' <span class="text-slate-400 font-mono">(' + b.borrowerId + ')</span></p>' +
               '<p>🗓️ <b>กำหนดส่ง:</b> ' + b.returnDate + '</p>' +
-              '<p class="text-emerald-800 dark:text-emerald-400 font-medium">📦 <b>พัสดุ:</b> ' + relevantItems.length + ' ชนิด (' + totalQty + ' รายการ)</p>' +
+              '<p class="text-emerald-800 dark:text-emerald-400 font-medium">📦 <b>พัสดุ:</b> ' + relevantItems.length + ' รายการ</p>' +
             '</div>' +
           '</div>' +
           '<div class="border-t dark:border-emerald-900/40 pt-2.5 flex items-center justify-between gap-2 mt-1">' +
@@ -1977,6 +2150,7 @@
     }
 
     function openBillManageModal(txId) {
+      currentManagingTxId = txId;
       var allBillItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
       if (allBillItems.length === 0) return;
 
@@ -2002,14 +2176,20 @@
       var meta = document.getElementById('billManageMeta');
       meta.innerHTML = 
         '<div><p><b>👤 ผู้ขอยืม:</b> ' + first.BorrowerName + '</p><p><b>🗓 ระยะเวลายืม:</b> ' + first.BorrowDate + ' ถึง ' + first.ReturnDate + '</p></div>' +
-        '<div><p class="truncate"><b>✍ เหตุผล/กิจกรรม:</b> ' + (first.UserNote || '-') + '</p><p><b>📦 รายการในบิล:</b> ' + billItems.length + ' ชนิด</p></div>';
+        '<div><p class="truncate"><b>✍ เหตุผล/กิจกรรม:</b> ' + (first.UserNote || '-') + '</p><p><b>📦 รายการในบิล:</b> ' + billItems.length + ' รายการ</p></div>';
+
+      // Toggle Add Item Button
+      var addArea = document.getElementById('billManageAddArea');
+      if (addArea) {
+        addArea.classList.toggle('hidden', !isBorrowMode);
+      }
 
       var container = document.getElementById('billManageItemsContainer');
       container.innerHTML = '';
 
       billItems.forEach(function(item) {
         var row = document.createElement('div');
-        row.className = 'bg-slate-50 dark:bg-[#0a1510] p-3 rounded-2xl border border-slate-200 dark:border-emerald-950/80 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3';
+        row.className = 'bg-slate-50 dark:bg-[#0a1510] p-3 rounded-2xl border border-slate-200 dark:border-emerald-950/80 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 relative';
         var imgUrl = cleanDriveUrl(item.EquipmentImage) || 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
 
         if (isBorrowMode) {
@@ -2034,7 +2214,10 @@
                 '<option value="ไม่อนุมัติ">🔴 ไม่อนุมัติ</option>' +
                 '<option value="รอดำเนินการ">🟡 รอไว้ก่อน</option>' +
               '</select>' +
-              '<input type="text" id="approveComment-' + item.rowIndex + '" placeholder="หมายเหตุ..." class="p-1.5 bg-white dark:bg-[#12231b] border dark:border-emerald-900/60 rounded-xl text-xs w-32 sm:w-44 text-slate-800 dark:text-slate-100 transition-all" />' +
+              '<input type="text" id="approveComment-' + item.rowIndex + '" placeholder="หมายเหตุ..." class="p-1.5 bg-white dark:bg-[#12231b] border dark:border-emerald-900/60 rounded-xl text-xs w-28 sm:w-36 text-slate-800 dark:text-slate-100 transition-all" />' +
+              '<button type="button" onclick="executeAdminRemoveItem(' + item.rowIndex + ')" title="ลบรายการนี้ออกจากบิล" class="p-1.5 px-2 rounded-xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-700 font-bold">' +
+                '<i class="fa-solid fa-trash-can text-xs"></i>' +
+              '</button>' +
             '</div>';
         } else {
           row.innerHTML = 
@@ -2075,6 +2258,103 @@
       }
 
       billManageModal.showModal();
+    }
+
+    // --- ADMIN ADD / REMOVE ITEMS DIRECTLY IN BILL ---
+    function openAdminAddItemModal() {
+      var select = document.getElementById('adminAddSelectEquipment');
+      select.innerHTML = '<option value="">-- เลือกอุปกรณ์จากคลัง --</option>';
+
+      allItems.forEach(function(item) {
+        var inStock = Number(item['จำนวนคงเหลือปัจจุบัน'] || 0);
+        var id = item['รหัสพัสดุ'];
+        var name = item['รายการ'];
+        select.insertAdjacentHTML('beforeend', '<option value="' + id + '">' + id + ' : ' + name + ' (เหลือ ' + inStock + ')</option>');
+      });
+
+      document.getElementById('adminAddQuantity').value = 1;
+      updateAdminAddStockHint();
+      adminAddItemModal.showModal();
+    }
+
+    function updateAdminAddStockHint() {
+      var eqId = document.getElementById('adminAddSelectEquipment').value;
+      var hint = document.getElementById('adminAddStockHint');
+      if (!eqId) {
+        hint.innerText = 'คงเหลือในคลัง: -';
+        return;
+      }
+      var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === eqId; });
+      if (item) {
+        hint.innerText = 'คงเหลือในคลัง: ' + (item['จำนวนคงเหลือปัจจุบัน'] || 0) + ' ' + (item['หน่วย'] || 'ชิ้น');
+      }
+    }
+
+    function executeAdminAddItemToBill() {
+      if (!currentManagingTxId) return;
+      var eqId = document.getElementById('adminAddSelectEquipment').value;
+      var qty = Number(document.getElementById('adminAddQuantity').value || 1);
+
+      if (!eqId) return showToast('กรุณาเลือกอุปกรณ์ที่ต้องการเพิ่ม', 'warning');
+      if (qty <= 0) return showToast('จำนวนต้องมากกว่า 0', 'warning');
+
+      var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === eqId; });
+      var inStock = item ? Number(item['จำนวนคงเหลือปัจจุบัน'] || 0) : 0;
+      if (qty > inStock) return showToast('ยอดที่เลือกเกินสต็อกคงเหลือในคลัง (' + inStock + ')', 'warning');
+
+      showLoading(true);
+      adminAddItemModal.close();
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          showLoading(false);
+          if (res && res.success) {
+            showToast('เพิ่ม ' + item['รายการ'] + ' เข้าบิลเรียบร้อยแล้ว', 'success');
+            google.script.run
+              .withSuccessHandler(function(data) {
+                adminRequests = data || [];
+                updateAdminBadges();
+                renderAdminCards();
+                openBillManageModal(currentManagingTxId);
+              })
+              .getAdminRequests(null);
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการเพิ่มรายการ', 'error');
+          }
+        })
+        .withFailureHandler(function() {
+          showLoading(false);
+        })
+        .adminAddItemToBill(currentManagingTxId, eqId, qty);
+    }
+
+    function executeAdminRemoveItem(rowIndex) {
+      if (!rowIndex) return;
+      showLoading(true);
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          showLoading(false);
+          if (res && res.success) {
+            showToast('ลบรายการออกจากบิลเรียบร้อยแล้ว', 'success');
+            google.script.run
+              .withSuccessHandler(function(data) {
+                adminRequests = data || [];
+                updateAdminBadges();
+                renderAdminCards();
+                if (currentManagingTxId) {
+                  openBillManageModal(currentManagingTxId);
+                }
+              })
+              .getAdminRequests(null);
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการลบรายการ', 'error');
+          }
+        })
+        .withFailureHandler(function() {
+          showLoading(false);
+        })
+        .adminRemoveItemFromBill(rowIndex);
     }
 
     function handleApproveStatusChange(rIdx, val) {
@@ -2199,9 +2479,19 @@
             return;
           }
           list.innerHTML = borrowers.map(function(b) {
-            return '<div class="p-2 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-100 dark:border-amber-900/50 flex items-center justify-between text-xs">' +
-              '<div><p class="font-bold text-amber-900 dark:text-amber-300">' + b.name + '</p><p class="text-[10px] text-slate-500 dark:text-slate-400">กำหนดคืน: ' + b.deadline + '</p></div>' +
-              '<span class="font-bold text-amber-800 dark:text-amber-400 text-[11px]">' + b.qty + ' รายการ</span>' +
+            return '<div class="p-2.5 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-100 dark:border-amber-900/50 flex items-center justify-between text-xs">' +
+              '<div>' +
+                '<p class="font-bold text-amber-900 dark:text-amber-300 flex items-center gap-1.5">' +
+                  '<i class="fa-solid fa-folder-closed text-[11px] text-[#c5a880]"></i>' +
+                  '<span>' + (b.project || 'ทั่วไป') + '</span>' +
+                '</p>' +
+                '<p class="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">ผู้ยืม: ' + b.name + ' <span class="font-mono text-slate-400">(' + b.id + ')</span></p>' +
+                '<p class="text-[10px] text-slate-400 mt-0.5">🗓 กำหนดคืน: ' + b.deadline + '</p>' +
+              '</div>' +
+              '<div class="text-right">' +
+                '<span class="font-extrabold text-amber-800 dark:text-amber-400 text-xs block">' + b.qty + ' ' + (item['หน่วย'] || 'ชิ้น') + '</span>' +
+                '<span class="text-[10px] text-slate-400">กำลังยืม</span>' +
+              '</div>' +
             '</div>';
           }).join('');
         })
@@ -2258,23 +2548,23 @@
       doc.write('</div>');
 
       doc.write('<table>');
-      doc.write('<thead><tr><th style="width:5%;">ลำดับ</th><th>รายการพัสดุ</th><th style="width:15%;">จำนวน / หน่วย</th><th style="width:15%;">ช่องตรวจยืม</th><th style="width:15%;">ช่องตรวจคืน</th></tr></thead>');
+      doc.write('<thead><tr><th style="width:8%;">ลำดับ</th><th>รายการพัสดุ</th><th style="width:20%;">จำนวน / หน่วย</th><th style="width:14%;">ช่องตรวจยืม</th><th style="width:14%;">ช่องตรวจคืน</th></tr></thead>');
       doc.write('<tbody>');
       billItems.forEach(function(item, idx) {
         doc.write('<tr>');
         doc.write('<td style="text-align:center;">' + (idx + 1) + '</td>');
         doc.write('<td>' + item.EquipmentName + ' (' + (item.EquipmentColor || '-') + ')</td>');
         doc.write('<td style="text-align:center;">' + item.Quantity + ' ' + item.EquipmentUnit + '</td>');
-        doc.write('<td style="text-align:center;"> &nbsp; </td>');
-        doc.write('<td style="text-align:center;"> &nbsp; </td>');
+        doc.write('<td style="text-align:center;">[ &nbsp; ]</td>');
+        doc.write('<td style="text-align:center;">[ &nbsp; ]</td>');
         doc.write('</tr>');
       });
       doc.write('</tbody></table>');
 
       doc.write('<p style="font-size:11px; margin-top:8px; color:#475569;">* ข้าพเจ้าขอรับรองว่าจะดูแลรักษาพัสดุอุปกรณ์ให้อยู่ในสภาพสมบูรณ์ หากเกิดการชำรุด เสียหาย หรือสูญหาย ยินดีรับผิดชอบชดใช้ตามระเบียบงานคลังพัสดุ สโมสรนิสิตฯ ทุกประการ</p>');
       doc.write('<div class="sig-grid">');
-      doc.write('<div><p>ลงชื่อ ................................................. ผู้ยืม</p><p>( ' + first.BorrowerName + ' )</p><p>วันที่ ......./......./...........</p></div>');
-      doc.write('<div><p>ลงชื่อ ................................................. เจ้าหน้าที่</p><p>( กรรมการฝ่ายพัสดุและแสงเสียง สโมสรนิสิตฯ )</p><p>วันที่ ......./......./...........</p></div>');
+      doc.write('<div><p>ลงชื่อ ........................................................... ผู้ยืม</p><p>( ' + first.BorrowerName + ' )</p><p>วันที่ ......./......./...........</p></div>');
+      doc.write('<div><p>ลงชื่อ ........................................................... เจ้าหน้าที่คลังพัสดุ</p><p>( กรรมการฝ่ายพัสดุและสถานที่ สโมสรนิสิตฯ )</p><p>วันที่ ......./......./...........</p></div>');
       doc.write('</div>');
 
       doc.write('</body></html>');
@@ -2306,7 +2596,7 @@
       idInput.disabled = false;
 
       document.getElementById('newEquipName').value = '';
-      document.getElementById('newEquipTotalQty').value = 1;
+      document.getElementById('newEquipStockQty').value = 1;
       document.getElementById('newEquipUnit').value = 'ชิ้น';
       document.getElementById('newEquipColor').value = '';
       document.getElementById('newEquipSize').value = '';
@@ -2315,6 +2605,7 @@
       
       populateCategorySelect('');
       removeEquipPhoto();
+
       addEquipmentModal.showModal();
     }
 
@@ -2331,7 +2622,7 @@
       idInput.disabled = true;
 
       document.getElementById('newEquipName').value = item['รายการ'] || '';
-      document.getElementById('newEquipTotalQty').value = Number(item['จำนวนทั้งหมด'] || 1);
+      document.getElementById('newEquipStockQty').value = Number(item['จำนวนคงเหลือปัจจุบัน'] || 0);
       document.getElementById('newEquipUnit').value = item['หน่วย'] || 'ชิ้น';
       document.getElementById('newEquipColor').value = item['สี/ลาย'] || '';
       document.getElementById('newEquipSize').value = item['ขนาด'] || '';
@@ -2516,7 +2807,7 @@
       var catSelect = document.getElementById('newEquipCategorySelect').value;
       var catCustom = document.getElementById('newEquipCustomCategory').value.trim();
       var category = catSelect === '__NEW__' ? catCustom : catSelect;
-      var totalQty = Number(document.getElementById('newEquipTotalQty').value || 1);
+      var inStockQty = Number(document.getElementById('newEquipStockQty').value || 0);
       var unit = document.getElementById('newEquipUnit').value.trim() || 'ชิ้น';
       var color = document.getElementById('newEquipColor').value.trim();
       var size = document.getElementById('newEquipSize').value.trim();
@@ -2533,7 +2824,7 @@
         id: id,
         name: name,
         category: category,
-        totalQty: totalQty,
+        inStockQty: inStockQty,
         unit: unit,
         color: color,
         size: size,
