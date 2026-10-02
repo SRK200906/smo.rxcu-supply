@@ -274,6 +274,11 @@
             <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> โหลด...
           </span>
 
+          <!-- Global Refresh Button (กดรีเฟรชข้อมูลได้ทุกหน้า) -->
+          <button id="btnGlobalRefresh" onclick="refreshCurrentViewData()" title="รีเฟรชข้อมูลหน้านี้" class="p-2 sm:px-2.5 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-emerald-200 hover:text-white transition-all flex items-center justify-center active:scale-95">
+            <i id="globalRefreshIcon" class="fa-solid fa-arrows-rotate text-xs sm:text-sm"></i>
+          </button>
+
           <!-- Cart Button (Desktop & Tablet) -->
           <button onclick="showCartView()" class="relative p-2 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600/80 hover:bg-emerald-600 border border-emerald-400/30 text-white transition-all flex items-center gap-1.5">
             <i class="fa-solid fa-bag-shopping text-sm"></i>
@@ -997,9 +1002,17 @@
 
   <!-- TOAST NOTIFICATION -->
   <div id="toastNotification" class="fixed bottom-24 sm:bottom-4 right-4 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 max-w-sm w-full px-3">
-    <div id="toastInner" class="p-3.5 rounded-2xl shadow-xl font-medium text-xs flex items-center justify-between text-white bg-slate-800">
-      <span id="toastMsg">แจ้งเตือน</span>
-      <button onclick="hideToast()" class="ml-3 font-bold opacity-75 hover:opacity-100">✕</button>
+    <div id="toastInner" class="p-3.5 rounded-2xl shadow-xl font-medium text-xs flex items-center justify-between text-white bg-slate-800 gap-2">
+      <div class="flex items-center gap-2 truncate">
+        <i id="toastIcon" class="fa-solid fa-circle-info text-sm"></i>
+        <span id="toastMsg" class="truncate">แจ้งเตือน</span>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="toastRetryBtn" onclick="retryLastAction()" class="hidden px-2 py-0.5 bg-white/20 hover:bg-white/30 rounded-lg text-[10px] font-bold transition-colors">
+          ลองอีกครั้ง
+        </button>
+        <button onclick="hideToast()" class="font-bold opacity-75 hover:opacity-100 text-sm">✕</button>
+      </div>
     </div>
   </div>
 
@@ -1014,6 +1027,136 @@
       'รับน้อง',
       'เครื่องเสียงและแสงไฟ'
     ];
+
+    // ตัวแปรสถานะและคลังข้อมูลหลักของระบบ
+    var currentUser = null;
+    var allItems = [];
+    var cart = [];
+    var adminRequests = [];
+    var currentAdminMode = 'BORROW';
+    var currentClubLogo = '';
+    var tempUploadedLogo = '';
+    var mediaStream = null;
+    var capturedPhotoBase64 = '';
+    var currentEditingItemId = null;
+    var currentFocusedDetailId = null;
+    var currentManagingTxId = null;
+
+    // เก็บฟังก์ชันล่าสุดเพื่อรองรับการกด "ลองอีกครั้ง" บน Toast
+    var lastFailedRetryFn = null;
+    var currentActiveView = 'HOME';
+
+    function checkIfAdmin(user) {
+      if (!user || !user.role) return false;
+      var role = user.role.toString().toLowerCase().trim();
+      return role.indexOf('แอดมิน') !== -1 || role.indexOf('พัสดุ') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1 || role.indexOf('admin') !== -1;
+    }
+
+    function cleanDriveUrl(url) {
+      var fallback = 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
+      if (!url) return fallback;
+      url = url.toString().trim();
+      if (url === 'ซ้ำ' || url === '-' || url.toLowerCase() === 'undefined' || url.toLowerCase() === 'null') return fallback;
+      if (url.indexOf('data:image') === 0) return url;
+      if (url.startsWith('/') || url.startsWith('./')) return url;
+      if (url.indexOf('drive.google.com') !== -1) {
+        var match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/[?&]id=([a-zA-Z0-9-_]+)/);
+        if (match && match[1]) return 'https://lh3.googleusercontent.com/d/' + match[1];
+      }
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        return fallback;
+      }
+      return url;
+    }
+
+    function updateFavicon(iconUrl) {
+      var favicon = document.getElementById('dynamicFavicon');
+      if (!favicon) {
+        favicon = document.createElement('link');
+        favicon.id = 'dynamicFavicon';
+        favicon.rel = 'icon';
+        document.head.appendChild(favicon);
+      }
+      var appleIcon = document.getElementById('dynamicAppleTouchIcon');
+      if (!appleIcon) {
+        appleIcon = document.createElement('link');
+        appleIcon.id = 'dynamicAppleTouchIcon';
+        appleIcon.rel = 'apple-touch-icon';
+        document.head.appendChild(appleIcon);
+      }
+      var clean = cleanDriveUrl(iconUrl);
+      var finalUrl = clean || '/favicon.png?v=10';
+      if (favicon) favicon.href = finalUrl;
+      if (appleIcon) appleIcon.href = finalUrl;
+    }
+
+    function renderClubLogo(url) {
+      var clean = cleanDriveUrl(url);
+      updateFavicon(url);
+
+      var gateImg = document.getElementById('gateLogoPreview');
+      var gateFallback = document.getElementById('gateLogoFallback');
+      var navImg = document.getElementById('navLogoPreview');
+      var navFallback = document.getElementById('navLogoFallback');
+
+      if (clean && clean !== 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply') {
+        if (gateImg) {
+          gateImg.src = clean;
+          gateImg.onload = function() {
+            gateImg.classList.remove('hidden');
+            if (gateFallback) gateFallback.classList.add('hidden');
+          };
+          gateImg.onerror = function() {
+            gateImg.classList.add('hidden');
+            if (gateFallback) gateFallback.classList.remove('hidden');
+          };
+        }
+        if (navImg) {
+          navImg.src = clean;
+          navImg.onload = function() {
+            navImg.classList.remove('hidden');
+            if (navFallback) navFallback.classList.add('hidden');
+          };
+          navImg.onerror = function() {
+            navImg.classList.add('hidden');
+            if (navFallback) navFallback.classList.remove('hidden');
+          };
+        }
+      } else {
+        if (gateImg) gateImg.classList.add('hidden');
+        if (gateFallback) gateFallback.classList.remove('hidden');
+        if (navImg) navImg.classList.add('hidden');
+        if (navFallback) navFallback.classList.remove('hidden');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+      initTheme();
+      currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=10';
+      renderClubLogo(currentClubLogo);
+
+      var session = localStorage.getItem('smo_rx_user');
+      if (session) {
+        try {
+          currentUser = JSON.parse(session);
+        } catch(e) {
+          localStorage.removeItem('smo_rx_user');
+          currentUser = null;
+        }
+      }
+
+      if (currentUser && currentUser.id) {
+        unlockAppInterface();
+      } else {
+        lockToAuthGate();
+      }
+
+      var today = new Date().toISOString().split('T')[0];
+      var startDateEl = document.getElementById('cartStartDate');
+      var endDateEl = document.getElementById('cartEndDate');
+      if (startDateEl && !startDateEl.value) startDateEl.value = today;
+      if (endDateEl && !endDateEl.value) endDateEl.value = today;
+    });
 
     // --- DARK MODE LOGIC ---
     function initTheme() {
@@ -1042,7 +1185,54 @@
       applyTheme(!isDark);
     }
 
-    // --- BACKEND API PROXY (REST FETCH TO APPS SCRIPT) ---
+    // --- BACKEND API PROXY WITH AUTO-RETRY (REST FETCH TO APPS SCRIPT) ---
+    function fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, retryCount) {
+      if (typeof retryCount === 'undefined') retryCount = 0;
+      var maxRetries = 3; // พยายามเชื่อมต่อซ้ำอัตโนมัติสูงสุด 3 ครั้ง (รวม 4 ครั้ง)
+
+      fetch(GAS_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: actionName, payload: payload }),
+        redirect: 'follow',
+        credentials: 'omit'
+      })
+      .then(function(res) {
+        if (!res.ok) throw new Error("HTTP Status " + res.status);
+        return res.json();
+      })
+      .then(function(data) {
+        lastFailedRetryFn = null;
+        var retryBtn = document.getElementById('toastRetryBtn');
+        if (retryBtn) retryBtn.classList.add('hidden');
+        if (successHandler) successHandler(data);
+      })
+      .catch(function(err) {
+        if (retryCount < maxRetries) {
+          var nextAttempt = retryCount + 1;
+          var waitTime = 1200 * nextAttempt; // รอเพิ่มขึ้นทีละสเต็ป 1.2s, 2.4s, 3.6s
+          showToast('สัญญาณสะดุด กำลังเชื่อมต่อซ้ำอัตโนมัติ (ครั้งที่ ' + nextAttempt + '/' + maxRetries + ')...', 'warning', false);
+
+          setTimeout(function() {
+            fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, nextAttempt);
+          }, waitTime);
+        } else {
+          console.error("API Call Error after retries:", err);
+          showLoading(false);
+          stopRefreshIconAnimation();
+
+          // เก็บตัวเรียกไว้ให้ผู้ใช้กดปุ่ม "ลองอีกครั้ง" จากแถบแจ้งเตือนได้
+          lastFailedRetryFn = function() {
+            showLoading(true);
+            fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, 0);
+          };
+
+          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาแตะปุ่มลองอีกครั้ง', 'error', true);
+          if (failureHandler) failureHandler(err);
+        }
+      });
+    }
+
     window.google = {
       script: {
         run: (function createRunner(successHandler, failureHandler) {
@@ -1068,26 +1258,7 @@
                 else if (actionName === 'adminRemoveItemFromBill') payload = { rowIndex: args[0] };
                 else if (actionName === 'adminAddItemToBill') payload = { transactionId: args[0], equipmentId: args[1], quantity: args[2] };
 
-                fetch(GAS_API_URL, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                  body: JSON.stringify({ action: actionName, payload: payload }),
-                  redirect: 'follow',
-                  credentials: 'omit'
-                })
-                .then(function(res) {
-                  if (!res.ok) throw new Error("HTTP Status " + res.status);
-                  return res.json();
-                })
-                .then(function(data) {
-                  if (successHandler) successHandler(data);
-                })
-                .catch(function(err) {
-                  console.error("API Call Error:", err);
-                  showLoading(false);
-                  showToast('การเชื่อมต่อขัดข้อง กรุณาลองใหม่อีกครั้ง', 'error');
-                  if (failureHandler) failureHandler(err);
-                });
+                fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, 0);
               };
             }
           });
@@ -1095,118 +1266,49 @@
       }
     };
 
-    // --- APPLICATION STATE ---
-    var currentUser = null;
-    var allItems = [];
-    var cart = [];
-    var adminRequests = [];
-    var currentAdminMode = 'BORROW';
-    var currentClubLogo = '';
-    var tempUploadedLogo = '';
-    var mediaStream = null;
-    var capturedPhotoBase64 = '';
-    var currentEditingItemId = null;
-    var currentFocusedDetailId = null;
-    var currentManagingTxId = null;
+    // --- GLOBAL REFRESH CONTROLLER ---
+    function triggerRefreshAnimation() {
+      var icon = document.getElementById('globalRefreshIcon');
+      if (icon) icon.classList.add('fa-spin');
+    }
 
-    window.addEventListener('DOMContentLoaded', function() {
-      initTheme();
-      currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=10';
-      renderClubLogo(currentClubLogo);
+    function stopRefreshIconAnimation() {
+      var icon = document.getElementById('globalRefreshIcon');
+      if (icon) icon.classList.remove('fa-spin');
+    }
 
-      var session = localStorage.getItem('smo_rx_user');
-      if (session) {
-        try {
-          currentUser = JSON.parse(session);
-        } catch(e) {
-          localStorage.removeItem('smo_rx_user');
-          currentUser = null;
-        }
+    function refreshCurrentViewData() {
+      triggerRefreshAnimation();
+      showLoading(true);
+
+      if (currentActiveView === 'HOME') {
+        fetchCatalogData();
+        refreshHomeDashboard();
+      } else if (currentActiveView === 'STORE') {
+        fetchCategories();
+        fetchCatalogData();
+      } else if (currentActiveView === 'TRACK') {
+        loadTrackingData();
+      } else if (currentActiveView === 'ADMIN') {
+        loadAdminData();
+      } else if (currentActiveView === 'CART') {
+        fetchCatalogData();
+        renderCartPage();
       }
 
-      if (currentUser && currentUser.id) {
-        unlockAppInterface();
+      setTimeout(function() {
+        stopRefreshIconAnimation();
+      }, 1200);
+      showToast('กำลังซิงค์และอัปเดตข้อมูลล่าสุด...', 'info', false);
+    }
+
+    function retryLastAction() {
+      if (typeof lastFailedRetryFn === 'function') {
+        var fn = lastFailedRetryFn;
+        lastFailedRetryFn = null;
+        fn();
       } else {
-        lockToAuthGate();
-      }
-
-      var today = new Date().toISOString().split('T')[0];
-      var startDateEl = document.getElementById('cartStartDate');
-      var endDateEl = document.getElementById('cartEndDate');
-      if (startDateEl) startDateEl.value = today;
-      if (endDateEl) endDateEl.value = today;
-    });
-
-    // --- STRICT ROLE CHECK FOR ADMIN ---
-    function checkIfAdmin(user) {
-      if (!user || !user.role) return false;
-      var role = user.role.toString().toLowerCase().trim();
-      if (role === 'นิสิต' || role === 'student' || role === 'member') return false;
-      return role.indexOf('แอดมิน') !== -1 || role.indexOf('admin') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1 || (role.indexOf('พัสดุ') !== -1 && role.indexOf('นิสิต') === -1);
-    }
-
-    // --- LOGO, FAVICON & TOUCH ICON UTILITIES ---
-    function cleanDriveUrl(url) {
-      if (!url) return '';
-      url = url.toString().trim();
-      if (url === 'ซ้ำ' || url === '-' || url.toLowerCase() === 'undefined' || url.toLowerCase() === 'null') return '';
-      if (url.indexOf('data:image') === 0) return url;
-      if (url.startsWith('/') || url.startsWith('./')) return url;
-      if (url.indexOf('drive.google.com') !== -1) {
-        var match = url.match(/\/d\/([a-zA-Z0-9-_]+)/) || url.match(/[?&]id=([a-zA-Z0-9-_]+)/);
-        if (match && match[1]) return 'https://lh3.googleusercontent.com/d/' + match[1];
-      }
-      if (!url.startsWith('http://') && !url.startsWith('https://')) return '';
-      return url;
-    }
-
-    function updateFavicon(iconUrl) {
-      var favicon = document.getElementById('dynamicFavicon');
-      if (!favicon) {
-        favicon = document.createElement('link');
-        favicon.id = 'dynamicFavicon';
-        favicon.rel = 'icon';
-        document.head.appendChild(favicon);
-      }
-      var appleIcon = document.getElementById('dynamicAppleTouchIcon');
-      if (!appleIcon) {
-        appleIcon = document.createElement('link');
-        appleIcon.id = 'dynamicAppleTouchIcon';
-        appleIcon.rel = 'apple-touch-icon';
-        document.head.appendChild(appleIcon);
-      }
-
-      var clean = cleanDriveUrl(iconUrl);
-      var finalUrl = clean ? clean : '/favicon.png?v=10';
-      favicon.href = finalUrl;
-      appleIcon.href = finalUrl;
-    }
-
-    function renderClubLogo(url) {
-      var clean = cleanDriveUrl(url);
-      updateFavicon(url);
-
-      var gateImg = document.getElementById('gateLogoPreview');
-      var gateFallback = document.getElementById('gateLogoFallback');
-      var navImg = document.getElementById('navLogoPreview');
-      var navFallback = document.getElementById('navLogoFallback');
-
-      if (clean) {
-        if (gateImg) {
-          gateImg.src = clean;
-          gateImg.onload = function() { gateImg.classList.remove('hidden'); if (gateFallback) gateFallback.classList.add('hidden'); };
-          gateImg.onerror = function() { gateImg.classList.add('hidden'); if (gateFallback) gateFallback.classList.remove('hidden'); };
-        }
-        if (navImg) {
-          navImg.src = clean;
-          navImg.onload = function() { navImg.classList.remove('hidden'); if (navFallback) navFallback.classList.add('hidden'); };
-          navImg.onerror = function() { navImg.classList.add('hidden'); if (navFallback) navFallback.classList.remove('hidden'); };
-        }
-      } else {
-        if (gateImg) gateImg.classList.add('hidden');
-        if (gateFallback) gateFallback.classList.remove('hidden');
-        if (navImg) navImg.classList.add('hidden');
-        if (navFallback) navFallback.classList.remove('hidden');
+        refreshCurrentViewData();
       }
     }
 
@@ -1244,6 +1346,7 @@
     }
 
     function showHomeView() {
+      currentActiveView = 'HOME';
       document.getElementById('homeView').classList.remove('hidden');
       document.getElementById('storeView').classList.add('hidden');
       document.getElementById('cartView').classList.add('hidden');
@@ -1255,6 +1358,7 @@
     }
 
     function showStoreView(filterCategory) {
+      currentActiveView = 'STORE';
       document.getElementById('homeView').classList.add('hidden');
       document.getElementById('storeView').classList.remove('hidden');
       document.getElementById('cartView').classList.add('hidden');
@@ -1274,6 +1378,7 @@
 
     function showCartView() {
       if (!currentUser) return lockToAuthGate();
+      currentActiveView = 'CART';
       document.getElementById('homeView').classList.add('hidden');
       document.getElementById('storeView').classList.add('hidden');
       document.getElementById('cartView').classList.remove('hidden');
@@ -1285,6 +1390,7 @@
 
     function showTrackingView() {
       if (!currentUser) return lockToAuthGate();
+      currentActiveView = 'TRACK';
       document.getElementById('homeView').classList.add('hidden');
       document.getElementById('storeView').classList.add('hidden');
       document.getElementById('cartView').classList.add('hidden');
@@ -1297,10 +1403,11 @@
     function showAdminView() {
       if (!currentUser) return lockToAuthGate();
       if (!checkIfAdmin(currentUser)) {
-        showToast('คุณไม่มีสิทธิ์เข้าถึงเมนูแอดมิน', 'warning');
+        showToast('คุณไม่มีสิทธิ์เข้าถึงเมนูแอดมิน', 'warning', false);
         showHomeView();
         return;
       }
+      currentActiveView = 'ADMIN';
       document.getElementById('homeView').classList.add('hidden');
       document.getElementById('storeView').classList.add('hidden');
       document.getElementById('cartView').classList.add('hidden');
@@ -1626,7 +1733,7 @@
       };
 
       var availableCats = [];
-      allItems.forEach(function(i) {
+      (allItems || []).forEach(function(i) {
         var c = i['หมวดหมู่'];
         if (c && availableCats.indexOf(c) === -1) {
           var cleanC = c.toLowerCase();
@@ -2937,27 +3044,48 @@
     function showLoading(show) {
       var badge = document.getElementById('globalLoadingBadge');
       if (badge) badge.classList.toggle('hidden', !show);
+      if (!show) stopRefreshIconAnimation();
     }
 
-    function showToast(msg, type) {
+    function showToast(msg, type, showRetry) {
       var toast = document.getElementById('toastNotification');
       var inner = document.getElementById('toastInner');
       var text = document.getElementById('toastMsg');
+      var icon = document.getElementById('toastIcon');
+      var retryBtn = document.getElementById('toastRetryBtn');
+
       text.innerText = msg;
 
-      inner.className = 'p-3.5 rounded-2xl shadow-xl font-medium text-xs flex items-center justify-between text-white ';
-      if (type === 'success') inner.className += 'bg-emerald-700';
-      else if (type === 'error') inner.className += 'bg-rose-600';
-      else if (type === 'warning') inner.className += 'bg-amber-600';
-      else inner.className += 'bg-slate-800';
+      var baseInnerClass = 'p-3.5 rounded-2xl shadow-xl font-medium text-xs flex items-center justify-between text-white gap-2 ';
+      if (type === 'success') {
+        inner.className = baseInnerClass + 'bg-emerald-700';
+        icon.className = 'fa-solid fa-circle-check text-sm';
+      } else if (type === 'error') {
+        inner.className = baseInnerClass + 'bg-rose-600';
+        icon.className = 'fa-solid fa-triangle-exclamation text-sm';
+      } else if (type === 'warning') {
+        inner.className = baseInnerClass + 'bg-amber-600';
+        icon.className = 'fa-solid fa-circle-notch fa-spin text-sm';
+      } else {
+        inner.className = baseInnerClass + 'bg-slate-800';
+        icon.className = 'fa-solid fa-circle-info text-sm';
+      }
+
+      if (retryBtn) {
+        retryBtn.classList.toggle('hidden', !showRetry);
+      }
 
       toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
-      setTimeout(hideToast, 4000);
+      
+      // ถ้าเป็นโหมดเตือนแบบต้องลองใหม่ ให้ค้างไว้ 6 วินาที แต่ถ้าปกติปิดใน 4 วินาที
+      var duration = showRetry ? 7000 : 4000;
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(hideToast, duration);
     }
 
     function hideToast() {
       var toast = document.getElementById('toastNotification');
-      toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+      if (toast) toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
     }
   </script>
 </body>
