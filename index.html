@@ -1279,7 +1279,7 @@ function updateFavicon(iconUrl) {
   });
 }
 
-function loginWithLine() {
+   function loginWithLine() {
       if (!window.liff) {
         if (typeof showToast === 'function') showToast("ไม่สามารถเรียก LINE SDK ได้", "error");
         return;
@@ -1301,6 +1301,41 @@ function loginWithLine() {
         // บังคับดีดเข้าแอป LINE เพื่อไม่ให้หลุดไป Chrome
         window.location.href = "https://liff.line.me/" + LIFF_ID;
       }
+    }
+
+    function verifyLineUserDirect(lineUid) {
+      if (!lineUid) return;
+      if (typeof showLoading === 'function') showLoading(true, "กำลังยืนยันตัวตนผ่าน LINE...");
+
+      GAS.run('verifyLineLogin', lineUid).then(function(res) {
+        if (typeof showLoading === 'function') showLoading(false);
+        if (res && res.success && res.user) {
+          // เคยผูกบัญชีแล้ว -> เข้าสู่ระบบทันที
+          setUserSession(res.user);
+          if (typeof showToast === 'function') showToast("ยินดีต้อนรับ " + res.user.name, "success");
+        } else {
+          // ยังไม่เคยผูกบัญชี -> สลับไปหน้าลงทะเบียน พร้อมดึงข้อมูลจาก LINE มาเติมให้
+          if (typeof switchAuthTab === 'function') switchAuthTab('register');
+          var regLineUid = document.getElementById('regLineUid');
+          if (regLineUid) regLineUid.value = lineUid;
+
+          if (tempLiffProfile) {
+            var prevImg = document.getElementById('linePreviewImg');
+            var prevName = document.getElementById('linePreviewName');
+            var prevBox = document.getElementById('lineProfilePreview');
+            if (prevImg) prevImg.src = tempLiffProfile.pictureUrl || '/favicon.png';
+            if (prevName) prevName.innerText = tempLiffProfile.displayName || '';
+            if (prevBox) prevBox.classList.remove('hidden');
+          }
+          if (typeof showToast === 'function') {
+            showToast("ไม่พบบัญชีที่ผูกกับ LINE นี้ กรุณากรอกข้อมูลนิสิตเพื่อเชื่อมต่อ", "info");
+          }
+        }
+      }).catch(function(err) {
+        if (typeof showLoading === 'function') showLoading(false);
+        console.error("verifyLineLogin error:", err);
+        if (typeof showToast === 'function') showToast("เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง", "error");
+      });
     }
 
     function executeLineLoginFlow() {
