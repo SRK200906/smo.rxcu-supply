@@ -110,9 +110,33 @@
       -moz-appearance: textfield;
       appearance: textfield;
     }
+
+    /* สไตล์สำหรับการพิมพ์ใบยืม A4 (In-Page Print - ป้องกันการโดนบล็อกป๊อปอัปบน iOS) */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printContainer, #printContainer * {
+        visibility: visible;
+      }
+      #printContainer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 10mm;
+        display: block !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+    }
   </style>
 </head>
 <body class="min-h-full flex flex-col antialiased selection:bg-emerald-800 selection:text-white">
+
+  <!-- พื้นที่สำหรับพิมพ์ใบยืม A4 แบบฝังในหน้า (ไม่พึ่ง Popup Window) -->
+  <div id="printContainer" class="hidden"></div>
 
   <!-- ================= AUTHENTICATION GATE ================= -->
   <section id="authGateSection" class="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 gate-safe bg-gradient-to-br from-[#091510] via-[#12281e] to-[#1c3d2e] text-slate-800 relative z-50">
@@ -2258,6 +2282,8 @@
       google.script.run
         .withSuccessHandler(function(requests) {
           showLoading(false);
+          // เก็บข้อมูลบิลล่าสุดไว้ในแคช เพื่อให้สั่งพิมพ์ได้ทันทีแม้ผู้ใช้เปิดจาก Shortcut
+          adminRequests = requests || [];
           renderTrackingCards(requests || []);
         })
         .withFailureHandler(function() {
@@ -2834,35 +2860,105 @@
     }
 
     function printA4Receipt(txId) {
-      var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
-      if (billItems.length === 0) return showToast('ไม่พบข้อมูลบิลสำหรับพิมพ์', 'warning');
+      // ค้นหาบิลจากข้อมูลในเครื่องก่อน
+      var billItems = (adminRequests || []).filter(function(r) { return r.TransactionID === txId; });
+      
+      // หากยังไม่มีข้อมูลในแคช ให้ดึงจากเซิร์ฟเวอร์ก่อนพิมพ์
+      if (billItems.length === 0) {
+        showLoading(true);
+        google.script.run
+          .withSuccessHandler(function(data) {
+            showLoading(false);
+            adminRequests = data || [];
+            var found = adminRequests.filter(function(r) { return r.TransactionID === txId; });
+            if (found.length === 0) {
+              showToast('ไม่พบข้อมูลบิลสำหรับพิมพ์', 'warning');
+            } else {
+              executePrintHtml(found, txId);
+            }
+          })
+          .withFailureHandler(function() {
+            showLoading(false);
+            showToast('ดึงข้อมูลบิลไม่สำเร็จ', 'error');
+          })
+          .getAdminRequests(null);
+        return;
+      }
 
+      executePrintHtml(billItems, txId);
+    }
+
+    function executePrintHtml(billItems, txId) {
       var first = billItems[0];
       var logoSrc = cleanDriveUrl(currentClubLogo) || '/favicon.png?v=10';
-      var printWin = window.open('', '_blank', 'width=850,height=900');
-      if (!printWin) return showToast('กรุณาอนุญาตป๊อปอัปเพื่อเปิดหน้าพิมพ์เอกสาร', 'warning');
+      
+      // ดึงชื่อเต็ม: คำนำหน้า + ชื่อจริง + นามสกุล เท่านั้น (ไม่ใส่ชื่อเล่นในวงเล็บ)
+      var rawBorrowerName = first.BorrowerName || 'ไม่ระบุชื่อ';
+      var cleanBorrowerName = rawBorrowerName.replace(/\s*\([^)]*\)\s*/g, '').trim();
 
-      var doc = printWin.document;
-      doc.open();
-      doc.write('<!DOCTYPE html><html><head><title>ใบยืม - คืนอุปกรณ์ ' + txId + '</title>');
-      doc.write('<style>');
-      doc.write('@page { size: A4 portrait; margin: 15mm; }');
-      doc.write('body { font-family: "Kanit", sans-serif; font-size: 13px; color: #111; margin: 0; padding: 10px; line-height: 1.6; }');
-      doc.write('.header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #183327; padding-bottom: 10px; margin-bottom: 14px; }');
-      doc.write('.logo-box { width: 55px; height: 55px; object-fit: contain; margin-right: 12px; }');
-      doc.write('.brand-title { display: flex; align-items: center; }');
-      doc.write('.tx-box { border: 1.5px solid #183327; padding: 4px 10px; font-weight: bold; font-family: monospace; font-size: 13px; border-radius: 4px; }');
-      doc.write('table { width: 100%; border-collapse: collapse; margin: 14px 0; }');
-      doc.write('th, td { border: 1px solid #94a3b8; padding: 7px 10px; font-size: 12px; text-align: left; }');
-      doc.write('th { background-color: #f1f5f9; text-align: center; font-weight: bold; }');
-      doc.write('.sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 35px; text-align: center; font-size: 12px; }');
-      doc.write('</style></head><body>');
+      var printArea = document.getElementById('printContainer');
+      if (!printArea) return;
 
-      doc.write('<div class="header">');
-      doc.write('<div class="brand-title">');
-      if (currentClubLogo) {
-        doc.write('<img src="' + logoSrc + '" class="logo-box" alt="ตราสโมสร" />');
-      }
+      var itemsRows = billItems.map(function(item, idx) {
+        return '<tr>' +
+          '<td style="text-align:center; border:1px solid #94a3b8; padding:6px 8px;">' + (idx + 1) + '</td>' +
+          '<td style="border:1px solid #94a3b8; padding:6px 8px;">' + item.EquipmentName + ' (' + (item.EquipmentColor || '-') + ')</td>' +
+          '<td style="text-align:center; border:1px solid #94a3b8; padding:6px 8px;">' + item.Quantity + ' ' + (item.EquipmentUnit || 'ชิ้น') + '</td>' +
+          '<td style="text-align:center; border:1px solid #94a3b8; padding:6px 8px;">[ &nbsp; ]</td>' +
+          '<td style="text-align:center; border:1px solid #94a3b8; padding:6px 8px;">[ &nbsp; ]</td>' +
+        '</tr>';
+      }).join('');
+
+      printArea.innerHTML = 
+        '<div style="font-family: \'Kanit\', sans-serif; font-size:13px; color:#111; line-height:1.6;">' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #103824; padding-bottom:10px; margin-bottom:14px;">' +
+            '<div style="display:flex; align-items:center;">' +
+              (currentClubLogo ? '<img src="' + logoSrc + '" style="width:55px; height:55px; object-fit:contain; margin-right:12px;" alt="ตราสโมสร" />' : '') +
+              '<div>' +
+                '<h2 style="margin:0; font-size:18px; color:#103824;">ใบยืม - คืน พัสดุอุปกรณ์</h2>' +
+                '<p style="margin:0; font-size:12px; color:#475569;">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>' +
+              '</div>' +
+            '</div>' +
+            '<div style="border:1.5px solid #103824; padding:4px 10px; font-weight:bold; font-family:monospace; font-size:13px; border-radius:4px;">ที่ ' + txId + '</div>' +
+          '</div>' +
+          '<div style="margin-bottom:12px; font-size:12px; line-height:1.7;">' +
+            '<p><b>ผู้ขอยืม:</b> ' + cleanBorrowerName + ' &nbsp;&nbsp;&nbsp;&nbsp; <b>รหัสนิสิต:</b> ' + (first.BorrowerID || '-') + '</p>' +
+            '<p><b>ในนามโครงการ / ฝ่าย:</b> ' + (first.ProjectGroup || 'ทั่วไป') + '</p>' +
+            '<p><b>นำไปใช้ในกิจกรรม:</b> ' + (first.UserNote || '-') + '</p>' +
+            '<p><b>วันที่ยืม:</b> ' + (first.BorrowDate || '-') + ' &nbsp;&nbsp;&nbsp;&nbsp; <b>กำหนดส่งคืน:</b> ' + (first.ReturnDate || '-') + '</p>' +
+          '</div>' +
+          '<table style="width:100%; border-collapse:collapse; margin:14px 0; font-size:12px;">' +
+            '<thead>' +
+              '<tr style="background-color:#f1f5f9;">' +
+                '<th style="width:8%; border:1px solid #94a3b8; padding:6px;">ลำดับ</th>' +
+                '<th style="border:1px solid #94a3b8; padding:6px; text-align:left;">รายการพัสดุ</th>' +
+                '<th style="width:20%; border:1px solid #94a3b8; padding:6px; text-align:center;">จำนวน / หน่วย</th>' +
+                '<th style="width:14%; border:1px solid #94a3b8; padding:6px; text-align:center;">ช่องตรวจยืม</th>' +
+                '<th style="width:14%; border:1px solid #94a3b8; padding:6px; text-align:center;">ช่องตรวจคืน</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' + itemsRows + '</tbody>' +
+          '</table>' +
+          '<p style="font-size:11px; margin-top:8px; color:#475569;">* ข้าพเจ้าขอรับรองว่าจะดูแลรักษาพัสดุอุปกรณ์ให้อยู่ในสภาพสมบูรณ์ หากเกิดการชำรุด เสียหาย หรือสูญหาย ยินดีรับผิดชอบชดใช้ตามระเบียบงานคลังพัสดุ สโมสรนิสิตฯ ทุกประการ</p>' +
+          '<div style="display:grid; grid-template-columns:1fr 1fr; gap:30px; margin-top:35px; text-align:center; font-size:12px;">' +
+            '<div>' +
+              '<p>ลงชื่อ ........................................................... ผู้ยืม</p>' +
+              '<p>( ' + cleanBorrowerName + ' )</p>' +
+              '<p>วันที่ ......./......./...........</p>' +
+            '</div>' +
+            '<div>' +
+              '<p>ลงชื่อ ........................................................... เจ้าหน้าที่คลังพัสดุ</p>' +
+              '<p>( กรรมการฝ่ายพัสดุและแสงเสียง สโมสรนิสิตฯ )</p>' +
+              '<p>วันที่ ......./......./...........</p>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+      // สั่งพิมพ์ทันทีโดยไม่พึ่ง Pop-up Window ป้องกันการโดนบล็อกบน iOS
+      setTimeout(function() {
+        window.print();
+      }, 200);
+    }
       doc.write('<div><h2 style="margin:0; font-size:18px; color:#183327;">ใบยืม - คืน พัสดุอุปกรณ์</h2><p style="margin:0; font-size:12px; color:#475569;">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p></div>');
       doc.write('</div>');
       doc.write('<div class="tx-box">ที่ ' + txId + '</div>');
