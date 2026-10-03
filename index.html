@@ -1248,51 +1248,63 @@ function updateFavicon(iconUrl) {
 
     // --- LINE LIFF INTEGRATION ENGINE ---
     function initLiffSDK() {
-      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
-        updateLineStatusUI(false);
+  if (!window.liff || !LIFF_ID || LIFF_ID.includes("ใส่_")) return;
+
+  liff.init({ liffId: LIFF_ID }).then(function() {
+    // ถ้าเปิดอยู่ภายในแอป LINE (In-App Client)
+    if (liff.isInClient()) {
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      } else {
+        liff.getProfile().then(function(profile) {
+          tempLiffProfile = profile;
+          if (!currentUser) {
+            verifyLineUserDirect(profile.userId);
+          }
+        });
+      }
+    } else {
+      // กรณีเปิดจากภายนอก (Safari / Chrome / Shortcut)
+      if (liff.isLoggedIn()) {
+        liff.getProfile().then(function(profile) {
+          tempLiffProfile = profile;
+          if (!currentUser) {
+            verifyLineUserDirect(profile.userId);
+          }
+        });
+      }
+    }
+  }).catch(function(err) {
+    console.warn("LIFF Init failed:", err);
+  });
+}
+
+function loginWithLine() {
+      if (!window.liff) {
+        if (typeof showToast === 'function') showToast("ไม่สามารถเรียก LINE SDK ได้", "error");
         return;
       }
 
-      liff.init({ liffId: LIFF_ID })
-        .then(function() {
-          if (liff.isLoggedIn()) {
-            return liff.getProfile();
-          } else if (liff.isInClient()) {
-            liff.login();
-          }
-        })
-        .then(function(profile) {
-          if (profile && profile.userId) {
-            currentLineUid = profile.userId;
-            localStorage.setItem('smo_rx_line_uid', currentLineUid);
-            updateLineStatusUI(true);
-
-            // แสดง Banner ตรวจจับบัญชี LINE บนหน้าล็อกอิน
-            var banner = document.getElementById('gateLineDetectedBanner');
-            var pic = document.getElementById('gateLineProfilePic');
-            var name = document.getElementById('gateLineDisplayName');
-            var btnText = document.getElementById('btnGateLineText');
-            if (banner) banner.classList.remove('hidden');
-            if (pic && profile.pictureUrl) pic.src = profile.pictureUrl;
-            if (name) name.innerText = profile.displayName || 'LINE User';
-            if (btnText) btnText.innerText = 'ดำเนินการต่อด้วย ' + (profile.displayName || 'LINE');
-
-            // Auto-Login: ตรวจสอบว่า Line UID นี้เคยลงทะเบียนไว้หรือยัง
-            if (!currentUser) {
-              attemptLineAutoLogin(currentLineUid, profile);
-            } else if (currentUser && currentUser.id && (!currentUser.lineUid || currentUser.lineUid !== currentLineUid)) {
-              syncLineUidToBackend(currentUser.id, currentLineUid);
+      // ถ้าเปิดอยู่ในแอป LINE อยู่แล้ว ให้ล็อกอินตรง
+      if (liff.isInClient()) {
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        } else {
+          liff.getProfile().then(function(profile) {
+            if (typeof verifyLineUserDirect === 'function') {
+              verifyLineUserDirect(profile.userId);
             }
-          }
-        })
-        .catch(function(err) {
-          console.warn("LIFF init warning:", err);
-          updateLineStatusUI(false);
-        });
+          });
+        }
+      } else {
+        // ถ้าเปิดจาก Browser นอก หรือ Shortcut หน้าจอโฮม
+        // บังคับดีดเข้าแอป LINE เพื่อไม่ให้หลุดไป Chrome
+        window.location.href = "https://liff.line.me/" + LIFF_ID;
+      }
     }
 
     function executeLineLoginFlow() {
-      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
+      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("2011843638-HjCDgF88") !== -1) {
         showToast('กรุณาระบุ LIFF ID ในไฟล์ index.html ก่อนใช้งาน', 'warning');
         return;
       }
