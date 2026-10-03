@@ -7,9 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
   <!-- Favicon & Touch Icon สำหรับหน้าจอโฮมมือถือ -->
-  <link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=11" />
-  <link id="dynamicAppleTouchIcon" rel="apple-touch-icon" href="/favicon.png?v=11" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=11" />
+  <link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=10" />
+  <link id="dynamicAppleTouchIcon" rel="apple-touch-icon" href="/favicon.png?v=10" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=10" />
   
   <!-- การตั้งค่า PWA / Web Clip สำหรับ iOS & Android -->
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1142,7 +1142,7 @@
         document.head.appendChild(appleIcon);
       }
       var clean = cleanDriveUrl(iconUrl);
-      var finalUrl = clean || '/favicon.png?v=11';
+      var finalUrl = clean || '/favicon.png?v=10';
       if (favicon) favicon.href = finalUrl;
       if (appleIcon) appleIcon.href = finalUrl;
     }
@@ -1221,7 +1221,7 @@
     window.addEventListener('DOMContentLoaded', function() {
       initTheme();
       initLiffSDK();
-      currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=11';
+      currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=10';
       renderClubLogo(currentClubLogo);
 
       var session = localStorage.getItem('smo_rx_user');
@@ -1398,13 +1398,14 @@
     // --- BACKEND API PROXY WITH AUTO-RETRY ---
     function fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, retryCount) {
       if (typeof retryCount === 'undefined') retryCount = 0;
-      var maxRetries = 3;
+      var maxRetries = 2; // ลดการยิงกระหน่ำซ้ำซ้อน
 
       fetch(GAS_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({ action: actionName, payload: payload }),
         redirect: 'follow',
+        cache: 'no-cache',
         credentials: 'omit'
       })
       .then(function(res) {
@@ -1420,9 +1421,7 @@
       .catch(function(err) {
         if (retryCount < maxRetries) {
           var nextAttempt = retryCount + 1;
-          var waitTime = 1200 * nextAttempt;
-          showToast('สัญญาณสะดุด กำลังเชื่อมต่อซ้ำอัตโนมัติ (ครั้งที่ ' + nextAttempt + '/' + maxRetries + ')...', 'warning', false);
-
+          var waitTime = 1500 * nextAttempt;
           setTimeout(function() {
             fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, nextAttempt);
           }, waitTime);
@@ -1436,7 +1435,6 @@
             fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, 0);
           };
 
-          showToast('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาแตะปุ่มลองอีกครั้ง', 'error', true);
           if (failureHandler) failureHandler(err);
         }
       });
@@ -1649,8 +1647,12 @@
       document.getElementById('authGateSection').classList.add('hidden');
       document.getElementById('appMainWrapper').classList.remove('hidden');
       updateUserDisplay();
+      
+      // ปรับจังหวะโหลดไม่ให้ยิงพร้อมกันจน Server ค้าง
       fetchCategories();
-      fetchCatalogData();
+      setTimeout(function() {
+        fetchCatalogData();
+      }, 200);
       showHomeView();
     }
 
@@ -2890,7 +2892,7 @@
 
     function executePrintHtml(billItems, txId) {
       var first = billItems[0];
-      var logoSrc = cleanDriveUrl(currentClubLogo) || '/favicon.png?v=11';
+      var logoSrc = cleanDriveUrl(currentClubLogo) || '/favicon.png?v=10';
       
       // ดึงชื่อเต็ม: คำนำหน้า + ชื่อจริง + นามสกุล เท่านั้น (ไม่ใส่ชื่อเล่นในวงเล็บ)
       var rawBorrowerName = first.BorrowerName || 'ไม่ระบุชื่อ';
