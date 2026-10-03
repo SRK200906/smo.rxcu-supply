@@ -2,6 +2,20 @@
 <html lang="th" class="h-full">
 <head>
   <meta charset="UTF-8" />
+
+  <!-- 1. คุมขนาดให้พอดีจอมือถือ ไม่หดเล็ก -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+
+  <!-- 2. ไอคอนสำหรับแอดลงหน้าจอโฮมมือถือ -->
+  <link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=10" />
+  <link id="dynamicAppleTouchIcon" rel="apple-touch-icon" href="/favicon.png?v=10" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=10" />
+  
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="RxCU Supply" />
+  <meta name="application-name" content="RxCU Supply" />
   
   <!-- การตั้งค่า Viewport รองรับ Safe Area สำหรับ Dynamic Island / Notch บน iOS -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
@@ -1087,11 +1101,11 @@
     var lastFailedRetryFn = null;
     var currentActiveView = 'HOME';
 
-    function checkIfAdmin(user) {
-      if (!user || !user.role) return false;
-      var role = user.role.toString().toLowerCase().trim();
-      return role.indexOf('แอดมิน') !== -1 || role.indexOf('พัสดุ') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1 || role.indexOf('admin') !== -1;
-    }
+function checkIfAdmin(user) {
+  if (!user || !user.role) return false;
+  var r = String(user.role).toLowerCase();
+  return r.includes('admin') || r.includes('แอดมิน') || r.includes('กรรมการ') || r.includes('พัสดุ');
+}
 
     function cleanDriveUrl(url) {
       var fallback = 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
@@ -1110,26 +1124,27 @@
       return url;
     }
 
-    function updateFavicon(iconUrl) {
-      var favicon = document.getElementById('dynamicFavicon');
-      if (!favicon) {
-        favicon = document.createElement('link');
-        favicon.id = 'dynamicFavicon';
-        favicon.rel = 'icon';
-        document.head.appendChild(favicon);
-      }
-      var appleIcon = document.getElementById('dynamicAppleTouchIcon');
-      if (!appleIcon) {
-        appleIcon = document.createElement('link');
-        appleIcon.id = 'dynamicAppleTouchIcon';
-        appleIcon.rel = 'apple-touch-icon';
-        document.head.appendChild(appleIcon);
-      }
-      var clean = cleanDriveUrl(iconUrl);
-      var finalUrl = clean || '/favicon.png?v=10';
-      if (favicon) favicon.href = finalUrl;
-      if (appleIcon) appleIcon.href = finalUrl;
-    }
+function updateFavicon(iconUrl) {
+  var favicon = document.getElementById('dynamicFavicon');
+  if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.id = 'dynamicFavicon';
+    favicon.rel = 'icon';
+    document.head.appendChild(favicon);
+  }
+  var appleIcon = document.getElementById('dynamicAppleTouchIcon');
+  if (!appleIcon) {
+    appleIcon = document.createElement('link');
+    appleIcon.id = 'dynamicAppleTouchIcon';
+    appleIcon.rel = 'apple-touch-icon';
+    document.head.appendChild(appleIcon);
+  }
+
+  var clean = cleanDriveUrl(iconUrl);
+  var finalUrl = clean ? clean : '/favicon.png?v=10';
+  favicon.href = finalUrl;
+  appleIcon.href = finalUrl;
+}
 
     function renderClubLogo(url) {
       var clean = cleanDriveUrl(url);
