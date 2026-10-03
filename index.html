@@ -54,6 +54,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
+  <!-- LINE Front-end Framework (LIFF SDK) สำหรับตรวจจับ LINE UID อัตโนมัติ -->
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -128,16 +131,39 @@
       </div>
 
       <div class="p-5 sm:p-6 space-y-4">
+
+        <!-- Banner แจ้งเตือนตรวจจับ LINE Account เมื่อเปิดใน LINE App -->
+        <div id="gateLineDetectedBanner" class="hidden p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-xs flex items-center gap-3">
+          <img id="gateLineProfilePic" src="" class="w-10 h-10 rounded-full border border-emerald-400 shrink-0 object-cover" />
+          <div class="truncate flex-1">
+            <p class="font-bold text-emerald-950 dark:text-emerald-200 truncate" id="gateLineDisplayName">ตรวจพบบัญชี LINE</p>
+            <p class="text-[10px] text-emerald-700 dark:text-emerald-400">พร้อมรับแจ้งเตือนบิลผ่านแชตอัตโนมัติ</p>
+          </div>
+        </div>
+
+        <!-- 🟢 1. ปุ่มหลัก: ล็อกอินผ่าน LINE (Primary Action) -->
+        <button id="btnGateLineLogin" onclick="executeLineLoginFlow()" class="w-full py-3.5 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2.5 transition-all">
+          <i class="fa-brands fa-line text-xl"></i>
+          <span id="btnGateLineText">เข้าสู่ระบบด้วย LINE</span>
+        </button>
+
+        <div class="relative flex py-1 items-center">
+          <div class="flex-grow border-t border-slate-200 dark:border-emerald-900/40"></div>
+          <span class="flex-shrink mx-3 text-[11px] font-medium text-slate-400">หรือใช้วิธีอื่น</span>
+          <div class="flex-grow border-t border-slate-200 dark:border-emerald-900/40"></div>
+        </div>
+
+        <!-- แท็บสลับเข้าสู่ระบบธรรมดา / ลงทะเบียน -->
         <div class="flex bg-slate-100 dark:bg-slate-900/60 p-1 rounded-2xl text-xs font-semibold">
           <button id="gateTabLogin" onclick="switchGateAuthMode('LOGIN')" class="flex-1 py-2 rounded-xl bg-white dark:bg-[#1b3327] shadow-sm text-[#183327] dark:text-[#f2e6d0] font-bold transition-all">
-            <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i> เข้าสู่ระบบ
+            <i class="fa-solid fa-id-card mr-1"></i> เข้าด้วยรหัสนิสิต
           </button>
           <button id="gateTabRegister" onclick="switchGateAuthMode('REGISTER')" class="flex-1 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-all">
             <i class="fa-solid fa-user-plus mr-1"></i> ลงทะเบียนใหม่
           </button>
         </div>
 
-        <!-- Login Form -->
+        <!-- Login Form (แบบเดิมสำรอง) -->
         <div id="gateLoginForm" class="space-y-3.5 text-xs">
           <div>
             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">รหัสนิสิต / ประจำตัวประชาชน <span class="text-rose-500">*</span></label>
@@ -155,14 +181,14 @@
             </div>
           </div>
 
-          <button id="btnGateLogin" onclick="executeGateLogin()" class="w-full py-3 rounded-xl bg-gradient-to-r from-[#10231a] to-[#204434] hover:opacity-95 text-white font-bold text-xs sm:text-sm shadow-md transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2">
-            <span>เข้าสู่ระบบคลังพัสดุ</span>
+          <button id="btnGateLogin" onclick="executeGateLogin()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#10231a] to-[#204434] hover:opacity-95 text-white font-bold text-xs shadow-md transition-all active:scale-[0.98] mt-1 flex items-center justify-center gap-2">
+            <span>เข้าสู่ระบบ</span>
             <i class="fa-solid fa-arrow-right text-xs"></i>
           </button>
         </div>
 
         <!-- Register Form -->
-        <div id="gateRegisterForm" class="hidden space-y-2.5 text-xs max-h-[55vh] overflow-y-auto pr-1 custom-scroll">
+        <div id="gateRegisterForm" class="hidden space-y-2.5 text-xs max-h-[50vh] overflow-y-auto pr-1 custom-scroll">
           <div class="grid grid-cols-3 gap-2">
             <div>
               <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">คำนำหน้า</label>
@@ -218,7 +244,7 @@
           </div>
 
           <button id="btnGateRegister" onclick="executeGateRegister()" class="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md transition-all mt-2 flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและเข้าใช้งาน</span>
+            <i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและผูก LINE</span>
           </button>
         </div>
 
@@ -688,16 +714,59 @@
             <input type="text" id="profLine" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium dark:text-slate-100" />
           </div>
         </div>
+
+        <!-- LINE User ID Status & Connect button in Profile Modal -->
+        <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0a1510] border dark:border-emerald-950/80 flex items-center justify-between gap-2">
+          <div class="truncate">
+            <p class="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <i class="fa-brands fa-line text-emerald-600 text-sm"></i>
+              <span>สถานะรับแจ้งเตือนบิลผ่าน LINE</span>
+            </p>
+            <p id="profLineUidStatus" class="text-[10px] text-slate-400 truncate mt-0.5">กำลังตรวจสอบ...</p>
+          </div>
+          <button type="button" id="btnProfConnectLine" onclick="triggerLiffConnect()" class="px-2.5 py-1 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[10px] shrink-0">
+            ผูกบัญชี LINE
+          </button>
+        </div>
       </div>
 
       <div class="border-t dark:border-emerald-900/40 pt-3 flex items-center justify-end gap-2">
-        <button onclick="profileEditModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs">ยกเลิก</button>
-        <button id="btnSaveProfile" onclick="saveUserProfile()" class="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">บันทึกข้อมูล</button>
+        <button type="button" onclick="profileEditModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs">ยกเลิก</button>
+        <button type="button" id="btnSaveProfile" onclick="saveUserProfile()" class="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">บันทึกข้อมูล</button>
       </div>
     </div>
   </dialog>
 
-  <!-- MODAL: ITEM DETAIL (WITH ADMIN EDIT TRIGGER) -->
+  <!-- MODAL: ADMIN ADD ITEM TO BILL -->
+  <dialog id="adminAddItemModal" class="p-0 backdrop:bg-slate-900/75 rounded-3xl shadow-2xl max-w-md w-[94vw] border border-slate-100 dark:border-emerald-900/60">
+    <div class="p-5 space-y-4 bg-white dark:bg-[#12231b] rounded-3xl text-slate-800 dark:text-slate-100">
+      <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-2.5">
+        <h3 class="font-bold text-sm sm:text-base text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-1.5">
+          <i class="fa-solid fa-cart-plus text-[#c5a880]"></i> เพิ่มพัสดุเข้าบิลนี้
+        </h3>
+        <button onclick="adminAddItemModal.close()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">เลือกรายการพัสดุ</label>
+          <select id="adminAddSelectEquipment" onchange="updateAdminAddStockHint()" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl font-medium dark:text-slate-100"></select>
+          <p id="adminAddStockHint" class="text-[10px] text-emerald-600 dark:text-emerald-400 mt-1">คงเหลือในคลัง: -</p>
+        </div>
+        <div>
+          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">จำนวนที่ต้องการเพิ่ม</label>
+          <input type="number" id="adminAddQuantity" min="1" value="1" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl font-bold text-center dark:text-slate-100" />
+        </div>
+      </div>
+
+      <div class="border-t dark:border-emerald-900/40 pt-3 flex items-center justify-end gap-2">
+        <button type="button" onclick="adminAddItemModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs">ยกเลิก</button>
+        <button type="button" onclick="executeAdminAddItemToBill()" class="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">ยืนยันเพิ่มรายการ</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: ITEM DETAIL -->
   <dialog id="itemDetailModal" class="p-0 backdrop:bg-slate-900/75 rounded-3xl shadow-2xl max-w-lg w-[94vw] border border-slate-100 dark:border-emerald-900/60">
     <div class="p-4 sm:p-5 space-y-4 bg-white dark:bg-[#12231b] rounded-3xl text-slate-800 dark:text-slate-100">
       <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-2.5">
@@ -803,8 +872,8 @@
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">จำนวนคงเหลือพร้อมยืม <span class="text-rose-500">*</span></label>
-              <input type="number" id="newEquipStockQty" min="0" value="1" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-bold text-center text-emerald-800 dark:text-emerald-300" />
+              <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">จำนวนคงเหลือ <span class="text-rose-500">*</span></label>
+              <input type="number" id="newEquipStockQty" min="1" value="1" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-bold text-center text-emerald-800 dark:text-emerald-300" />
             </div>
             <div>
               <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">หน่วยนับ</label>
@@ -850,46 +919,14 @@
 
       <div id="billManageMeta" class="bg-slate-50 dark:bg-[#0a1510] p-3 rounded-2xl text-xs text-slate-600 dark:text-slate-300 grid grid-cols-1 sm:grid-cols-2 gap-1.5 shrink-0 border border-slate-100 dark:border-emerald-950/80"></div>
       
-      <!-- Admin Add Item To Bill Button -->
-      <div id="billManageAddArea" class="hidden flex items-center justify-between bg-emerald-50/70 dark:bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-200/80 dark:border-emerald-900/60">
-        <span class="text-xs text-emerald-900 dark:text-emerald-300 font-medium">จัดการรายการในบิลคำขอ:</span>
-        <button type="button" onclick="openAdminAddItemModal()" class="px-3 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5">
-          <i class="fa-solid fa-plus text-[10px]"></i>
-          <span>เพิ่มพัสดุเข้าบิลนี้</span>
+      <div id="billManageAddArea" class="hidden flex justify-end shrink-0">
+        <button type="button" onclick="openAdminAddItemModal()" class="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm">
+          <i class="fa-solid fa-plus"></i> เพิ่มรายการพัสดุในบิลนี้
         </button>
       </div>
 
       <div class="flex-1 overflow-y-auto space-y-2.5 custom-scroll py-1 pr-1" id="billManageItemsContainer"></div>
       <div id="billManageFooter" class="border-t dark:border-emerald-900/40 pt-3 shrink-0 flex flex-col sm:flex-row gap-2 items-center justify-between"></div>
-    </div>
-  </dialog>
-
-  <!-- MODAL: ADMIN ADD ITEM DIRECTLY TO BILL -->
-  <dialog id="adminAddItemModal" class="p-0 backdrop:bg-slate-900/75 rounded-3xl shadow-2xl max-w-md w-[92vw] border border-slate-100 dark:border-emerald-900/60 z-50">
-    <div class="p-5 space-y-4 bg-white dark:bg-[#12231b] rounded-3xl text-slate-800 dark:text-slate-100">
-      <div class="flex items-center justify-between border-b dark:border-emerald-900/40 pb-2.5">
-        <h3 class="font-bold text-sm sm:text-base text-[#10231a] dark:text-[#f0e4cf] flex items-center gap-1.5">
-          <i class="fa-solid fa-cart-plus text-emerald-600"></i> เพิ่มพัสดุเข้าบิลของผู้ยืม
-        </h3>
-        <button onclick="adminAddItemModal.close()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold">✕</button>
-      </div>
-
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">เลือกรายการพัสดุ <span class="text-rose-500">*</span></label>
-          <select id="adminAddSelectEquipment" onchange="updateAdminAddStockHint()" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs dark:text-slate-100"></select>
-          <p id="adminAddStockHint" class="text-[11px] text-slate-400 mt-1">คงเหลือในคลัง: -</p>
-        </div>
-        <div>
-          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">จำนวนที่ต้องการเพิ่ม <span class="text-rose-500">*</span></label>
-          <input type="number" id="adminAddQuantity" min="1" value="1" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl text-xs font-bold text-center dark:text-slate-100" />
-        </div>
-      </div>
-
-      <div class="border-t dark:border-emerald-900/40 pt-3 flex items-center justify-end gap-2">
-        <button onclick="adminAddItemModal.close()" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs">ยกเลิก</button>
-        <button onclick="executeAdminAddItemToBill()" class="px-5 py-2 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-md">ยืนยันเพิ่มรายการ</button>
-      </div>
     </div>
   </dialog>
 
@@ -1020,16 +1057,20 @@
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw9DjdFBpgcobqpR_uzGNeLHgImVHDYImXyuhkWALACLWHxqlMtVXRo_a0BpsQnnP3Q/exec";
 
+    // 🔑 LIFF ID (นำ LIFF ID จาก LINE Developers Console มาใส่ที่นี่ หากยังไม่มีระบบจะข้ามไปทำงานตามปกติ)
+    const LIFF_ID = "2011843638-HjCDgF88";
+
     // 4 หมวดหมู่ที่ปักหมุดแสดงบนหน้าแรก (แก้ไขชื่อตามต้องการได้เลย)
     var PINNED_CATEGORIES = [
       'ประกอบกิจกรรม',
       'เครื่องแต่งกาย-พร็อพ',
-      'รับน้อง',
+      'วัสดุสำนักงาน',
       'เครื่องเสียงและแสงไฟ'
     ];
 
     // ตัวแปรสถานะและคลังข้อมูลหลักของระบบ
     var currentUser = null;
+    var currentLineUid = ""; // เก็บ LINE UID ที่ดึงได้จาก LIFF SDK
     var allItems = [];
     var cart = [];
     var adminRequests = [];
@@ -1130,8 +1171,40 @@
       }
     }
 
+    // --- DARK MODE / THEME MANAGEMENT ---
+    function initTheme() {
+      var saved = localStorage.getItem('smo_rx_theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var isDark = saved === 'dark' || (!saved && prefersDark);
+      applyTheme(isDark);
+    }
+
+    function applyTheme(isDark) {
+      var html = document.documentElement;
+      var icon = document.getElementById('themeToggleIcon');
+      if (isDark) {
+        html.classList.add('dark');
+        localStorage.setItem('smo_rx_theme', 'dark');
+        if (icon) {
+          icon.className = 'fa-solid fa-sun text-xs sm:text-sm text-amber-300';
+        }
+      } else {
+        html.classList.remove('dark');
+        localStorage.setItem('smo_rx_theme', 'light');
+        if (icon) {
+          icon.className = 'fa-solid fa-moon text-xs sm:text-sm text-emerald-200';
+        }
+      }
+    }
+
+    function toggleTheme() {
+      var isDark = document.documentElement.classList.contains('dark');
+      applyTheme(!isDark);
+    }
+
     window.addEventListener('DOMContentLoaded', function() {
       initTheme();
+      initLiffSDK(); // เริ่มต้นทำงาน LINE LIFF SDK
       currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=10';
       renderClubLogo(currentClubLogo);
 
@@ -1154,35 +1227,154 @@
       var today = new Date().toISOString().split('T')[0];
       var startDateEl = document.getElementById('cartStartDate');
       var endDateEl = document.getElementById('cartEndDate');
-      if (startDateEl && !startDateEl.value) startDateEl.value = today;
-      if (endDateEl && !endDateEl.value) endDateEl.value = today;
+      if (startDateEl) startDateEl.value = today;
+      if (endDateEl) endDateEl.value = today;
     });
 
-    // --- DARK MODE LOGIC ---
-    function initTheme() {
-      var saved = localStorage.getItem('smo_rx_theme');
-      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var isDark = saved === 'dark' || (!saved && prefersDark);
-      applyTheme(isDark);
+    // --- LINE LIFF INTEGRATION ENGINE ---
+    function initLiffSDK() {
+      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
+        updateLineStatusUI(false);
+        return;
+      }
+
+      liff.init({ liffId: LIFF_ID })
+        .then(function() {
+          if (liff.isLoggedIn()) {
+            return liff.getProfile();
+          } else if (liff.isInClient()) {
+            liff.login();
+          }
+        })
+        .then(function(profile) {
+          if (profile && profile.userId) {
+            currentLineUid = profile.userId;
+            localStorage.setItem('smo_rx_line_uid', currentLineUid);
+            updateLineStatusUI(true);
+
+            // แสดง Banner ตรวจจับบัญชี LINE บนหน้าล็อกอิน
+            var banner = document.getElementById('gateLineDetectedBanner');
+            var pic = document.getElementById('gateLineProfilePic');
+            var name = document.getElementById('gateLineDisplayName');
+            var btnText = document.getElementById('btnGateLineText');
+            if (banner) banner.classList.remove('hidden');
+            if (pic && profile.pictureUrl) pic.src = profile.pictureUrl;
+            if (name) name.innerText = profile.displayName || 'LINE User';
+            if (btnText) btnText.innerText = 'ดำเนินการต่อด้วย ' + (profile.displayName || 'LINE');
+
+            // Auto-Login: ตรวจสอบว่า Line UID นี้เคยลงทะเบียนไว้หรือยัง
+            if (!currentUser) {
+              attemptLineAutoLogin(currentLineUid, profile);
+            } else if (currentUser && currentUser.id && (!currentUser.lineUid || currentUser.lineUid !== currentLineUid)) {
+              syncLineUidToBackend(currentUser.id, currentLineUid);
+            }
+          }
+        })
+        .catch(function(err) {
+          console.warn("LIFF init warning:", err);
+          updateLineStatusUI(false);
+        });
     }
 
-    function applyTheme(isDark) {
-      var html = document.documentElement;
-      var icon = document.getElementById('themeToggleIcon');
-      if (isDark) {
-        html.classList.add('dark');
-        localStorage.setItem('smo_rx_theme', 'dark');
-        if (icon) icon.className = 'fa-solid fa-sun text-amber-300 text-xs sm:text-sm';
+    function executeLineLoginFlow() {
+      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
+        showToast('กรุณาระบุ LIFF ID ในไฟล์ index.html ก่อนใช้งาน', 'warning');
+        return;
+      }
+
+      if (!liff.isLoggedIn()) {
+        liff.login();
       } else {
-        html.classList.remove('dark');
-        localStorage.setItem('smo_rx_theme', 'light');
-        if (icon) icon.className = 'fa-solid fa-moon text-emerald-200 text-xs sm:text-sm';
+        liff.getProfile().then(function(profile) {
+          currentLineUid = profile.userId;
+          attemptLineAutoLogin(currentLineUid, profile);
+        });
       }
     }
 
-    function toggleTheme() {
-      var isDark = document.documentElement.classList.contains('dark');
-      applyTheme(!isDark);
+    function attemptLineAutoLogin(lineUid, profile) {
+      showLoading(true);
+      var btn = document.getElementById('btnGateLineLogin');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังตรวจสอบบัญชี...';
+      }
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          showLoading(false);
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-brands fa-line text-xl"></i> <span>เข้าสู่ระบบด้วย LINE</span>';
+          }
+
+          if (res && res.success) {
+            if (res.isRegistered) {
+              currentUser = res.user;
+              localStorage.setItem('smo_rx_user', JSON.stringify(currentUser));
+              showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' + (currentUser.firstName || ''), 'success');
+              unlockAppInterface();
+            } else {
+              // ยังไม่เคยลงทะเบียน: สลับไปหน้าลงทะเบียน พร้อมกรอกชื่อจาก LINE ให้
+              showToast('พบบัญชี LINE ใหม่! กรุณากรอกรหัสนิสิตและฝ่ายเพื่อผูกบัญชี', 'info');
+              switchGateAuthMode('REGISTER');
+              if (profile && profile.displayName) {
+                document.getElementById('gateRegFirstName').value = profile.displayName;
+              }
+            }
+          }
+        })
+        .withFailureHandler(function() {
+          showLoading(false);
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-brands fa-line text-xl"></i> <span>เข้าสู่ระบบด้วย LINE</span>';
+          }
+        })
+        .verifyLineLogin(lineUid);
+    }
+
+    function triggerLiffConnect() {
+      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
+        showToast('กรุณาระบุ LIFF ID ในโค้ดก่อนเริ่มใช้งาน', 'warning');
+        return;
+      }
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      } else {
+        liff.getProfile().then(function(profile) {
+          currentLineUid = profile.userId;
+          if (currentUser && currentUser.id) {
+            syncLineUidToBackend(currentUser.id, currentLineUid);
+          }
+          showToast('เชื่อมต่อ LINE สำเร็จ! พร้อมรับการแจ้งเตือน', 'success');
+          updateLineStatusUI(true);
+        });
+      }
+    }
+
+    function syncLineUidToBackend(studentId, uid) {
+      google.script.run
+        .withSuccessHandler(function(res) {
+          if (res && res.success && currentUser) {
+            currentUser.lineUid = uid;
+            localStorage.setItem('smo_rx_user', JSON.stringify(currentUser));
+            updateLineStatusUI(true);
+          }
+        })
+        .linkLineUid(studentId, uid);
+    }
+
+    function updateLineStatusUI(isConnected) {
+      var profStatus = document.getElementById('profLineUidStatus');
+      var btnProf = document.getElementById('btnProfConnectLine');
+      var hasUid = isConnected || !!currentLineUid || (currentUser && !!currentUser.lineUid);
+
+      if (profStatus) {
+        profStatus.innerText = hasUid ? "✅ เชื่อมต่อเรียบร้อย (ระบบจะทักแจ้งเตือนเมื่ออนุมัติ/คืนของ)" : "ยังไม่ได้ผูกบัญชี LINE";
+        profStatus.className = hasUid ? "text-[10px] text-emerald-600 dark:text-emerald-400 font-medium truncate mt-0.5" : "text-[10px] text-slate-400 truncate mt-0.5";
+      }
+      if (btnProf) btnProf.innerText = hasUid ? "เชื่อมต่อแล้ว" : "ผูกบัญชี LINE";
     }
 
     // --- BACKEND API PROXY WITH AUTO-RETRY (REST FETCH TO APPS SCRIPT) ---
@@ -1246,6 +1438,8 @@
                 var payload = {};
 
                 if (actionName === 'verifyLogin') payload = { loginId: args[0], firstName: args[1], userType: args[2] };
+                else if (actionName === 'verifyLineLogin') payload = { lineUid: args[0] };
+                else if (actionName === 'linkLineUid') payload = { userId: args[0], lineUid: args[1] };
                 else if (actionName === 'registerNewUser') payload = args[0];
                 else if (actionName === 'updateProfile') payload = args[0];
                 else if (actionName === 'submitCartRequest') payload = { cartItems: args[0], userInfo: args[1], userNote: args[2] };
@@ -1492,6 +1686,7 @@
     }
 
     function executeGateRegister() {
+      var savedLineUid = currentLineUid || localStorage.getItem('smo_rx_line_uid') || '';
       var payload = {
         prefix: document.getElementById('gateRegPrefix').value.trim(),
         firstName: document.getElementById('gateRegFirstName').value.trim(),
@@ -1502,7 +1697,8 @@
         department: document.getElementById('gateRegDept').value.trim(),
         project: document.getElementById('gateRegProject').value.trim() || 'ทั่วไป',
         phone: document.getElementById('gateRegPhone').value.trim(),
-        lineId: document.getElementById('gateRegLine').value.trim()
+        lineId: document.getElementById('gateRegLine').value.trim(),
+        lineUid: savedLineUid // แนบ LINE User ID เข้าไปด้วย
       };
 
       if (!payload.firstName || !payload.lastName || !payload.id || !payload.phone || !payload.lineId) {
@@ -1576,7 +1772,11 @@
       document.getElementById('profProject').value = currentUser.project || 'ทั่วไป';
       document.getElementById('profPhone').value = currentUser.phone || '';
       document.getElementById('profLine').value = currentUser.lineId || '';
-      profileEditModal.showModal();
+      updateLineStatusUI(!!currentUser.lineUid);
+      var modal = document.getElementById('profileEditModal');
+      if (modal && typeof modal.showModal === 'function') {
+        modal.showModal();
+      }
     }
 
     function saveUserProfile() {
@@ -1588,7 +1788,8 @@
         department: document.getElementById('profDept').value.trim(),
         project: document.getElementById('profProject').value.trim() || 'ทั่วไป',
         phone: document.getElementById('profPhone').value.trim(),
-        lineId: document.getElementById('profLine').value.trim()
+        lineId: document.getElementById('profLine').value.trim(),
+        lineUid: currentLineUid || currentUser.lineUid || ''
       };
 
       if (!updated.phone || !updated.lineId) {
@@ -1596,14 +1797,18 @@
       }
 
       var btn = document.getElementById('btnSaveProfile');
-      btn.disabled = true;
-      btn.innerText = 'กำลังบันทึก...';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = 'กำลังบันทึก...';
+      }
       showLoading(true);
 
       google.script.run
         .withSuccessHandler(function(res) {
-          btn.disabled = false;
-          btn.innerText = 'บันทึกข้อมูล';
+          if (btn) {
+            btn.disabled = false;
+            btn.innerText = 'บันทึกข้อมูล';
+          }
           showLoading(false);
 
           if (res && res.success) {
@@ -1616,15 +1821,20 @@
             localStorage.setItem('smo_rx_user', JSON.stringify(currentUser));
             updateUserDisplay();
             refreshHomeDashboard();
-            profileEditModal.close();
+            var modal = document.getElementById('profileEditModal');
+            if (modal && typeof modal.close === 'function') {
+              modal.close();
+            }
             showToast('อัปเดตข้อมูลโปรไฟล์เรียบร้อยแล้ว', 'success');
           } else {
             showToast(res ? res.message : 'เกิดข้อผิดพลาดในการบันทึก', 'error');
           }
         })
         .withFailureHandler(function() {
-          btn.disabled = false;
-          btn.innerText = 'บันทึกข้อมูล';
+          if (btn) {
+            btn.disabled = false;
+            btn.innerText = 'บันทึกข้อมูล';
+          }
           showLoading(false);
         })
         .updateProfile(updated);
