@@ -2959,47 +2959,6 @@
         window.print();
       }, 200);
     }
-      doc.write('<div><h2 style="margin:0; font-size:18px; color:#183327;">ใบยืม - คืน พัสดุอุปกรณ์</h2><p style="margin:0; font-size:12px; color:#475569;">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p></div>');
-      doc.write('</div>');
-      doc.write('<div class="tx-box">ที่ ' + txId + '</div>');
-      doc.write('</div>');
-
-      doc.write('<div style="margin-bottom: 12px; font-size: 12px; line-height:1.7;">');
-      doc.write('<p><b>ผู้ขอยืม:</b> ' + first.BorrowerName + ' &nbsp;&nbsp;&nbsp;&nbsp; <b>รหัสนิสิต:</b> ' + first.BorrowerID + '</p>');
-      doc.write('<p><b>ในนามโครงการ / ฝ่าย:</b> ' + first.ProjectGroup + '</p>');
-      doc.write('<p><b>นำไปใช้ในกิจกรรม:</b> ' + (first.UserNote || '-') + '</p>');
-      doc.write('<p><b>วันที่ยืม:</b> ' + first.BorrowDate + ' &nbsp;&nbsp;&nbsp;&nbsp; <b>กำหนดส่งคืน:</b> ' + first.ReturnDate + '</p>');
-      doc.write('</div>');
-
-      doc.write('<table>');
-      doc.write('<thead><tr><th style="width:8%;">ลำดับ</th><th>รายการพัสดุ</th><th style="width:20%;">จำนวน / หน่วย</th><th style="width:14%;">ช่องตรวจยืม</th><th style="width:14%;">ช่องตรวจคืน</th></tr></thead>');
-      doc.write('<tbody>');
-      billItems.forEach(function(item, idx) {
-        doc.write('<tr>');
-        doc.write('<td style="text-align:center;">' + (idx + 1) + '</td>');
-        doc.write('<td>' + item.EquipmentName + ' (' + (item.EquipmentColor || '-') + ')</td>');
-        doc.write('<td style="text-align:center;">' + item.Quantity + ' ' + item.EquipmentUnit + '</td>');
-        doc.write('<td style="text-align:center;">[ &nbsp; ]</td>');
-        doc.write('<td style="text-align:center;">[ &nbsp; ]</td>');
-        doc.write('</tr>');
-      });
-      doc.write('</tbody></table>');
-
-      doc.write('<p style="font-size:11px; margin-top:8px; color:#475569;">* ข้าพเจ้าขอรับรองว่าจะดูแลรักษาพัสดุอุปกรณ์ให้อยู่ในสภาพสมบูรณ์ หากเกิดการชำรุด เสียหาย หรือสูญหาย ยินดีรับผิดชอบชดใช้ตามระเบียบงานคลังพัสดุ สโมสรนิสิตฯ ทุกประการ</p>');
-      doc.write('<div class="sig-grid">');
-      doc.write('<div><p>ลงชื่อ ........................................................... ผู้ยืม</p><p>( ' + first.BorrowerName + ' )</p><p>วันที่ ......./......./...........</p></div>');
-      doc.write('<div><p>ลงชื่อ ........................................................... เจ้าหน้าที่คลังพัสดุ</p><p>( กรรมการฝ่ายพัสดุและสถานที่ สโมสรนิสิตฯ )</p><p>วันที่ ......./......./...........</p></div>');
-      doc.write('</div>');
-
-      doc.write('</body></html>');
-      doc.close();
-
-      setTimeout(function() {
-        printWin.focus();
-        printWin.print();
-        printWin.close();
-      }, 400);
-    
 
     function openAddEquipmentModal() {
       currentEditingItemId = null;
