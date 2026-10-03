@@ -2,20 +2,6 @@
 <html lang="th" class="h-full">
 <head>
   <meta charset="UTF-8" />
-
-  <!-- 1. คุมขนาดให้พอดีจอมือถือ ไม่หดเล็ก -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-
-  <!-- 2. ไอคอนสำหรับแอดลงหน้าจอโฮมมือถือ -->
-  <link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=10" />
-  <link id="dynamicAppleTouchIcon" rel="apple-touch-icon" href="/favicon.png?v=10" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=10" />
-  
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="RxCU Supply" />
-  <meta name="application-name" content="RxCU Supply" />
   
   <!-- การตั้งค่า Viewport รองรับ Safe Area สำหรับ Dynamic Island / Notch บน iOS -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
@@ -68,7 +54,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- LINE Front-end Framework (LIFF SDK) สำหรับตรวจจับ LINE UID อัตโนมัติ -->
+  <!-- LINE Front-end Framework (LIFF SDK) -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
   <style>
@@ -156,7 +142,7 @@
         </div>
 
         <!-- 🟢 1. ปุ่มหลัก: ล็อกอินผ่าน LINE (Primary Action) -->
-        <button id="btnGateLineLogin" onclick="executeLineLoginFlow()" class="w-full py-3.5 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2.5 transition-all">
+        <button id="btnGateLineLogin" onclick="loginWithLine()" class="w-full py-3.5 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2.5 transition-all">
           <i class="fa-brands fa-line text-xl"></i>
           <span id="btnGateLineText">เข้าสู่ระบบด้วย LINE</span>
         </button>
@@ -269,7 +255,7 @@
   <!-- ================= MAIN APP WRAPPER ================= -->
   <div id="appMainWrapper" class="hidden min-h-screen flex flex-col pb-24 md:pb-0">
 
-    <!-- Top Navigation Bar (Header พร้อม Header-Safe หลบ Dynamic Island) -->
+    <!-- Top Navigation Bar -->
     <header class="luxury-glass sticky top-0 z-40 px-3 sm:px-6 header-safe pb-2.5 text-white shadow-lg">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
         
@@ -314,12 +300,12 @@
             <i class="fa-solid fa-circle-notch fa-spin mr-1"></i> โหลด...
           </span>
 
-          <!-- Global Refresh Button (กดรีเฟรชข้อมูลได้ทุกหน้า) -->
+          <!-- Global Refresh Button -->
           <button id="btnGlobalRefresh" onclick="refreshCurrentViewData()" title="รีเฟรชข้อมูลหน้านี้" class="p-2 sm:px-2.5 sm:py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-emerald-200 hover:text-white transition-all flex items-center justify-center active:scale-95">
             <i id="globalRefreshIcon" class="fa-solid fa-arrows-rotate text-xs sm:text-sm"></i>
           </button>
 
-          <!-- Cart Button (Desktop & Tablet) -->
+          <!-- Cart Button -->
           <button onclick="showCartView()" class="relative p-2 sm:px-3 sm:py-1.5 rounded-xl bg-emerald-600/80 hover:bg-emerald-600 border border-emerald-400/30 text-white transition-all flex items-center gap-1.5">
             <i class="fa-solid fa-bag-shopping text-sm"></i>
             <span class="hidden sm:inline text-xs font-medium">ตะกร้า</span>
@@ -380,7 +366,6 @@
             </div>
           </div>
 
-          <!-- Background Pattern Accent -->
           <div class="absolute -right-8 -bottom-10 opacity-10 pointer-events-none text-[180px] text-white">
             <i class="fa-solid fa-mortar-pestle"></i>
           </div>
@@ -507,9 +492,7 @@
             </button>
           </div>
           
-          <div id="homeQuickCategories" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            <!-- Dynamically populated via JS -->
-          </div>
+          <div id="homeQuickCategories" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
         </div>
 
         <!-- Operational Notices -->
@@ -647,7 +630,7 @@
 
     </main>
 
-    <!-- ================= MOBILE BOTTOM NAVIGATION BAR (พร้อม Dock-Safe หลบแถบ Home) ================= -->
+    <!-- ================= MOBILE BOTTOM NAVIGATION BAR ================= -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#0c1d15]/95 backdrop-blur-lg border-t border-slate-200/80 dark:border-emerald-950/80 px-2 pt-1 dock-safe shadow-2xl">
       <div id="mobileDockGrid" class="max-w-md mx-auto grid grid-cols-4 items-center text-center">
         <!-- 1. Home -->
@@ -677,7 +660,7 @@
           <span class="text-[10px] mt-0.5">ตะกร้า</span>
         </button>
 
-        <!-- 5. Admin Tab (Strictly hidden for regular students) -->
+        <!-- 5. Admin Tab -->
         <button id="mTabAdmin" onclick="showAdminView()" class="hidden flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium transition-all">
           <i class="fa-solid fa-shield-halved text-base"></i>
           <span class="text-[10px] mt-0.5">แอดมิน</span>
@@ -729,7 +712,6 @@
           </div>
         </div>
 
-        <!-- LINE User ID Status & Connect button in Profile Modal -->
         <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0a1510] border dark:border-emerald-950/80 flex items-center justify-between gap-2">
           <div class="truncate">
             <p class="font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
@@ -954,7 +936,6 @@
         <button onclick="addToHomeModal.close()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold">✕</button>
       </div>
 
-      <!-- Segmented OS Tabs -->
       <div class="flex bg-slate-100 dark:bg-[#0a1510] p-1 rounded-xl text-xs font-bold border border-slate-200 dark:border-emerald-900/40">
         <button id="tabOsIos" onclick="switchOsGuide('IOS')" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-emerald-900 text-[#10231a] dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5">
           <i class="fa-brands fa-apple text-sm"></i> <span>iPhone / iPad (iOS)</span>
@@ -964,7 +945,6 @@
         </button>
       </div>
 
-      <!-- iOS Instructions -->
       <div id="guideIos" class="space-y-3 text-xs leading-relaxed">
         <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
           <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
@@ -984,7 +964,6 @@
         </div>
       </div>
 
-      <!-- Android Instructions -->
       <div id="guideAndroid" class="hidden space-y-3 text-xs leading-relaxed">
         <div class="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60">
           <span class="w-5 h-5 rounded-full bg-emerald-800 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
@@ -1071,10 +1050,10 @@
   <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw9DjdFBpgcobqpR_uzGNeLHgImVHDYImXyuhkWALACLWHxqlMtVXRo_a0BpsQnnP3Q/exec";
 
-    // 🔑 LIFF ID (นำ LIFF ID จาก LINE Developers Console มาใส่ที่นี่ หากยังไม่มีระบบจะข้ามไปทำงานตามปกติ)
+    // 🔑 LIFF ID
     const LIFF_ID = "2011843638-HjCDgF88";
 
-    // 4 หมวดหมู่ที่ปักหมุดแสดงบนหน้าแรก (แก้ไขชื่อตามต้องการได้เลย)
+    // 4 หมวดหมู่ที่ปักหมุดแสดงบนหน้าแรก
     var PINNED_CATEGORIES = [
       'ประกอบกิจกรรม',
       'เครื่องแต่งกาย-พร็อพ',
@@ -1084,7 +1063,7 @@
 
     // ตัวแปรสถานะและคลังข้อมูลหลักของระบบ
     var currentUser = null;
-    var currentLineUid = ""; // เก็บ LINE UID ที่ดึงได้จาก LIFF SDK
+    var currentLineUid = "";
     var allItems = [];
     var cart = [];
     var adminRequests = [];
@@ -1097,15 +1076,14 @@
     var currentFocusedDetailId = null;
     var currentManagingTxId = null;
 
-    // เก็บฟังก์ชันล่าสุดเพื่อรองรับการกด "ลองอีกครั้ง" บน Toast
     var lastFailedRetryFn = null;
     var currentActiveView = 'HOME';
 
-function checkIfAdmin(user) {
-  if (!user || !user.role) return false;
-  var r = String(user.role).toLowerCase();
-  return r.includes('admin') || r.includes('แอดมิน') || r.includes('กรรมการ') || r.includes('พัสดุ');
-}
+    function checkIfAdmin(user) {
+      if (!user || !user.role) return false;
+      var role = user.role.toString().toLowerCase().trim();
+      return role.indexOf('แอดมิน') !== -1 || role.indexOf('พัสดุ') !== -1 || role.indexOf('เจ้าหน้าที่') !== -1 || role.indexOf('admin') !== -1;
+    }
 
     function cleanDriveUrl(url) {
       var fallback = 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply';
@@ -1124,27 +1102,26 @@ function checkIfAdmin(user) {
       return url;
     }
 
-function updateFavicon(iconUrl) {
-  var favicon = document.getElementById('dynamicFavicon');
-  if (!favicon) {
-    favicon = document.createElement('link');
-    favicon.id = 'dynamicFavicon';
-    favicon.rel = 'icon';
-    document.head.appendChild(favicon);
-  }
-  var appleIcon = document.getElementById('dynamicAppleTouchIcon');
-  if (!appleIcon) {
-    appleIcon = document.createElement('link');
-    appleIcon.id = 'dynamicAppleTouchIcon';
-    appleIcon.rel = 'apple-touch-icon';
-    document.head.appendChild(appleIcon);
-  }
-
-  var clean = cleanDriveUrl(iconUrl);
-  var finalUrl = clean ? clean : '/favicon.png?v=10';
-  favicon.href = finalUrl;
-  appleIcon.href = finalUrl;
-}
+    function updateFavicon(iconUrl) {
+      var favicon = document.getElementById('dynamicFavicon');
+      if (!favicon) {
+        favicon = document.createElement('link');
+        favicon.id = 'dynamicFavicon';
+        favicon.rel = 'icon';
+        document.head.appendChild(favicon);
+      }
+      var appleIcon = document.getElementById('dynamicAppleTouchIcon');
+      if (!appleIcon) {
+        appleIcon = document.createElement('link');
+        appleIcon.id = 'dynamicAppleTouchIcon';
+        appleIcon.rel = 'apple-touch-icon';
+        document.head.appendChild(appleIcon);
+      }
+      var clean = cleanDriveUrl(iconUrl);
+      var finalUrl = clean || '/favicon.png?v=10';
+      if (favicon) favicon.href = finalUrl;
+      if (appleIcon) appleIcon.href = finalUrl;
+    }
 
     function renderClubLogo(url) {
       var clean = cleanDriveUrl(url);
@@ -1219,7 +1196,7 @@ function updateFavicon(iconUrl) {
 
     window.addEventListener('DOMContentLoaded', function() {
       initTheme();
-      initLiffSDK(); // เริ่มต้นทำงาน LINE LIFF SDK
+      initLiffSDK();
       currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=10';
       renderClubLogo(currentClubLogo);
 
@@ -1248,113 +1225,69 @@ function updateFavicon(iconUrl) {
 
     // --- LINE LIFF INTEGRATION ENGINE ---
     function initLiffSDK() {
-  if (!window.liff || !LIFF_ID || LIFF_ID.includes("ใส่_")) return;
-
-  liff.init({ liffId: LIFF_ID }).then(function() {
-    // ถ้าเปิดอยู่ภายในแอป LINE (In-App Client)
-    if (liff.isInClient()) {
-      if (!liff.isLoggedIn()) {
-        liff.login();
-      } else {
-        liff.getProfile().then(function(profile) {
-          tempLiffProfile = profile;
-          if (!currentUser) {
-            verifyLineUserDirect(profile.userId);
-          }
-        });
-      }
-    } else {
-      // กรณีเปิดจากภายนอก (Safari / Chrome / Shortcut)
-      if (liff.isLoggedIn()) {
-        liff.getProfile().then(function(profile) {
-          tempLiffProfile = profile;
-          if (!currentUser) {
-            verifyLineUserDirect(profile.userId);
-          }
-        });
-      }
-    }
-  }).catch(function(err) {
-    console.warn("LIFF Init failed:", err);
-  });
-}
-
-   function loginWithLine() {
-      if (!window.liff) {
-        if (typeof showToast === 'function') showToast("ไม่สามารถเรียก LINE SDK ได้", "error");
+      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
+        updateLineStatusUI(false);
         return;
       }
 
-      // ถ้าเปิดอยู่ในแอป LINE อยู่แล้ว ให้ล็อกอินตรง
+      liff.init({ liffId: LIFF_ID })
+        .then(function() {
+          if (liff.isLoggedIn()) {
+            return liff.getProfile();
+          } else if (liff.isInClient()) {
+            liff.login();
+          }
+        })
+        .then(function(profile) {
+          if (profile && profile.userId) {
+            currentLineUid = profile.userId;
+            localStorage.setItem('smo_rx_line_uid', currentLineUid);
+            updateLineStatusUI(true);
+
+            var banner = document.getElementById('gateLineDetectedBanner');
+            var pic = document.getElementById('gateLineProfilePic');
+            var name = document.getElementById('gateLineDisplayName');
+            var btnText = document.getElementById('btnGateLineText');
+            if (banner) banner.classList.remove('hidden');
+            if (pic && profile.pictureUrl) pic.src = profile.pictureUrl;
+            if (name) name.innerText = profile.displayName || 'LINE User';
+            if (btnText) btnText.innerText = 'ดำเนินการต่อด้วย ' + (profile.displayName || 'LINE');
+
+            if (!currentUser) {
+              verifyLineUserDirect(currentLineUid, profile);
+            } else if (currentUser && currentUser.id && (!currentUser.lineUid || currentUser.lineUid !== currentLineUid)) {
+              syncLineUidToBackend(currentUser.id, currentLineUid);
+            }
+          }
+        })
+        .catch(function(err) {
+          console.warn("LIFF init warning:", err);
+          updateLineStatusUI(false);
+        });
+    }
+
+    function loginWithLine() {
+      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
+        showToast('กรุณาระบุ LIFF ID ในไฟล์ index.html ก่อนใช้งาน', 'warning');
+        return;
+      }
+
       if (liff.isInClient()) {
         if (!liff.isLoggedIn()) {
           liff.login();
         } else {
           liff.getProfile().then(function(profile) {
-            if (typeof verifyLineUserDirect === 'function') {
-              verifyLineUserDirect(profile.userId);
-            }
+            currentLineUid = profile.userId;
+            verifyLineUserDirect(currentLineUid, profile);
           });
         }
       } else {
-        // ถ้าเปิดจาก Browser นอก หรือ Shortcut หน้าจอโฮม
-        // บังคับดีดเข้าแอป LINE เพื่อไม่ให้หลุดไป Chrome
+        // หากเปิดจากภายนอก ส่งเข้าสู่ LIFF URL โดยตรงเพื่อความราบรื่นและไม่หลุดไป Chrome
         window.location.href = "https://liff.line.me/" + LIFF_ID;
       }
     }
 
-    function verifyLineUserDirect(lineUid) {
-      if (!lineUid) return;
-      if (typeof showLoading === 'function') showLoading(true, "กำลังยืนยันตัวตนผ่าน LINE...");
-
-      GAS.run('verifyLineLogin', lineUid).then(function(res) {
-        if (typeof showLoading === 'function') showLoading(false);
-        if (res && res.success && res.user) {
-          // เคยผูกบัญชีแล้ว -> เข้าสู่ระบบทันที
-          setUserSession(res.user);
-          if (typeof showToast === 'function') showToast("ยินดีต้อนรับ " + res.user.name, "success");
-        } else {
-          // ยังไม่เคยผูกบัญชี -> สลับไปหน้าลงทะเบียน พร้อมดึงข้อมูลจาก LINE มาเติมให้
-          if (typeof switchAuthTab === 'function') switchAuthTab('register');
-          var regLineUid = document.getElementById('regLineUid');
-          if (regLineUid) regLineUid.value = lineUid;
-
-          if (tempLiffProfile) {
-            var prevImg = document.getElementById('linePreviewImg');
-            var prevName = document.getElementById('linePreviewName');
-            var prevBox = document.getElementById('lineProfilePreview');
-            if (prevImg) prevImg.src = tempLiffProfile.pictureUrl || '/favicon.png';
-            if (prevName) prevName.innerText = tempLiffProfile.displayName || '';
-            if (prevBox) prevBox.classList.remove('hidden');
-          }
-          if (typeof showToast === 'function') {
-            showToast("ไม่พบบัญชีที่ผูกกับ LINE นี้ กรุณากรอกข้อมูลนิสิตเพื่อเชื่อมต่อ", "info");
-          }
-        }
-      }).catch(function(err) {
-        if (typeof showLoading === 'function') showLoading(false);
-        console.error("verifyLineLogin error:", err);
-        if (typeof showToast === 'function') showToast("เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่อีกครั้ง", "error");
-      });
-    }
-
-    function executeLineLoginFlow() {
-      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("2011843638-HjCDgF88") !== -1) {
-        showToast('กรุณาระบุ LIFF ID ในไฟล์ index.html ก่อนใช้งาน', 'warning');
-        return;
-      }
-
-      if (!liff.isLoggedIn()) {
-        liff.login();
-      } else {
-        liff.getProfile().then(function(profile) {
-          currentLineUid = profile.userId;
-          attemptLineAutoLogin(currentLineUid, profile);
-        });
-      }
-    }
-
-    function attemptLineAutoLogin(lineUid, profile) {
+    function verifyLineUserDirect(lineUid, profile) {
       showLoading(true);
       var btn = document.getElementById('btnGateLineLogin');
       if (btn) {
@@ -1377,7 +1310,6 @@ function updateFavicon(iconUrl) {
               showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' + (currentUser.firstName || ''), 'success');
               unlockAppInterface();
             } else {
-              // ยังไม่เคยลงทะเบียน: สลับไปหน้าลงทะเบียน พร้อมกรอกชื่อจาก LINE ให้
               showToast('พบบัญชี LINE ใหม่! กรุณากรอกรหัสนิสิตและฝ่ายเพื่อผูกบัญชี', 'info');
               switchGateAuthMode('REGISTER');
               if (profile && profile.displayName) {
@@ -1397,7 +1329,7 @@ function updateFavicon(iconUrl) {
     }
 
     function triggerLiffConnect() {
-      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("2011843638-HjCDgF88") !== -1) {
+      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
         showToast('กรุณาระบุ LIFF ID ในโค้ดก่อนเริ่มใช้งาน', 'warning');
         return;
       }
@@ -1439,10 +1371,10 @@ function updateFavicon(iconUrl) {
       if (btnProf) btnProf.innerText = hasUid ? "เชื่อมต่อแล้ว" : "ผูกบัญชี LINE";
     }
 
-    // --- BACKEND API PROXY WITH AUTO-RETRY (REST FETCH TO APPS SCRIPT) ---
+    // --- BACKEND API PROXY WITH AUTO-RETRY ---
     function fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, retryCount) {
       if (typeof retryCount === 'undefined') retryCount = 0;
-      var maxRetries = 3; // พยายามเชื่อมต่อซ้ำอัตโนมัติสูงสุด 3 ครั้ง (รวม 4 ครั้ง)
+      var maxRetries = 3;
 
       fetch(GAS_API_URL, {
         method: 'POST',
@@ -1464,7 +1396,7 @@ function updateFavicon(iconUrl) {
       .catch(function(err) {
         if (retryCount < maxRetries) {
           var nextAttempt = retryCount + 1;
-          var waitTime = 1200 * nextAttempt; // รอเพิ่มขึ้นทีละสเต็ป 1.2s, 2.4s, 3.6s
+          var waitTime = 1200 * nextAttempt;
           showToast('สัญญาณสะดุด กำลังเชื่อมต่อซ้ำอัตโนมัติ (ครั้งที่ ' + nextAttempt + '/' + maxRetries + ')...', 'warning', false);
 
           setTimeout(function() {
@@ -1475,7 +1407,6 @@ function updateFavicon(iconUrl) {
           showLoading(false);
           stopRefreshIconAnimation();
 
-          // เก็บตัวเรียกไว้ให้ผู้ใช้กดปุ่ม "ลองอีกครั้ง" จากแถบแจ้งเตือนได้
           lastFailedRetryFn = function() {
             showLoading(true);
             fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, 0);
@@ -1519,6 +1450,17 @@ function updateFavicon(iconUrl) {
             }
           });
         })(null, null)
+      }
+    };
+
+    // ⭐ ประกาศตัวแปร GAS เป็น Promise Alias ป้องกัน "GAS is not defined"
+    const GAS = {
+      run: function(fnName, ...args) {
+        return new Promise(function(resolve, reject) {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(reject)[fnName](...args);
+        });
       }
     };
 
@@ -1720,7 +1662,7 @@ function updateFavicon(iconUrl) {
       google.script.run
         .withSuccessHandler(function(res) {
           btn.disabled = false;
-          btn.innerHTML = '<span>เข้าสู่ระบบคลังพัสดุ</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
+          btn.innerHTML = '<span>เข้าสู่ระบบ</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
           showLoading(false);
 
           if (res && res.success) {
@@ -1741,7 +1683,7 @@ function updateFavicon(iconUrl) {
         })
         .withFailureHandler(function() {
           btn.disabled = false;
-          btn.innerHTML = '<span>เข้าสู่ระบบคลังพัสดุ</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
+          btn.innerHTML = '<span>เข้าสู่ระบบ</span> <i class="fa-solid fa-arrow-right text-xs"></i>';
           showLoading(false);
         })
         .verifyLogin(id, name, 'ภายใน');
@@ -1760,7 +1702,7 @@ function updateFavicon(iconUrl) {
         project: document.getElementById('gateRegProject').value.trim() || 'ทั่วไป',
         phone: document.getElementById('gateRegPhone').value.trim(),
         lineId: document.getElementById('gateRegLine').value.trim(),
-        lineUid: savedLineUid // แนบ LINE User ID เข้าไปด้วย
+        lineUid: savedLineUid
       };
 
       if (!payload.firstName || !payload.lastName || !payload.id || !payload.phone || !payload.lineId) {
@@ -1775,7 +1717,7 @@ function updateFavicon(iconUrl) {
       google.script.run
         .withSuccessHandler(function(res) {
           btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและเข้าใช้งาน</span>';
+          btn.innerHTML = '<i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและผูก LINE</span>';
           showLoading(false);
 
           if (res && res.success) {
@@ -1789,7 +1731,7 @@ function updateFavicon(iconUrl) {
         })
         .withFailureHandler(function() {
           btn.disabled = false;
-          btn.innerHTML = '<i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและเข้าใช้งาน</span>';
+          btn.innerHTML = '<i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและผูก LINE</span>';
           showLoading(false);
         })
         .registerNewUser(payload);
@@ -1961,7 +1903,6 @@ function updateFavicon(iconUrl) {
       renderQuickCategories();
     }
 
-    // --- ADD TO HOME SCREEN GUIDE CONTROLS ---
     function openAddToHomeModal() {
       switchOsGuide('IOS');
       addToHomeModal.showModal();
@@ -2569,7 +2510,6 @@ function updateFavicon(iconUrl) {
         '<div><p><b>👤 ผู้ขอยืม:</b> ' + first.BorrowerName + '</p><p><b>🗓 ระยะเวลายืม:</b> ' + first.BorrowDate + ' ถึง ' + first.ReturnDate + '</p></div>' +
         '<div><p class="truncate"><b>✍ เหตุผล/กิจกรรม:</b> ' + (first.UserNote || '-') + '</p><p><b>📦 รายการในบิล:</b> ' + billItems.length + ' รายการ</p></div>';
 
-      // Toggle Add Item Button
       var addArea = document.getElementById('billManageAddArea');
       if (addArea) {
         addArea.classList.toggle('hidden', !isBorrowMode);
@@ -2651,7 +2591,6 @@ function updateFavicon(iconUrl) {
       billManageModal.showModal();
     }
 
-    // --- ADMIN ADD / REMOVE ITEMS DIRECTLY IN BILL ---
     function openAdminAddItemModal() {
       var select = document.getElementById('adminAddSelectEquipment');
       select.innerHTML = '<option value="">-- เลือกอุปกรณ์จากคลัง --</option>';
@@ -2840,7 +2779,6 @@ function updateFavicon(iconUrl) {
         .processBatchReturn(returns, note);
     }
 
-    // --- EQUIPMENT DETAILS & BORROWERS MODAL ---
     function openItemDetails(id) {
       currentFocusedDetailId = id;
       var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === id; });
@@ -2895,7 +2833,6 @@ function updateFavicon(iconUrl) {
       openEditEquipmentModal(currentFocusedDetailId);
     }
 
-    // --- A4 RECEIPT PRINTING ---
     function printA4Receipt(txId) {
       var billItems = adminRequests.filter(function(r) { return r.TransactionID === txId; });
       if (billItems.length === 0) return showToast('ไม่พบข้อมูลบิลสำหรับพิมพ์', 'warning');
@@ -2968,7 +2905,6 @@ function updateFavicon(iconUrl) {
       }, 400);
     }
 
-    // --- EQUIPMENT ADD & EDIT MANAGEMENT ---
     function openAddEquipmentModal() {
       currentEditingItemId = null;
       document.getElementById('equipModalTitle').innerHTML = '<i class="fa-solid fa-box-open text-[#c5a880]"></i> <span>เพิ่มรายการพัสดุใหม่เข้าคลัง</span>';
@@ -3251,7 +3187,6 @@ function updateFavicon(iconUrl) {
         })[action](payload);
     }
 
-    // --- BRANDING & LOGO MODAL ---
     function openLogoSettingModal() {
       tempUploadedLogo = '';
       document.getElementById('logoUrlInput').value = currentClubLogo.indexOf('data:image') === 0 ? '' : currentClubLogo;
@@ -3312,7 +3247,6 @@ function updateFavicon(iconUrl) {
       previewLogoModal('');
     }
 
-    // --- UTILITIES: TOAST & LOADING ---
     function showLoading(show) {
       var badge = document.getElementById('globalLoadingBadge');
       if (badge) badge.classList.toggle('hidden', !show);
@@ -3348,8 +3282,6 @@ function updateFavicon(iconUrl) {
       }
 
       toast.classList.remove('translate-y-10', 'opacity-0', 'pointer-events-none');
-      
-      // ถ้าเป็นโหมดเตือนแบบต้องลองใหม่ ให้ค้างไว้ 6 วินาที แต่ถ้าปกติปิดใน 4 วินาที
       var duration = showRetry ? 7000 : 4000;
       clearTimeout(window._toastTimer);
       window._toastTimer = setTimeout(hideToast, duration);
