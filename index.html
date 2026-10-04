@@ -2024,16 +2024,73 @@
     }
 
     // --- CATALOG & CART FUNCTIONS ---
-    function fetchCategories() {
+    function fetchBootstrapData() {
+      showLoading(true);
       google.script.run
-        .withSuccessHandler(function(cats) {
-          var select = document.getElementById('categoryFilter');
-          select.innerHTML = '<option value="ALL">📦 หมวดหมู่ทั้งหมด</option>';
-          (cats || []).forEach(function(c) {
-            select.insertAdjacentHTML('beforeend', '<option value="' + c + '">' + c + '</option>');
-          });
+        .withSuccessHandler(function(res) {
+          showLoading(false);
+          if (res && res.success) {
+            allItems = res.items || [];
+            renderCategoriesSelect(res.categories || []);
+            renderEquipmentGrid(allItems);
+            renderQuickCategories();
+          }
         })
-        .getDynamicCategories();
+        .withFailureHandler(function() {
+          showLoading(false);
+        })
+        .getAppBootstrapData();
+    }
+
+    function renderCategoriesSelect(cats) {
+      var select = document.getElementById('categoryFilter');
+      if (!select) return;
+      select.innerHTML = '<option value="ALL">📦 หมวดหมู่ทั้งหมด</option>';
+      (cats || []).forEach(function(c) {
+        select.insertAdjacentHTML('beforeend', '<option value="' + c + '">' + c + '</option>');
+      });
+    }
+
+    function fetchCategories() {
+      fetchBootstrapData();
+    }
+
+    function fetchCatalogData() {
+      fetchBootstrapData();
+    }
+
+    function refreshCurrentViewData() {
+      triggerRefreshAnimation();
+      showLoading(true);
+
+      if (currentActiveView === 'HOME') {
+        fetchBootstrapData();
+        refreshHomeDashboard();
+      } else if (currentActiveView === 'STORE') {
+        fetchBootstrapData();
+      } else if (currentActiveView === 'TRACK') {
+        loadTrackingData();
+      } else if (currentActiveView === 'ADMIN') {
+        loadAdminData();
+      } else if (currentActiveView === 'CART') {
+        fetchBootstrapData();
+        renderCartPage();
+      }
+
+      setTimeout(function() {
+        stopRefreshIconAnimation();
+      }, 1200);
+      showToast('กำลังซิงค์และอัปเดตข้อมูลล่าสุด...', 'info', false);
+    }
+
+    function unlockAppInterface() {
+      document.getElementById('authGateSection').classList.add('hidden');
+      document.getElementById('appMainWrapper').classList.remove('hidden');
+      updateUserDisplay();
+      
+      // ดึงข้อมูลรายการอุปกรณ์และหมวดหมู่ทั้งหมดใน 1 คำขอเดียว
+      fetchBootstrapData(false);
+      showHomeView();
     }
 
     function fetchCatalogData() {
