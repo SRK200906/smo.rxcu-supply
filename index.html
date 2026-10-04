@@ -28,8 +28,25 @@
   <meta property="og:description" content="สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย" />
   <meta property="og:image" content="/favicon.png" />
 
-  <!-- Production Compiled Tailwind CSS -->
-  <link rel="stylesheet" href="/output.css" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            rx: {
+              dark: '#0a1510',
+              card: '#12231b',
+              gold: '#c5a880',
+              goldLight: '#dfc8a5'
+            }
+          }
+        }
+      }
+    };
+  </script>
 
   <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
