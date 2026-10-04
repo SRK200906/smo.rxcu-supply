@@ -28,36 +28,8 @@
   <meta property="og:description" content="สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย" />
   <meta property="og:image" content="/favicon.png" />
 
-  <!-- ปิดการแจ้งเตือน Tailwind Play CDN ใน Console -->
-  <script>
-    (function() {
-      var origWarn = console.warn;
-      console.warn = function(...args) {
-        if (args[0] && typeof args[0] === 'string' && args[0].indexOf('cdn.tailwindcss.com') !== -1) return;
-        origWarn.apply(console, args);
-      };
-    })();
-  </script>
-
-  <!-- Tailwind CSS & Custom Config -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            rx: {
-              dark: '#0a1510',
-              card: '#12231b',
-              gold: '#c5a880',
-              goldLight: '#dfc8a5'
-            }
-          }
-        }
-      }
-    };
-  </script>
+  <!-- Production Compiled Tailwind CSS -->
+  <link rel="stylesheet" href="/output.css" />
 
   <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -2218,7 +2190,14 @@
       if (!note) return showToast('กรุณาระบุชื่อกิจกรรมหรือเหตุผลความจำเป็น', 'warning');
 
       var payloadItems = cart.map(function(c) {
-        return { id: c.id, qty: c.qty, startDate: start, endDate: end };
+        return { 
+          id: c.id, 
+          name: c.name || '',
+          unit: c.unit || 'ชิ้น',
+          qty: Number(c.qty) || 1, 
+          startDate: start, 
+          endDate: end 
+        };
       });
 
       var btn = document.getElementById('btnSubmitBorrow');
