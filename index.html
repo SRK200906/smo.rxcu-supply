@@ -1102,6 +1102,7 @@
 
     var lastFailedRetryFn = null;
     var currentActiveView = 'HOME';
+    var currentAdminSubView = 'MONITOR'; // 'MONITOR' หรือ 'MANAGEMENT'
 
     function checkIfAdmin(user) {
       if (!user || !user.role) return false;
@@ -1634,44 +1635,161 @@
       document.getElementById('trackingView').classList.add('hidden');
       document.getElementById('adminView').classList.remove('hidden');
       setActiveNavTab('ADMIN');
+      
+      // ค่าเริ่มต้นให้เปิดหน้า Monitor เสมอ
+      switchAdminSubView('MONITOR');
       loadAdminData();
     }
 
-    // --- AUTHENTICATION & SESSION LOGIC ---
-    function lockToAuthGate() {
-      document.getElementById('authGateSection').classList.remove('hidden');
-      document.getElementById('appMainWrapper').classList.add('hidden');
-    }
+    // ฟังก์ชันสลับระหว่างหน้า Monitor Overview และ หน้าจัดการบิล Management
+    function switchAdminSubView(viewName, initialMode) {
+      currentAdminSubView = viewName;
+      var monitorEl = document.getElementById('adminMonitorSection');
+      var manageEl = document.getElementById('adminManagementSection');
 
-    function unlockAppInterface() {
-      document.getElementById('authGateSection').classList.add('hidden');
-      document.getElementById('appMainWrapper').classList.remove('hidden');
-      updateUserDisplay();
-      
-      // ปรับจังหวะโหลดไม่ให้ยิงพร้อมกันจน Server ค้าง
-      fetchCategories();
-      setTimeout(function() {
-        fetchCatalogData();
-      }, 200);
-      showHomeView();
-    }
-
-    function switchGateAuthMode(mode) {
-      var tabLogin = document.getElementById('gateTabLogin');
-      var tabReg = document.getElementById('gateTabRegister');
-      var formLogin = document.getElementById('gateLoginForm');
-      var formReg = document.getElementById('gateRegisterForm');
-
-      if (mode === 'LOGIN') {
-        tabLogin.className = 'flex-1 py-2 rounded-xl bg-white dark:bg-[#1b3327] shadow-sm text-[#183327] dark:text-[#f2e6d0] font-bold transition-all';
-        tabReg.className = 'flex-1 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-all';
-        formLogin.classList.remove('hidden');
-        formReg.classList.add('hidden');
+      if (viewName === 'MONITOR') {
+        if (monitorEl) monitorEl.classList.remove('hidden');
+        if (manageEl) manageEl.classList.add('hidden');
+        renderAdminMonitorStats();
       } else {
-        tabReg.className = 'flex-1 py-2 rounded-xl bg-white dark:bg-[#1b3327] shadow-sm text-[#183327] dark:text-[#f2e6d0] font-bold transition-all';
-        tabLogin.className = 'flex-1 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-all';
-        formReg.classList.remove('hidden');
-        formLogin.classList.add('hidden');
+        if (monitorEl) monitorEl.classList.add('hidden');
+        if (manageEl) manageEl.classList.remove('hidden');
+        if (initialMode) {
+          switchAdminMode(initialMode);
+        } else {
+          renderAdminCards();
+        }
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // คำนวณและเรนเดอร์ข้อมูลสถิติหน้า Admin Monitor
+    function renderAdminMonitorStats() {
+      var pendingCount = 0;
+      var activeCount = 0;
+      var overdueList = [];
+      var todayStr = new Date().toISOString().split('T')[0];
+
+      // คำนวณจากคำขอในระบบ
+      var billsMap = {};
+      (adminRequests || []).forEach(function(r) {
+        if (!billsMap[r.TransactionID]) {
+          billsMap[r.TransactionID] = {
+            txId: r.TransactionID,
+            borrowerName: r.BorrowerName,
+            borrowerId: r.BorrowerID,
+            project: r.ProjectGroup,
+            borrowDate: r.BorrowDate,
+            returnDate: r.ReturnDate,
+            items: []
+          };
+        }
+        billsMap[r.TransactionID].items.push(r);
+      });
+
+      Object.keys(billsMap).forEach(function(tx) {
+        var b = billsMap[tx];
+        var hasPending = b.items.some(function(i) { return (i.Status || '').indexOf('รอ') !== -1; });
+        var hasActive = b.items.some(function(i) { 
+          var st = i.Status || ''; 
+          return st.indexOf('อนุมัติ') !== -1 && st.indexOf('ไม่อนุมัติ') === -1; 
+        });
+
+        if (hasPending) pendingCount++;
+        if (hasActive) {
+          activeCount++;
+          // ตรวจสอบวันกำหนดส่งคืนว่าเกินกำหนดหรือไม่
+          if (b.returnDate && b.returnDate !== '-' && b.returnDate < todayStr) {
+            overdueList.push(b);
+          }
+        }
+      });
+
+      // อัปเดตตัวเลขการ์ดสถิติ
+      var pEl = document.getElementById('monitorStatPending');
+      var aEl = document.getElementById('monitorStatActive');
+      var oEl = document.getElementById('monitorStatOverdue');
+      var oBadge = document.getElementById('monitorOverdueCountBadge');
+      if (pEl) pEl.innerText = pendingCount;
+      if (aEl) aEl.innerText = activeCount;
+      if (oEl) oEl.innerText = overdueList.length;
+      if (oBadge) oBadge.innerText = overdueList.length + ' รายการ';
+
+      // คำนวณสต็อกพัสดุ
+      var totalItems = (allItems || []).length;
+      var outOfStockCount = (allItems || []).filter(function(i) {
+        return Number(i['จำนวนคงเหลือปัจจุบัน'] || 0) <= 0;
+      }).length;
+
+      var eqEl = document.getElementById('monitorStatEquipTotal');
+      var outEl = document.getElementById('monitorStatOutOfStock');
+      if (eqEl) eqEl.innerText = totalItems + ' รายการ';
+      if (outEl) outEl.innerText = 'หมดคลัง ' + outOfStockCount + ' รายการ';
+
+      // เรนเดอร์รายการที่เกินกำหนด (Overdue Alert List)
+      var overdueContainer = document.getElementById('monitorOverdueList');
+      if (overdueContainer) {
+        overdueContainer.innerHTML = '';
+        if (overdueList.length === 0) {
+          overdueContainer.innerHTML = '<p class="text-center text-slate-400 py-6 text-xs">ไม่มีรายการพัสดุค้างคืนเกินกำหนด 🎉</p>';
+        } else {
+          overdueList.forEach(function(b) {
+            var itemNames = b.items.map(function(i) { return i.EquipmentName + ' (' + i.Quantity + ')'; }).join(', ');
+            var row = document.createElement('div');
+            row.className = 'p-3 bg-rose-50 dark:bg-rose-950/30 rounded-2xl border border-rose-200 dark:border-rose-900/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2';
+            row.innerHTML = 
+              '<div class="truncate">' +
+                '<p class="font-bold text-rose-900 dark:text-rose-200 flex items-center gap-1.5">' +
+                  '<i class="fa-solid fa-clock text-rose-600"></i>' +
+                  '<span>บิล: ' + b.txId + ' | โครงการ: ' + b.project + '</span>' +
+                '</p>' +
+                '<p class="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">ผู้ยืม: <b>' + b.borrowerName + '</b> (' + b.borrowerId + ')</p>' +
+                '<p class="text-[10px] text-rose-700 dark:text-rose-400 font-semibold mt-0.5">🗓 กำหนดคืนเดิม: ' + b.returnDate + ' | พัสดุ: ' + itemNames + '</p>' +
+              '</div>' +
+              '<button onclick="openBillManageModal(\'' + b.txId + '\')" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shrink-0 self-end sm:self-center shadow-sm">' +
+                'ตรวจรับคืนบิลนี้' +
+              '</button>';
+            overdueContainer.appendChild(row);
+          });
+        }
+      }
+
+      // เรนเดอร์สถิติการใช้งานแยกตามหมวดหมู่
+      var catContainer = document.getElementById('monitorCategoryStats');
+      if (catContainer) {
+        catContainer.innerHTML = '';
+        var catStats = {};
+        (allItems || []).forEach(function(i) {
+          var c = i['หมวดหมู่'] || 'ทั่วไป';
+          if (!catStats[c]) {
+            catStats[c] = { total: 0, borrowed: 0 };
+          }
+          catStats[c].total += Number(i['จำนวนทั้งหมด'] || i['จำนวนคงเหลือปัจจุบัน'] || 0);
+          catStats[c].borrowed += Number(i['จำนวนที่ติดยืมปัจจุบัน'] || 0);
+        });
+
+        var catKeys = Object.keys(catStats);
+        if (catKeys.length === 0) {
+          catContainer.innerHTML = '<p class="text-center text-slate-400 py-4 text-xs">กำลังโหลดสถิติหมวดหมู่...</p>';
+        } else {
+          catKeys.forEach(function(cat) {
+            var st = catStats[cat];
+            var percent = st.total > 0 ? Math.min(100, Math.round((st.borrowed / st.total) * 100)) : 0;
+            var barColor = percent > 75 ? 'bg-rose-500' : (percent > 40 ? 'bg-amber-500' : 'bg-emerald-600');
+
+            var catRow = document.createElement('div');
+            catRow.className = 'space-y-1 text-xs';
+            catRow.innerHTML = 
+              '<div class="flex justify-between items-center text-slate-700 dark:text-slate-300 font-medium">' +
+                '<span>' + cat + '</span>' +
+                '<span class="text-slate-500 dark:text-slate-400 text-[11px]">ยืมอยู่ ' + st.borrowed + ' / ทั้งหมด ' + st.total + ' (' + percent + '%)</span>' +
+              '</div>' +
+              '<div class="w-full h-2 rounded-full bg-slate-100 dark:bg-emerald-950/60 overflow-hidden">' +
+                '<div class="h-full rounded-full transition-all duration-500 ' + barColor + '" style="width: ' + percent + '%;"></div>' +
+              '</div>';
+            catContainer.appendChild(catRow);
+          });
+        }
       }
     }
 
@@ -2453,7 +2571,7 @@
     function loadAdminData() {
       if (!checkIfAdmin(currentUser)) return;
       var container = document.getElementById('adminCardsContainer');
-      container.innerHTML = '<p class="col-span-full text-center text-xs text-slate-400 py-10">กำลังโหลดข้อมูลคำขอทั้งหมด...</p>';
+      if (container) container.innerHTML = '<p class="col-span-full text-center text-xs text-slate-400 py-10">กำลังโหลดข้อมูลคำขอทั้งหมด...</p>';
       showLoading(true);
 
       google.script.run
@@ -2462,6 +2580,7 @@
           adminRequests = data || [];
           updateAdminBadges();
           renderAdminCards();
+          renderAdminMonitorStats(); // อัปเดตข้อมูลมอนิเตอร์ทันที
         })
         .withFailureHandler(function() {
           showLoading(false);
