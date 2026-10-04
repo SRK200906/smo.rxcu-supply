@@ -606,50 +606,129 @@
         <div id="trackingBillsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
       </section>
 
-      <!-- ================= 5. ADMIN DASHBOARD ================= -->
-      <section id="adminView" class="hidden space-y-4">
-        <div class="bg-white dark:bg-[#12231b] p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm space-y-3 transition-colors">
-          
-          <div class="flex flex-col lg:flex-row gap-2.5 items-stretch lg:items-center justify-between">
-            <!-- Segmented Control Tab -->
-            <div class="bg-slate-100 dark:bg-[#0a1510] p-1 rounded-2xl flex items-center shrink-0 border border-slate-200/60 dark:border-emerald-950/60">
-              <button id="adminTabBorrow" onclick="switchAdminMode('BORROW')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold bg-[#10231a] dark:bg-emerald-900 text-white shadow-sm transition-all flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-inbox text-[11px]"></i>
-                <span>คำขอยืมรอตรวจ</span>
-                <span id="adminPendingBadge" class="px-1.5 py-0.2 bg-amber-400 text-slate-900 rounded-full text-[10px] font-extrabold">0</span>
-              </button>
-              <button id="adminTabReturn" onclick="switchAdminMode('RETURN')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all flex items-center justify-center gap-1.5">
-                <i class="fa-solid fa-clock-rotate-left text-[11px]"></i>
-                <span>พัสดุอยู่ระหว่างยืม</span>
-                <span id="adminActiveBadge" class="px-1.5 py-0.2 bg-emerald-600 text-white rounded-full text-[10px] font-extrabold">0</span>
-              </button>
+      <!-- ================= 5. ADMIN EXECUTIVE & OPERATIONS VIEW ================= -->
+      <section id="adminView" class="hidden space-y-5">
+        
+        <!-- แถบด้านบน: สลับระหว่างหน้า Monitor สรุปผล กับ หน้าจัดการตรวจบิล -->
+        <div class="bg-white dark:bg-[#12231b] p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <div class="w-8 h-8 rounded-xl bg-[#10231a] text-[#c5a880] flex items-center justify-center text-sm shadow-sm">
+              <i class="fa-solid fa-shield-halved"></i>
             </div>
-
-            <!-- Admin Actions -->
-            <div class="flex items-center gap-2">
-              <button onclick="openLogoSettingModal()" class="px-3 py-2 rounded-xl text-xs font-semibold bg-[#f4ece1] dark:bg-amber-950/30 hover:bg-[#ebdcc8] dark:hover:bg-amber-900/40 text-[#715329] dark:text-[#e4cfb2] border border-[#c5a880]/40 transition-all flex items-center gap-1.5">
-                <i class="fa-solid fa-award"></i> <span>ตั้งค่าตราสโมสร</span>
-              </button>
-              <button onclick="openAddEquipmentModal()" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-700 to-emerald-800 text-white shadow-sm hover:brightness-110 transition-all flex items-center gap-1.5">
-                <i class="fa-solid fa-plus"></i> <span>เพิ่มพัสดุใหม่</span>
-              </button>
+            <div>
+              <h3 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100">ฝ่ายพัสดุและแสงเสียง สโมสรนิสิตฯ</h3>
+              <p class="text-[10px] text-slate-400">แผงควบคุมระบบคลังพัสดุส่วนกลาง</p>
             </div>
           </div>
 
-          <!-- Search & Refresh Bar -->
-          <div class="flex items-center gap-2 pt-1 border-t dark:border-emerald-950/60">
-            <div class="relative flex-1">
-              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-              <input type="text" id="adminSearchInput" oninput="filterAdminCards()" placeholder="ค้นหาเลขบิล, ชื่อผู้ยืม หรือโครงการ..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl font-medium text-slate-800 dark:text-slate-100" />
-            </div>
-            <button onclick="loadAdminData()" title="รีเฟรชข้อมูล" class="p-1.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold">
-              <i class="fa-solid fa-rotate-right"></i>
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <button id="btnSwitchAdminSubView" onclick="toggleAdminSubView()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#10231a] dark:bg-emerald-900 text-white shadow-sm hover:brightness-110 flex items-center gap-1.5 transition-all">
+              <i class="fa-solid fa-table-list text-xs"></i>
+              <span id="txtSwitchAdminSubView">เข้าสู่หน้าตรวจบิล & จัดการ</span>
+            </button>
+            <button onclick="openLogoSettingModal()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#f4ece1] dark:bg-amber-950/30 hover:bg-[#ebdcc8] text-[#715329] dark:text-[#e4cfb2] border border-[#c5a880]/40 transition-all flex items-center gap-1">
+              <i class="fa-solid fa-award"></i> <span>ตราสโมสร</span>
+            </button>
+            <button onclick="openAddEquipmentModal()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-700 to-emerald-800 text-white shadow-sm hover:brightness-110 transition-all flex items-center gap-1">
+              <i class="fa-solid fa-plus"></i> <span>เพิ่มพัสดุ</span>
             </button>
           </div>
-
         </div>
 
-        <div id="adminCardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
+        <!-- 5.1 SUB-VIEW: ADMIN MONITOR DASHBOARD -->
+        <div id="adminMonitorSubView" class="space-y-4">
+          <!-- 4 KPI Metrics -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div onclick="switchAdminMode('BORROW'); toggleAdminSubView();" class="cursor-pointer bg-white dark:bg-[#12231b] p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm hover:border-amber-400 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-medium text-slate-400">คำขอยืมรอตรวจ</span>
+                <span class="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xs"><i class="fa-solid fa-hourglass-half"></i></span>
+              </div>
+              <h4 id="adminStatPending" class="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400 mt-1">0 บิล</h4>
+              <p class="text-[10px] text-slate-400 mt-0.5">คลิกเพื่อเริ่มตรวจคำขอ</p>
+            </div>
+
+            <div onclick="switchAdminMode('RETURN'); toggleAdminSubView();" class="cursor-pointer bg-white dark:bg-[#12231b] p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm hover:border-blue-400 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-medium text-slate-400">พัสดุอยู่ระหว่างยืม</span>
+                <span class="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs"><i class="fa-solid fa-hand-holding-box"></i></span>
+              </div>
+              <h4 id="adminStatActive" class="text-xl sm:text-2xl font-black text-blue-600 dark:text-blue-400 mt-1">0 บิล</h4>
+              <p class="text-[10px] text-slate-400 mt-0.5">รอส่งคืนตามกำหนด</p>
+            </div>
+
+            <div class="bg-white dark:bg-[#12231b] p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-medium text-slate-400">บิลเกินกำหนดส่งคืน</span>
+                <span class="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xs"><i class="fa-solid fa-triangle-exclamation"></i></span>
+              </div>
+              <h4 id="adminStatOverdue" class="text-xl sm:text-2xl font-black text-rose-600 dark:text-rose-400 mt-1">0 บิล</h4>
+              <p class="text-[10px] text-rose-500 mt-0.5">ต้องติดตามด่วน</p>
+            </div>
+
+            <div onclick="showStoreView()" class="cursor-pointer bg-white dark:bg-[#12231b] p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm hover:border-emerald-400 transition-all">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-medium text-slate-400">อุปกรณ์หมดคลัง</span>
+                <span class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs"><i class="fa-solid fa-boxes-stacked"></i></span>
+              </div>
+              <h4 id="adminStatLowStock" class="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 mt-1">0 รายการ</h4>
+              <p class="text-[10px] text-slate-400 mt-0.5">จากพัสดุทั้งหมดในระบบ</p>
+            </div>
+          </div>
+
+          <!-- กล่องแจ้งเตือนบิลค้างคืน / เกินกำหนด -->
+          <div class="bg-white dark:bg-[#12231b] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs sm:text-sm font-bold text-rose-600 dark:text-rose-400 flex items-center gap-2">
+                <i class="fa-solid fa-bell"></i> รายการที่เกินกำหนดคืน / ต้องติดตามคืนพัสดุ
+              </h4>
+              <span class="text-[10px] text-slate-400">ตรวจเช็กสถานะล่าสุด</span>
+            </div>
+            <div id="adminOverdueContainer" class="space-y-2 text-xs">
+              <p class="text-slate-400 py-3 text-center text-xs">ไม่มีรายการพัสดุที่เกินกำหนดคืนในขณะนี้</p>
+            </div>
+          </div>
+
+          <!-- อัตราการยืมตามหมวดหมู่ -->
+          <div class="bg-white dark:bg-[#12231b] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm space-y-3">
+            <h4 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <i class="fa-solid fa-chart-simple text-[#c5a880]"></i> อัตราการใช้งานพัสดุแยกตามหมวดหมู่
+            </h4>
+            <div id="adminCategoryProgressContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"></div>
+          </div>
+        </div>
+
+        <!-- 5.2 SUB-VIEW: ADMIN BILL MANAGEMENT & APPROVAL -->
+        <div id="adminManagementSubView" class="hidden space-y-4">
+          <div class="bg-white dark:bg-[#12231b] p-3 sm:p-4 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm space-y-3 transition-colors">
+            
+            <div class="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
+              <!-- Segmented Control Tab -->
+              <div class="bg-slate-100 dark:bg-[#0a1510] p-1 rounded-2xl flex items-center shrink-0 border border-slate-200/60 dark:border-emerald-950/60">
+                <button id="adminTabBorrow" onclick="switchAdminMode('BORROW')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold bg-[#10231a] dark:bg-emerald-900 text-white shadow-sm transition-all flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-inbox text-[11px]"></i>
+                  <span>คำขอยืมรอตรวจ</span>
+                  <span id="adminPendingBadge" class="px-1.5 py-0.2 bg-amber-400 text-slate-900 rounded-full text-[10px] font-extrabold">0</span>
+                </button>
+                <button id="adminTabReturn" onclick="switchAdminMode('RETURN')" class="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-clock-rotate-left text-[11px]"></i>
+                  <span>พัสดุอยู่ระหว่างยืม</span>
+                  <span id="adminActiveBadge" class="px-1.5 py-0.2 bg-emerald-600 text-white rounded-full text-[10px] font-extrabold">0</span>
+                </button>
+              </div>
+
+              <!-- Search Bar -->
+              <div class="relative flex-1 sm:max-w-xs">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" id="adminSearchInput" oninput="filterAdminCards()" placeholder="ค้นหาเลขบิล, ชื่อผู้ยืม หรือโครงการ..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/60 rounded-xl font-medium text-slate-800 dark:text-slate-100" />
+              </div>
+            </div>
+
+          </div>
+
+          <div id="adminCardsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5"></div>
+        </div>
+
       </section>
 
     </main>
@@ -804,7 +883,7 @@
           <h4 id="detailTitle" class="font-bold text-sm text-slate-800 dark:text-slate-100"></h4>
           <p id="detailId" class="text-slate-400 font-mono text-[11px]"></p>
           <div class="pt-1 space-y-1 text-slate-600 dark:text-slate-300">
-            <p><b>🏷️ หมวดหมู่:</b> <span id="detailCategory">-</span></p>
+            <p><b>🏷️️ หมวดหมู่:</b> <span id="detailCategory">-</span></p>
             <p><b>🎨 สี/ลาย:</b> <span id="detailColor">-</span></p>
             <p><b>📏 ขนาด:</b> <span id="detailSize">-</span></p>
             <p><b>📦 ทั้งหมด:</b> <span id="detailTotal">-</span></p>
@@ -1292,10 +1371,12 @@
     }
 
     function loginWithLine() {
-      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
-        showToast('กรุณาระบุ LIFF ID ในไฟล์ index.html ก่อนใช้งาน', 'warning');
+      if (!window.liff) {
+        showToast('ไม่สามารถเรียก LINE SDK ได้', 'error');
         return;
       }
+
+      var isStandalone = window.navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
 
       if (liff.isInClient()) {
         if (!liff.isLoggedIn()) {
@@ -1306,6 +1387,9 @@
             verifyLineUserDirect(currentLineUid, profile);
           });
         }
+      } else if (isStandalone) {
+        // เมื่อเปิดจากหน้าจอโฮม (PWA) ให้ล็อกอินผ่าน Web Login เพื่อคงเซสชันในหน้าจอโฮม
+        liff.login({ redirectUri: window.location.origin + window.location.pathname });
       } else {
         // หากเปิดจากภายนอก ส่งเข้าสู่ LIFF URL โดยตรงเพื่อความราบรื่นและไม่หลุดไป Chrome
         window.location.href = "https://liff.line.me/" + LIFF_ID;
@@ -1453,7 +1537,8 @@
                 var args = Array.prototype.slice.call(arguments);
                 var payload = {};
 
-                if (actionName === 'verifyLogin') payload = { loginId: args[0], firstName: args[1], userType: args[2] };
+                if (actionName === 'getAppBootstrapData') payload = {};
+                else if (actionName === 'verifyLogin') payload = { loginId: args[0], firstName: args[1], userType: args[2] };
                 else if (actionName === 'verifyLineLogin') payload = { lineUid: args[0] };
                 else if (actionName === 'linkLineUid') payload = { userId: args[0], lineUid: args[1] };
                 else if (actionName === 'registerNewUser') payload = args[0];
@@ -1523,273 +1608,40 @@
       showToast('กำลังซิงค์และอัปเดตข้อมูลล่าสุด...', 'info', false);
     }
 
-    function retryLastAction() {
-      if (typeof lastFailedRetryFn === 'function') {
-        var fn = lastFailedRetryFn;
-        lastFailedRetryFn = null;
-        fn();
-      } else {
-        refreshCurrentViewData();
-      }
+    // --- AUTH GATE CONTROLLER ---
+    function lockToAuthGate() {
+      var gate = document.getElementById('authGateSection');
+      var app = document.getElementById('appMainWrapper');
+      if (gate) gate.classList.remove('hidden');
+      if (app) app.classList.add('hidden');
     }
 
-    // --- NAVIGATION LOGIC & MOBILE DOCK SYNC ---
-    function setActiveNavTab(tabName) {
-      var isAdmin = checkIfAdmin(currentUser);
-      var mobileTabs = {
-        'HOME': document.getElementById('mTabHome'),
-        'STORE': document.getElementById('mTabStore'),
-        'TRACK': document.getElementById('mTabTrack'),
-        'CART': document.getElementById('mTabCart'),
-        'ADMIN': document.getElementById('mTabAdmin')
-      };
-
-      var activeClass = 'flex flex-col items-center justify-center py-1 rounded-xl text-[#c5a880] dark:text-[#dfc8a5] font-bold transition-all scale-105';
-      var inactiveClass = 'flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium transition-all';
-
-      Object.keys(mobileTabs).forEach(function(key) {
-        var el = mobileTabs[key];
-        if (el) {
-          if (key === 'ADMIN' && !isAdmin) {
-            el.className = 'hidden';
-            return;
-          }
-          el.className = (key === tabName) ? activeClass : inactiveClass;
-        }
-      });
-
-      var dockGrid = document.getElementById('mobileDockGrid');
-      if (dockGrid) {
-        dockGrid.className = isAdmin 
-          ? 'max-w-md mx-auto grid grid-cols-5 items-center text-center' 
-          : 'max-w-md mx-auto grid grid-cols-4 items-center text-center';
-      }
-    }
-
-    function showHomeView() {
-      currentActiveView = 'HOME';
-      document.getElementById('homeView').classList.remove('hidden');
-      document.getElementById('storeView').classList.add('hidden');
-      document.getElementById('cartView').classList.add('hidden');
-      document.getElementById('trackingView').classList.add('hidden');
-      document.getElementById('adminView').classList.add('hidden');
-      setActiveNavTab('HOME');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      refreshHomeDashboard();
-    }
-
-    function showStoreView(filterCategory) {
-      currentActiveView = 'STORE';
-      document.getElementById('homeView').classList.add('hidden');
-      document.getElementById('storeView').classList.remove('hidden');
-      document.getElementById('cartView').classList.add('hidden');
-      document.getElementById('trackingView').classList.add('hidden');
-      document.getElementById('adminView').classList.add('hidden');
-      setActiveNavTab('STORE');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      if (filterCategory) {
-        var catSelect = document.getElementById('categoryFilter');
-        if (catSelect) {
-          catSelect.value = filterCategory;
-          applyFilters();
-        }
-      }
-    }
-
-    function showCartView() {
-      if (!currentUser) return lockToAuthGate();
-      currentActiveView = 'CART';
-      document.getElementById('homeView').classList.add('hidden');
-      document.getElementById('storeView').classList.add('hidden');
-      document.getElementById('cartView').classList.remove('hidden');
-      document.getElementById('trackingView').classList.add('hidden');
-      document.getElementById('adminView').classList.add('hidden');
-      setActiveNavTab('CART');
-      renderCartPage();
-    }
-
-    function showTrackingView() {
-      if (!currentUser) return lockToAuthGate();
-      currentActiveView = 'TRACK';
-      document.getElementById('homeView').classList.add('hidden');
-      document.getElementById('storeView').classList.add('hidden');
-      document.getElementById('cartView').classList.add('hidden');
-      document.getElementById('trackingView').classList.remove('hidden');
-      document.getElementById('adminView').classList.add('hidden');
-      setActiveNavTab('TRACK');
-      loadTrackingData();
-    }
-
-    function showAdminView() {
-      if (!currentUser) return lockToAuthGate();
-      if (!checkIfAdmin(currentUser)) {
-        showToast('คุณไม่มีสิทธิ์เข้าถึงเมนูแอดมิน', 'warning', false);
-        showHomeView();
-        return;
-      }
-      currentActiveView = 'ADMIN';
-      document.getElementById('homeView').classList.add('hidden');
-      document.getElementById('storeView').classList.add('hidden');
-      document.getElementById('cartView').classList.add('hidden');
-      document.getElementById('trackingView').classList.add('hidden');
-      document.getElementById('adminView').classList.remove('hidden');
-      setActiveNavTab('ADMIN');
+    function unlockAppInterface() {
+      document.getElementById('authGateSection').classList.add('hidden');
+      document.getElementById('appMainWrapper').classList.remove('hidden');
+      updateUserDisplay();
       
-      // ค่าเริ่มต้นให้เปิดหน้า Monitor เสมอ
-      switchAdminSubView('MONITOR');
-      loadAdminData();
+      // ดึงข้อมูลรายการอุปกรณ์และหมวดหมู่ทั้งหมดใน 1 คำขอเดียว
+      fetchBootstrapData(false);
+      showHomeView();
     }
 
-    // ฟังก์ชันสลับระหว่างหน้า Monitor Overview และ หน้าจัดการบิล Management
-    function switchAdminSubView(viewName, initialMode) {
-      currentAdminSubView = viewName;
-      var monitorEl = document.getElementById('adminMonitorSection');
-      var manageEl = document.getElementById('adminManagementSection');
+    function switchGateAuthMode(mode) {
+      var tabLogin = document.getElementById('gateTabLogin');
+      var tabReg = document.getElementById('gateTabRegister');
+      var formLogin = document.getElementById('gateLoginForm');
+      var formReg = document.getElementById('gateRegisterForm');
 
-      if (viewName === 'MONITOR') {
-        if (monitorEl) monitorEl.classList.remove('hidden');
-        if (manageEl) manageEl.classList.add('hidden');
-        renderAdminMonitorStats();
+      if (mode === 'LOGIN') {
+        tabLogin.className = 'flex-1 py-2 rounded-xl bg-white dark:bg-[#1b3327] shadow-sm text-[#183327] dark:text-[#f2e6d0] font-bold transition-all';
+        tabReg.className = 'flex-1 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-all';
+        formLogin.classList.remove('hidden');
+        formReg.classList.add('hidden');
       } else {
-        if (monitorEl) monitorEl.classList.add('hidden');
-        if (manageEl) manageEl.classList.remove('hidden');
-        if (initialMode) {
-          switchAdminMode(initialMode);
-        } else {
-          renderAdminCards();
-        }
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // คำนวณและเรนเดอร์ข้อมูลสถิติหน้า Admin Monitor
-    function renderAdminMonitorStats() {
-      var pendingCount = 0;
-      var activeCount = 0;
-      var overdueList = [];
-      var todayStr = new Date().toISOString().split('T')[0];
-
-      // คำนวณจากคำขอในระบบ
-      var billsMap = {};
-      (adminRequests || []).forEach(function(r) {
-        if (!billsMap[r.TransactionID]) {
-          billsMap[r.TransactionID] = {
-            txId: r.TransactionID,
-            borrowerName: r.BorrowerName,
-            borrowerId: r.BorrowerID,
-            project: r.ProjectGroup,
-            borrowDate: r.BorrowDate,
-            returnDate: r.ReturnDate,
-            items: []
-          };
-        }
-        billsMap[r.TransactionID].items.push(r);
-      });
-
-      Object.keys(billsMap).forEach(function(tx) {
-        var b = billsMap[tx];
-        var hasPending = b.items.some(function(i) { return (i.Status || '').indexOf('รอ') !== -1; });
-        var hasActive = b.items.some(function(i) { 
-          var st = i.Status || ''; 
-          return st.indexOf('อนุมัติ') !== -1 && st.indexOf('ไม่อนุมัติ') === -1; 
-        });
-
-        if (hasPending) pendingCount++;
-        if (hasActive) {
-          activeCount++;
-          // ตรวจสอบวันกำหนดส่งคืนว่าเกินกำหนดหรือไม่
-          if (b.returnDate && b.returnDate !== '-' && b.returnDate < todayStr) {
-            overdueList.push(b);
-          }
-        }
-      });
-
-      // อัปเดตตัวเลขการ์ดสถิติ
-      var pEl = document.getElementById('monitorStatPending');
-      var aEl = document.getElementById('monitorStatActive');
-      var oEl = document.getElementById('monitorStatOverdue');
-      var oBadge = document.getElementById('monitorOverdueCountBadge');
-      if (pEl) pEl.innerText = pendingCount;
-      if (aEl) aEl.innerText = activeCount;
-      if (oEl) oEl.innerText = overdueList.length;
-      if (oBadge) oBadge.innerText = overdueList.length + ' รายการ';
-
-      // คำนวณสต็อกพัสดุ
-      var totalItems = (allItems || []).length;
-      var outOfStockCount = (allItems || []).filter(function(i) {
-        return Number(i['จำนวนคงเหลือปัจจุบัน'] || 0) <= 0;
-      }).length;
-
-      var eqEl = document.getElementById('monitorStatEquipTotal');
-      var outEl = document.getElementById('monitorStatOutOfStock');
-      if (eqEl) eqEl.innerText = totalItems + ' รายการ';
-      if (outEl) outEl.innerText = 'หมดคลัง ' + outOfStockCount + ' รายการ';
-
-      // เรนเดอร์รายการที่เกินกำหนด (Overdue Alert List)
-      var overdueContainer = document.getElementById('monitorOverdueList');
-      if (overdueContainer) {
-        overdueContainer.innerHTML = '';
-        if (overdueList.length === 0) {
-          overdueContainer.innerHTML = '<p class="text-center text-slate-400 py-6 text-xs">ไม่มีรายการพัสดุค้างคืนเกินกำหนด 🎉</p>';
-        } else {
-          overdueList.forEach(function(b) {
-            var itemNames = b.items.map(function(i) { return i.EquipmentName + ' (' + i.Quantity + ')'; }).join(', ');
-            var row = document.createElement('div');
-            row.className = 'p-3 bg-rose-50 dark:bg-rose-950/30 rounded-2xl border border-rose-200 dark:border-rose-900/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2';
-            row.innerHTML = 
-              '<div class="truncate">' +
-                '<p class="font-bold text-rose-900 dark:text-rose-200 flex items-center gap-1.5">' +
-                  '<i class="fa-solid fa-clock text-rose-600"></i>' +
-                  '<span>บิล: ' + b.txId + ' | โครงการ: ' + b.project + '</span>' +
-                '</p>' +
-                '<p class="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">ผู้ยืม: <b>' + b.borrowerName + '</b> (' + b.borrowerId + ')</p>' +
-                '<p class="text-[10px] text-rose-700 dark:text-rose-400 font-semibold mt-0.5">🗓 กำหนดคืนเดิม: ' + b.returnDate + ' | พัสดุ: ' + itemNames + '</p>' +
-              '</div>' +
-              '<button onclick="openBillManageModal(\'' + b.txId + '\')" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shrink-0 self-end sm:self-center shadow-sm">' +
-                'ตรวจรับคืนบิลนี้' +
-              '</button>';
-            overdueContainer.appendChild(row);
-          });
-        }
-      }
-
-      // เรนเดอร์สถิติการใช้งานแยกตามหมวดหมู่
-      var catContainer = document.getElementById('monitorCategoryStats');
-      if (catContainer) {
-        catContainer.innerHTML = '';
-        var catStats = {};
-        (allItems || []).forEach(function(i) {
-          var c = i['หมวดหมู่'] || 'ทั่วไป';
-          if (!catStats[c]) {
-            catStats[c] = { total: 0, borrowed: 0 };
-          }
-          catStats[c].total += Number(i['จำนวนทั้งหมด'] || i['จำนวนคงเหลือปัจจุบัน'] || 0);
-          catStats[c].borrowed += Number(i['จำนวนที่ติดยืมปัจจุบัน'] || 0);
-        });
-
-        var catKeys = Object.keys(catStats);
-        if (catKeys.length === 0) {
-          catContainer.innerHTML = '<p class="text-center text-slate-400 py-4 text-xs">กำลังโหลดสถิติหมวดหมู่...</p>';
-        } else {
-          catKeys.forEach(function(cat) {
-            var st = catStats[cat];
-            var percent = st.total > 0 ? Math.min(100, Math.round((st.borrowed / st.total) * 100)) : 0;
-            var barColor = percent > 75 ? 'bg-rose-500' : (percent > 40 ? 'bg-amber-500' : 'bg-emerald-600');
-
-            var catRow = document.createElement('div');
-            catRow.className = 'space-y-1 text-xs';
-            catRow.innerHTML = 
-              '<div class="flex justify-between items-center text-slate-700 dark:text-slate-300 font-medium">' +
-                '<span>' + cat + '</span>' +
-                '<span class="text-slate-500 dark:text-slate-400 text-[11px]">ยืมอยู่ ' + st.borrowed + ' / ทั้งหมด ' + st.total + ' (' + percent + '%)</span>' +
-              '</div>' +
-              '<div class="w-full h-2 rounded-full bg-slate-100 dark:bg-emerald-950/60 overflow-hidden">' +
-                '<div class="h-full rounded-full transition-all duration-500 ' + barColor + '" style="width: ' + percent + '%;"></div>' +
-              '</div>';
-            catContainer.appendChild(catRow);
-          });
-        }
+        tabReg.className = 'flex-1 py-2 rounded-xl bg-white dark:bg-[#1b3327] shadow-sm text-[#183327] dark:text-[#f2e6d0] font-bold transition-all';
+        tabLogin.className = 'flex-1 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-all';
+        formReg.classList.remove('hidden');
+        formLogin.classList.add('hidden');
       }
     }
 
@@ -1834,7 +1686,6 @@
     }
 
     function executeGateRegister() {
-      var savedLineUid = currentLineUid || localStorage.getItem('smo_rx_line_uid') || '';
       var payload = {
         prefix: document.getElementById('gateRegPrefix').value.trim(),
         firstName: document.getElementById('gateRegFirstName').value.trim(),
@@ -1846,7 +1697,7 @@
         project: document.getElementById('gateRegProject').value.trim() || 'ทั่วไป',
         phone: document.getElementById('gateRegPhone').value.trim(),
         lineId: document.getElementById('gateRegLine').value.trim(),
-        lineUid: savedLineUid
+        lineUid: currentLineUid || ''
       };
 
       if (!payload.firstName || !payload.lastName || !payload.id || !payload.phone || !payload.lineId) {
@@ -1894,113 +1745,127 @@
 
     function updateUserDisplay() {
       if (!currentUser) return;
-      document.getElementById('userBarInfo').innerText = (currentUser.fullName || currentUser.firstName) + ' [' + (currentUser.project || 'ทั่วไป') + ']';
+      var nameText = (currentUser.fullName || currentUser.firstName || 'ผู้ใช้งาน');
+      document.getElementById('userBarInfo').innerText = '👤 ' + nameText + ' [' + (currentUser.project || 'ทั่วไป') + ']';
 
       var isAdmin = checkIfAdmin(currentUser);
-      document.getElementById('btnAdminView').classList.toggle('hidden', !isAdmin);
-
+      var btnAdminNav = document.getElementById('btnAdminView');
       var mTabAdmin = document.getElementById('mTabAdmin');
-      if (mTabAdmin) {
-        mTabAdmin.classList.toggle('hidden', !isAdmin);
-      }
-      var dockGrid = document.getElementById('mobileDockGrid');
-      if (dockGrid) {
-        dockGrid.className = isAdmin 
-          ? 'max-w-md mx-auto grid grid-cols-5 items-center text-center' 
-          : 'max-w-md mx-auto grid grid-cols-4 items-center text-center';
+      var mDock = document.getElementById('mobileDockGrid');
+
+      if (btnAdminNav) btnAdminNav.classList.toggle('hidden', !isAdmin);
+      if (mTabAdmin) mTabAdmin.classList.toggle('hidden', !isAdmin);
+      if (mDock) mDock.className = 'max-w-md mx-auto grid ' + (isAdmin ? 'grid-cols-5' : 'grid-cols-4') + ' items-center text-center';
+    }
+
+    // --- NAVIGATION VIEW SWITCHER ---
+    function showHomeView() {
+      currentActiveView = 'HOME';
+      document.getElementById('homeView').classList.remove('hidden');
+      document.getElementById('storeView').classList.add('hidden');
+      document.getElementById('cartView').classList.add('hidden');
+      document.getElementById('trackingView').classList.add('hidden');
+      document.getElementById('adminView').classList.add('hidden');
+      updateNavActiveClass('HOME');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      refreshHomeDashboard();
+    }
+
+    function showStoreView(filterCategory) {
+      currentActiveView = 'STORE';
+      document.getElementById('homeView').classList.add('hidden');
+      document.getElementById('storeView').classList.remove('hidden');
+      document.getElementById('cartView').classList.add('hidden');
+      document.getElementById('trackingView').classList.add('hidden');
+      document.getElementById('adminView').classList.add('hidden');
+      updateNavActiveClass('STORE');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (filterCategory) {
+        var catSelect = document.getElementById('categoryFilter');
+        if (catSelect) {
+          catSelect.value = filterCategory;
+          applyFilters();
+        }
       }
     }
 
-    // --- PROFILE EDIT MODAL ---
-    function openProfileModal() {
-      if (!currentUser) return;
-      document.getElementById('profNickname').value = currentUser.nickname || '';
-      document.getElementById('profYear').value = currentUser.year || '';
-      document.getElementById('profDept').value = currentUser.department || '';
-      document.getElementById('profProject').value = currentUser.project || 'ทั่วไป';
-      document.getElementById('profPhone').value = currentUser.phone || '';
-      document.getElementById('profLine').value = currentUser.lineId || '';
-      updateLineStatusUI(!!currentUser.lineUid);
-      var modal = document.getElementById('profileEditModal');
-      if (modal && typeof modal.showModal === 'function') {
-        modal.showModal();
-      }
+    function showTrackingView() {
+      if (!currentUser) return lockToAuthGate();
+      currentActiveView = 'TRACK';
+      document.getElementById('homeView').classList.add('hidden');
+      document.getElementById('storeView').classList.add('hidden');
+      document.getElementById('cartView').classList.add('hidden');
+      document.getElementById('trackingView').classList.remove('hidden');
+      document.getElementById('adminView').classList.add('hidden');
+      updateNavActiveClass('TRACK');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      loadTrackingData();
     }
 
-    function saveUserProfile() {
-      if (!currentUser) return;
-      var updated = {
-        id: currentUser.id,
-        nickname: document.getElementById('profNickname').value.trim(),
-        year: document.getElementById('profYear').value.trim(),
-        department: document.getElementById('profDept').value.trim(),
-        project: document.getElementById('profProject').value.trim() || 'ทั่วไป',
-        phone: document.getElementById('profPhone').value.trim(),
-        lineId: document.getElementById('profLine').value.trim(),
-        lineUid: currentLineUid || currentUser.lineUid || ''
+    function showCartView() {
+      if (!currentUser) return lockToAuthGate();
+      currentActiveView = 'CART';
+      document.getElementById('homeView').classList.add('hidden');
+      document.getElementById('storeView').classList.add('hidden');
+      document.getElementById('cartView').classList.remove('hidden');
+      document.getElementById('trackingView').classList.add('hidden');
+      document.getElementById('adminView').classList.add('hidden');
+      updateNavActiveClass('CART');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderCartPage();
+    }
+
+    function showAdminView() {
+      if (!currentUser) return lockToAuthGate();
+      if (!checkIfAdmin(currentUser)) {
+        showToast('สงวนสิทธิ์สำหรับแอดมินฝ่ายพัสดุเท่านั้น', 'warning');
+        return;
+      }
+      currentActiveView = 'ADMIN';
+      document.getElementById('homeView').classList.add('hidden');
+      document.getElementById('storeView').classList.add('hidden');
+      document.getElementById('cartView').classList.add('hidden');
+      document.getElementById('trackingView').classList.add('hidden');
+      document.getElementById('adminView').classList.remove('hidden');
+      updateNavActiveClass('ADMIN');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      loadAdminData();
+    }
+
+    function updateNavActiveClass(activeKey) {
+      var tabs = {
+        'HOME': document.getElementById('mTabHome'),
+        'STORE': document.getElementById('mTabStore'),
+        'TRACK': document.getElementById('mTabTrack'),
+        'CART': document.getElementById('mTabCart'),
+        'ADMIN': document.getElementById('mTabAdmin')
       };
 
-      if (!updated.phone || !updated.lineId) {
-        return showToast('กรุณากรอกเบอร์โทรและ Line ID ให้ครบถ้วน', 'warning');
-      }
-
-      var btn = document.getElementById('btnSaveProfile');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerText = 'กำลังบันทึก...';
-      }
-      showLoading(true);
-
-      google.script.run
-        .withSuccessHandler(function(res) {
-          if (btn) {
-            btn.disabled = false;
-            btn.innerText = 'บันทึกข้อมูล';
-          }
-          showLoading(false);
-
-          if (res && res.success) {
-            currentUser.nickname = updated.nickname;
-            currentUser.year = updated.year;
-            currentUser.department = updated.department;
-            currentUser.project = updated.project;
-            currentUser.phone = updated.phone;
-            currentUser.lineId = updated.lineId;
-            localStorage.setItem('smo_rx_user', JSON.stringify(currentUser));
-            updateUserDisplay();
-            refreshHomeDashboard();
-            var modal = document.getElementById('profileEditModal');
-            if (modal && typeof modal.close === 'function') {
-              modal.close();
-            }
-            showToast('อัปเดตข้อมูลโปรไฟล์เรียบร้อยแล้ว', 'success');
-          } else {
-            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการบันทึก', 'error');
-          }
-        })
-        .withFailureHandler(function() {
-          if (btn) {
-            btn.disabled = false;
-            btn.innerText = 'บันทึกข้อมูล';
-          }
-          showLoading(false);
-        })
-        .updateProfile(updated);
+      Object.keys(tabs).forEach(function(k) {
+        var el = tabs[k];
+        if (!el) return;
+        if (k === activeKey) {
+          el.className = 'flex flex-col items-center justify-center py-1 rounded-xl text-[#c5a880] dark:text-[#dfc8a5] font-bold transition-all scale-105';
+        } else {
+          el.className = 'flex flex-col items-center justify-center py-1 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 font-medium transition-all';
+        }
+      });
     }
 
-    // --- HOME DASHBOARD DATA & STATS ---
+    // --- HOME DASHBOARD & PERSONAL STATS ---
     function refreshHomeDashboard() {
       if (!currentUser) return;
 
       var nameEl = document.getElementById('homeWelcomeUser');
       var affilEl = document.getElementById('homeUserAffiliation');
-      if (nameEl) nameEl.innerText = 'สวัสดี ' + (currentUser.fullName || currentUser.firstName);
-      if (affilEl) affilEl.innerText = 'สังกัด: ' + (currentUser.department || '-') + ' | ในนาม: ' + (currentUser.project || 'ทั่วไป');
+      if (nameEl) nameEl.innerText = 'สวัสดี ' + (currentUser.fullName || currentUser.firstName || 'นสภ.');
+      if (affilEl) affilEl.innerText = 'สังกัด: ' + (currentUser.department || '-') + ' | โครงการ: ' + (currentUser.project || 'ทั่วไป');
 
       google.script.run
         .withSuccessHandler(function(requests) {
-          var activeCategoryCount = 0;
-          var pendingBillsSet = {};
+          var activeCount = 0;
+          var pendingCount = 0;
           var nearestDate = null;
 
           (requests || []).forEach(function(r) {
@@ -2011,7 +1876,7 @@
             var isPending = st.indexOf('รอ') !== -1;
 
             if (isApproved && !isReturned) {
-              activeCategoryCount++;
+              activeCount += Number(r.Quantity || 1);
               if (r.ReturnDate && r.ReturnDate !== '-') {
                 var retDate = new Date(r.ReturnDate);
                 if (!isNaN(retDate.getTime())) {
@@ -2021,7 +1886,7 @@
                 }
               }
             } else if (isPending) {
-              pendingBillsSet[r.TransactionID] = true;
+              pendingCount++;
             }
           });
 
@@ -2029,8 +1894,8 @@
           var pendingEl = document.getElementById('homeStatPendingBills');
           var returnEl = document.getElementById('homeStatNearestReturn');
 
-          if (activeEl) activeEl.innerText = activeCategoryCount + ' รายการ';
-          if (pendingEl) pendingEl.innerText = Object.keys(pendingBillsSet).length + ' บิล';
+          if (activeEl) activeEl.innerText = activeCount + ' รายการ';
+          if (pendingEl) pendingEl.innerText = pendingCount + ' บิล';
           if (returnEl) {
             if (nearestDate) {
               var y = nearestDate.getFullYear();
@@ -2038,7 +1903,7 @@
               var d = ('0' + nearestDate.getDate()).slice(-2);
               returnEl.innerText = d + '/' + m + '/' + y;
             } else {
-              returnEl.innerText = activeCategoryCount > 0 ? 'ตามที่ระบุในบิล' : 'ไม่มีอุปกรณ์ค้างคืน';
+              returnEl.innerText = activeCount > 0 ? 'ตามที่ระบุในบิล' : 'ไม่มีอุปกรณ์ค้างคืน';
             }
           }
         })
@@ -2047,79 +1912,38 @@
       renderQuickCategories();
     }
 
-    function openAddToHomeModal() {
-      switchOsGuide('IOS');
-      addToHomeModal.showModal();
-    }
-
-    function switchOsGuide(os) {
-      var tabIos = document.getElementById('tabOsIos');
-      var tabAndroid = document.getElementById('tabOsAndroid');
-      var guideIos = document.getElementById('guideIos');
-      var guideAndroid = document.getElementById('guideAndroid');
-
-      if (os === 'IOS') {
-        tabIos.className = 'flex-1 py-1.5 rounded-lg bg-white dark:bg-emerald-900 text-[#10231a] dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5';
-        tabAndroid.className = 'flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center justify-center gap-1.5';
-        guideIos.classList.remove('hidden');
-        guideAndroid.classList.add('hidden');
-      } else {
-        tabAndroid.className = 'flex-1 py-1.5 rounded-lg bg-white dark:bg-emerald-900 text-[#10231a] dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5';
-        tabIos.className = 'flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center justify-center gap-1.5';
-        guideAndroid.classList.remove('hidden');
-        guideIos.classList.add('hidden');
-      }
-    }
-
     function renderQuickCategories() {
       var container = document.getElementById('homeQuickCategories');
       if (!container) return;
 
+      var cats = [];
+      allItems.forEach(function(i) {
+        var c = i['หมวดหมู่'];
+        if (c && cats.indexOf(c) === -1) cats.push(c);
+      });
+
       var iconMap = {
-        'กิจกรรม': 'fa-masks-theater',
-        'แต่งกาย': 'fa-vest',
-        'พร็อพ': 'fa-hat-wizard',
-        'รับน้อง': 'fa-people-group',
         'เครื่องเสียง': 'fa-volume-high',
-        'ไฟ': 'fa-lightbulb',
+        'แสง': 'fa-lightbulb',
+        'กิจกรรม': 'fa-puzzle-piece',
         'สันทนาการ': 'fa-gamepad',
         'โต๊ะ': 'fa-chair',
         'เก้าอี้': 'fa-chair',
         'เครื่องเขียน': 'fa-pen-ruler',
-        'ป้าย': 'fa-signs-post'
+        'ป้าย': 'fa-signs-post',
+        'เครื่องแต่งกาย': 'fa-masks-theater'
       };
 
-      var availableCats = [];
-      (allItems || []).forEach(function(i) {
-        var c = i['หมวดหมู่'];
-        if (c && availableCats.indexOf(c) === -1) {
-          var cleanC = c.toLowerCase();
-          if (cleanC.indexOf('test') === -1 && cleanC.indexOf('ทดสอบ') === -1) {
-            availableCats.push(c);
-          }
-        }
-      });
-
-      var displayCats = [];
-      PINNED_CATEGORIES.forEach(function(pinned) {
-        var match = availableCats.find(function(c) { return c.indexOf(pinned) !== -1 || pinned.indexOf(c) !== -1; });
-        if (match && displayCats.indexOf(match) === -1) {
-          displayCats.push(match);
-        }
-      });
-
-      availableCats.forEach(function(c) {
-        if (displayCats.length < 4 && displayCats.indexOf(c) === -1) {
-          displayCats.push(c);
-        }
+      container.innerHTML = '';
+      var displayCats = PINNED_CATEGORIES.filter(function(pc) {
+        return cats.indexOf(pc) !== -1;
       });
 
       if (displayCats.length === 0) {
-        displayCats = PINNED_CATEGORIES.slice(0, 4);
+        displayCats = cats.slice(0, 4);
       }
 
-      container.innerHTML = '';
-      displayCats.slice(0, 4).forEach(function(cat) {
+      displayCats.forEach(function(cat) {
         var iconClass = 'fa-boxes-stacked';
         Object.keys(iconMap).forEach(function(k) {
           if (cat.indexOf(k) !== -1) iconClass = iconMap[k];
@@ -2127,7 +1951,7 @@
 
         var card = document.createElement('div');
         card.onclick = function() { showStoreView(cat); };
-        card.className = 'cursor-pointer p-3 rounded-2xl bg-white dark:bg-[#12231b] border border-slate-200 dark:border-emerald-950/80 shadow-sm hover:border-[#c5a880] dark:hover:border-[#c5a880] transition-all flex items-center gap-2.5 group';
+        card.className = 'cursor-pointer p-3 rounded-2xl bg-white dark:bg-[#12231b] border border-slate-200 dark:border-emerald-950/80 shadow-sm hover:border-[#c5a880] transition-all flex items-center gap-2.5 group';
         card.innerHTML = 
           '<div class="w-9 h-9 rounded-xl bg-slate-50 dark:bg-[#0a1510] text-[#183327] dark:text-[#c5a880] flex items-center justify-center shrink-0 text-sm group-hover:scale-105 transition-transform">' +
             '<i class="fa-solid ' + iconClass + '"></i>' +
@@ -2141,15 +1965,24 @@
       });
     }
 
-    // --- CATALOG & CART FUNCTIONS ---
-    function fetchBootstrapData() {
+    // --- DATA FETCHING (BOOTSTRAP & CATALOG) ---
+    function fetchBootstrapData(isManual) {
       showLoading(true);
       google.script.run
         .withSuccessHandler(function(res) {
           showLoading(false);
           if (res && res.success) {
             allItems = res.items || [];
-            renderCategoriesSelect(res.categories || []);
+            var cats = res.categories || [];
+            
+            var select = document.getElementById('categoryFilter');
+            if (select) {
+              select.innerHTML = '<option value="ALL">📦 หมวดหมู่ทั้งหมด</option>';
+              cats.forEach(function(c) {
+                select.insertAdjacentHTML('beforeend', '<option value="' + c + '">' + c + '</option>');
+              });
+            }
+
             renderEquipmentGrid(allItems);
             renderQuickCategories();
           }
@@ -2160,55 +1993,17 @@
         .getAppBootstrapData();
     }
 
-    function renderCategoriesSelect(cats) {
-      var select = document.getElementById('categoryFilter');
-      if (!select) return;
-      select.innerHTML = '<option value="ALL">📦 หมวดหมู่ทั้งหมด</option>';
-      (cats || []).forEach(function(c) {
-        select.insertAdjacentHTML('beforeend', '<option value="' + c + '">' + c + '</option>');
-      });
-    }
-
     function fetchCategories() {
-      fetchBootstrapData();
-    }
-
-    function fetchCatalogData() {
-      fetchBootstrapData();
-    }
-
-    function refreshCurrentViewData() {
-      triggerRefreshAnimation();
-      showLoading(true);
-
-      if (currentActiveView === 'HOME') {
-        fetchBootstrapData();
-        refreshHomeDashboard();
-      } else if (currentActiveView === 'STORE') {
-        fetchBootstrapData();
-      } else if (currentActiveView === 'TRACK') {
-        loadTrackingData();
-      } else if (currentActiveView === 'ADMIN') {
-        loadAdminData();
-      } else if (currentActiveView === 'CART') {
-        fetchBootstrapData();
-        renderCartPage();
-      }
-
-      setTimeout(function() {
-        stopRefreshIconAnimation();
-      }, 1200);
-      showToast('กำลังซิงค์และอัปเดตข้อมูลล่าสุด...', 'info', false);
-    }
-
-    function unlockAppInterface() {
-      document.getElementById('authGateSection').classList.add('hidden');
-      document.getElementById('appMainWrapper').classList.remove('hidden');
-      updateUserDisplay();
-      
-      // ดึงข้อมูลรายการอุปกรณ์และหมวดหมู่ทั้งหมดใน 1 คำขอเดียว
-      fetchBootstrapData(false);
-      showHomeView();
+      google.script.run
+        .withSuccessHandler(function(cats) {
+          var select = document.getElementById('categoryFilter');
+          if (!select) return;
+          select.innerHTML = '<option value="ALL">📦 หมวดหมู่ทั้งหมด</option>';
+          (cats || []).forEach(function(c) {
+            select.insertAdjacentHTML('beforeend', '<option value="' + c + '">' + c + '</option>');
+          });
+        })
+        .getDynamicCategories();
     }
 
     function fetchCatalogData() {
@@ -2302,6 +2097,7 @@
       renderEquipmentGrid(filtered);
     }
 
+    // --- CART & ORDER PLACEMENT ---
     function addToCart(id) {
       if (!currentUser) return lockToAuthGate();
       var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === id; });
@@ -2459,7 +2255,6 @@
       google.script.run
         .withSuccessHandler(function(requests) {
           showLoading(false);
-          // เก็บข้อมูลบิลล่าสุดไว้ในแคช เพื่อให้สั่งพิมพ์ได้ทันทีแม้ผู้ใช้เปิดจาก Shortcut
           adminRequests = requests || [];
           renderTrackingCards(requests || []);
         })
@@ -2544,7 +2339,7 @@
           '</div>' +
           '<div class="space-y-1">' + itemsHtml + '</div>' +
           '<div class="bg-slate-50 dark:bg-[#0a1510] p-2.5 rounded-xl text-[10px] text-slate-500 dark:text-slate-400 space-y-0.5 border border-slate-100 dark:border-emerald-950/80">' +
-            '<p><b>🗓️ กำหนดการ:</b> ' + bill.borrowDate + ' ถึง ' + bill.returnDate + '</p>' +
+            '<p><b>🗓️️ กำหนดการ:</b> ' + bill.borrowDate + ' ถึง ' + bill.returnDate + '</p>' +
             '<p class="truncate"><b>✍️ เหตุผล:</b> ' + bill.userNote + '</p>' +
           '</div>';
 
@@ -2553,6 +2348,25 @@
     }
 
     // --- ADMIN DASHBOARD & APPROVAL WORKFLOW ---
+    function toggleAdminSubView() {
+      currentAdminSubView = currentAdminSubView === 'MONITOR' ? 'MANAGEMENT' : 'MONITOR';
+      var monitorView = document.getElementById('adminMonitorSubView');
+      var manageView = document.getElementById('adminManagementSubView');
+      var btnTxt = document.getElementById('txtSwitchAdminSubView');
+
+      if (currentAdminSubView === 'MONITOR') {
+        monitorView.classList.remove('hidden');
+        manageView.classList.add('hidden');
+        if (btnTxt) btnTxt.innerText = 'เข้าสู่หน้าตรวจบิล & จัดการ';
+        renderAdminMonitorStats();
+      } else {
+        monitorView.classList.add('hidden');
+        manageView.classList.remove('hidden');
+        if (btnTxt) btnTxt.innerText = 'กลับหน้ามอนิเตอร์ภาพรวม';
+        renderAdminCards();
+      }
+    }
+
     function switchAdminMode(mode) {
       currentAdminMode = mode;
       var tabBorrow = document.getElementById('adminTabBorrow');
@@ -2570,8 +2384,6 @@
 
     function loadAdminData() {
       if (!checkIfAdmin(currentUser)) return;
-      var container = document.getElementById('adminCardsContainer');
-      if (container) container.innerHTML = '<p class="col-span-full text-center text-xs text-slate-400 py-10">กำลังโหลดข้อมูลคำขอทั้งหมด...</p>';
       showLoading(true);
 
       google.script.run
@@ -2579,8 +2391,8 @@
           showLoading(false);
           adminRequests = data || [];
           updateAdminBadges();
+          renderAdminMonitorStats();
           renderAdminCards();
-          renderAdminMonitorStats(); // อัปเดตข้อมูลมอนิเตอร์ทันที
         })
         .withFailureHandler(function() {
           showLoading(false);
@@ -2600,10 +2412,91 @@
       document.getElementById('adminActiveBadge').innerText = Object.keys(activeTxs).length;
     }
 
+    function renderAdminMonitorStats() {
+      var pendingTxs = {}, activeTxs = {}, overdueTxs = {};
+      var today = new Date().toISOString().split('T')[0];
+
+      adminRequests.forEach(function(r) {
+        var st = r.Status || '';
+        var isPending = st.indexOf('รอ') !== -1;
+        var isActive = st.indexOf('อนุมัติ') !== -1 && st.indexOf('ไม่อนุมัติ') === -1;
+
+        if (isPending) pendingTxs[r.TransactionID] = true;
+        if (isActive) {
+          activeTxs[r.TransactionID] = true;
+          if (r.ReturnDate && r.ReturnDate < today) {
+            overdueTxs[r.TransactionID] = r;
+          }
+        }
+      });
+
+      var outOfStockCount = allItems.filter(function(i) {
+        return Number(i['จำนวนคงเหลือปัจจุบัน'] || 0) <= 0;
+      }).length;
+
+      var pEl = document.getElementById('adminStatPending');
+      var aEl = document.getElementById('adminStatActive');
+      var oEl = document.getElementById('adminStatOverdue');
+      var lEl = document.getElementById('adminStatLowStock');
+
+      if (pEl) pEl.innerText = Object.keys(pendingTxs).length + ' บิล';
+      if (aEl) aEl.innerText = Object.keys(activeTxs).length + ' บิล';
+      if (oEl) oEl.innerText = Object.keys(overdueTxs).length + ' บิล';
+      if (lEl) lEl.innerText = outOfStockCount + ' รายการ';
+
+      // แสดงรายการที่เกินกำหนดคืน
+      var overdueBox = document.getElementById('adminOverdueContainer');
+      if (overdueBox) {
+        var overdueKeys = Object.keys(overdueTxs);
+        if (overdueKeys.length === 0) {
+          overdueBox.innerHTML = '<p class="text-slate-400 py-3 text-center text-xs">ไม่มีรายการพัสดุที่เกินกำหนดคืนในขณะนี้</p>';
+        } else {
+          overdueBox.innerHTML = overdueKeys.map(function(k) {
+            var item = overdueTxs[k];
+            return '<div class="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 flex items-center justify-between gap-2">' +
+              '<div>' +
+                '<p class="font-bold text-rose-900 dark:text-rose-200">บิล ' + item.TransactionID + ' : ' + item.BorrowerName + ' (' + item.ProjectGroup + ')</p>' +
+                '<p class="text-[10px] text-rose-700 dark:text-rose-400 mt-0.5">ครบกำหนดส่งคืน: ' + item.ReturnDate + ' (เกินกำหนด)</p>' +
+              '</div>' +
+              '<button onclick="openBillManageModal(\'' + item.TransactionID + '\')" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shrink-0">ตรวจรับคืน</button>' +
+            '</div>';
+          }).join('');
+        }
+      }
+
+      // แสดงอัตราการยืมตามหมวดหมู่
+      var catBox = document.getElementById('adminCategoryProgressContainer');
+      if (catBox) {
+        var catStats = {};
+        allItems.forEach(function(i) {
+          var c = i['หมวดหมู่'] || 'ทั่วไป';
+          if (!catStats[c]) catStats[c] = { total: 0, borrowed: 0 };
+          catStats[c].total += Number(i['จำนวนทั้งหมด'] || i['จำนวนคงเหลือปัจจุบัน'] || 1);
+          catStats[c].borrowed += Number(i['จำนวนที่ติดยืมปัจจุบัน'] || 0);
+        });
+
+        catBox.innerHTML = Object.keys(catStats).map(function(c) {
+          var s = catStats[c];
+          var pct = s.total > 0 ? Math.round((s.borrowed / s.total) * 100) : 0;
+          return '<div class="p-3 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60 space-y-1.5">' +
+            '<div class="flex justify-between items-center">' +
+              '<span class="font-bold text-slate-700 dark:text-slate-200">' + c + '</span>' +
+              '<span class="text-[11px] font-mono text-emerald-700 dark:text-emerald-400">' + pct + '% (ยืม ' + s.borrowed + '/' + s.total + ')</span>' +
+            '</div>' +
+            '<div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">' +
+              '<div class="bg-gradient-to-r from-emerald-600 to-amber-500 h-2 rounded-full" style="width: ' + pct + '%"></div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
     function renderAdminCards() {
       var container = document.getElementById('adminCardsContainer');
+      if (!container) return;
       container.innerHTML = '';
-      var query = document.getElementById('adminSearchInput').value.toLowerCase().trim();
+      var searchInput = document.getElementById('adminSearchInput');
+      var query = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
       var bills = {};
       adminRequests.forEach(function(r) {
@@ -2849,6 +2742,7 @@
                 adminRequests = data || [];
                 updateAdminBadges();
                 renderAdminCards();
+                renderAdminMonitorStats();
                 openBillManageModal(currentManagingTxId);
               })
               .getAdminRequests(null);
@@ -2876,6 +2770,7 @@
                 adminRequests = data || [];
                 updateAdminBadges();
                 renderAdminCards();
+                renderAdminMonitorStats();
                 if (currentManagingTxId) {
                   openBillManageModal(currentManagingTxId);
                 }
@@ -2983,6 +2878,7 @@
         .processBatchReturn(returns, note);
     }
 
+    // --- ITEM DETAILS & MODALS ---
     function openItemDetails(id) {
       currentFocusedDetailId = id;
       var item = allItems.find(function(i) { return i['รหัสพัสดุ'] === id; });
@@ -3037,11 +2933,10 @@
       openEditEquipmentModal(currentFocusedDetailId);
     }
 
+    // --- PRINTING A4 RECEIPT ---
     function printA4Receipt(txId) {
-      // ค้นหาบิลจากข้อมูลในเครื่องก่อน
       var billItems = (adminRequests || []).filter(function(r) { return r.TransactionID === txId; });
       
-      // หากยังไม่มีข้อมูลในแคช ให้ดึงจากเซิร์ฟเวอร์ก่อนพิมพ์
       if (billItems.length === 0) {
         showLoading(true);
         google.script.run
@@ -3132,12 +3027,12 @@
           '</div>' +
         '</div>';
 
-      // สั่งพิมพ์ทันทีโดยไม่พึ่ง Pop-up Window ป้องกันการโดนบล็อกบน iOS
       setTimeout(function() {
         window.print();
       }, 200);
     }
 
+    // --- EQUIPMENT MODAL CONTROLLER ---
     function openAddEquipmentModal() {
       currentEditingItemId = null;
       document.getElementById('equipModalTitle').innerHTML = '<i class="fa-solid fa-box-open text-[#c5a880]"></i> <span>เพิ่มรายการพัสดุใหม่เข้าคลัง</span>';
@@ -3165,7 +3060,6 @@
       
       populateCategorySelect('');
       removeEquipPhoto();
-
       addEquipmentModal.showModal();
     }
 
@@ -3420,6 +3314,7 @@
         })[action](payload);
     }
 
+    // --- BRANDING & LOGO MODAL ---
     function openLogoSettingModal() {
       tempUploadedLogo = '';
       document.getElementById('logoUrlInput').value = currentClubLogo.indexOf('data:image') === 0 ? '' : currentClubLogo;
@@ -3480,6 +3375,98 @@
       previewLogoModal('');
     }
 
+    // --- ADD TO HOME SCREEN MODAL GUIDE ---
+    function openAddToHomeModal() {
+      var isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      switchOsGuide(isIos ? 'IOS' : 'ANDROID');
+      addToHomeModal.showModal();
+    }
+
+    function switchOsGuide(os) {
+      var tabIos = document.getElementById('tabOsIos');
+      var tabAnd = document.getElementById('tabOsAndroid');
+      var gIos = document.getElementById('guideIos');
+      var gAnd = document.getElementById('guideAndroid');
+
+      if (os === 'IOS') {
+        tabIos.className = 'flex-1 py-1.5 rounded-lg bg-white dark:bg-emerald-900 text-[#10231a] dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5';
+        tabAnd.className = 'flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center justify-center gap-1.5';
+        gIos.classList.remove('hidden');
+        gAnd.classList.add('hidden');
+      } else {
+        tabAnd.className = 'flex-1 py-1.5 rounded-lg bg-white dark:bg-emerald-900 text-[#10231a] dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5';
+        tabIos.className = 'flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all flex items-center justify-center gap-1.5';
+        gAnd.classList.remove('hidden');
+        gIos.classList.add('hidden');
+      }
+    }
+
+    // --- PROFILE MODAL & EDIT ---
+    function openProfileModal() {
+      if (!currentUser) return;
+      document.getElementById('profNickname').value = currentUser.nickname || '';
+      document.getElementById('profYear').value = currentUser.year || '';
+      document.getElementById('profDept').value = currentUser.department || '';
+      document.getElementById('profProject').value = currentUser.project || '';
+      document.getElementById('profPhone').value = currentUser.phone || '';
+      document.getElementById('profLine').value = currentUser.lineId || '';
+      updateLineStatusUI(!!currentUser.lineUid);
+      profileEditModal.showModal();
+    }
+
+    function saveUserProfile() {
+      if (!currentUser) return;
+
+      var phone = document.getElementById('profPhone').value.trim();
+      var lineId = document.getElementById('profLine').value.trim();
+      if (!phone || !lineId) {
+        showToast('กรุณากรอกเบอร์โทรศัพท์และไอดีไลน์', 'warning');
+        return;
+      }
+
+      var payload = {
+        id: currentUser.id,
+        nickname: document.getElementById('profNickname').value.trim(),
+        year: document.getElementById('profYear').value.trim(),
+        department: document.getElementById('profDept').value.trim(),
+        project: document.getElementById('profProject').value.trim() || 'ทั่วไป',
+        phone: phone,
+        lineId: lineId
+      };
+
+      var btn = document.getElementById('btnSaveProfile');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> บันทึก...';
+
+      google.script.run
+        .withSuccessHandler(function(res) {
+          btn.disabled = false;
+          btn.innerText = 'บันทึกข้อมูล';
+          if (res && res.success) {
+            currentUser.nickname = payload.nickname;
+            currentUser.year = payload.year;
+            currentUser.department = payload.department;
+            currentUser.project = payload.project;
+            currentUser.phone = payload.phone;
+            currentUser.lineId = payload.lineId;
+            localStorage.setItem('smo_rx_user', JSON.stringify(currentUser));
+            updateUserDisplay();
+            refreshHomeDashboard();
+            profileEditModal.close();
+            showToast('อัปเดตข้อมูลโปรไฟล์เรียบร้อยแล้ว', 'success');
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการบันทึก', 'error');
+          }
+        })
+        .withFailureHandler(function() {
+          btn.disabled = false;
+          btn.innerText = 'บันทึกข้อมูล';
+          showToast('เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์', 'error');
+        })
+        .updateProfile(payload);
+    }
+
+    // --- UI HELPERS & TOAST NOTIFICATION ---
     function showLoading(show) {
       var badge = document.getElementById('globalLoadingBadge');
       if (badge) badge.classList.toggle('hidden', !show);
@@ -3523,6 +3510,13 @@
     function hideToast() {
       var toast = document.getElementById('toastNotification');
       if (toast) toast.classList.add('translate-y-10', 'opacity-0', 'pointer-events-none');
+    }
+
+    function retryLastAction() {
+      hideToast();
+      if (typeof lastFailedRetryFn === 'function') {
+        lastFailedRetryFn();
+      }
     }
   </script>
 </body>
