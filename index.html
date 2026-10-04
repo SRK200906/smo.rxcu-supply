@@ -28,6 +28,17 @@
   <meta property="og:description" content="สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย" />
   <meta property="og:image" content="/favicon.png" />
 
+  <!-- ปิดการแจ้งเตือน Tailwind Play CDN ใน Console -->
+  <script>
+    (function() {
+      var origWarn = console.warn;
+      console.warn = function(...args) {
+        if (args[0] && typeof args[0] === 'string' && args[0].indexOf('cdn.tailwindcss.com') !== -1) return;
+        origWarn.apply(console, args);
+      };
+    })();
+  </script>
+
   <!-- Tailwind CSS & Custom Config -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -166,7 +177,7 @@
         </div>
 
         <!-- 🟢 1. ปุ่มหลัก: ล็อกอินผ่าน LINE (Primary Action) -->
-        <button id="btnGateLineLogin" onclick="loginWithLine()" class="w-full py-3.5 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2.5 transition-all">
+        <button id="btnGateLineLogin" type="button" onclick="loginWithLine()" class="w-full py-3.5 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2.5 transition-all">
           <i class="fa-brands fa-line text-xl"></i>
           <span id="btnGateLineText">เข้าสู่ระบบด้วย LINE</span>
         </button>
@@ -1338,9 +1349,8 @@
         .then(function() {
           if (liff.isLoggedIn()) {
             return liff.getProfile();
-          } else if (liff.isInClient()) {
-            liff.login();
           }
+          return null;
         })
         .then(function(profile) {
           if (profile && profile.userId) {
@@ -1376,23 +1386,17 @@
         return;
       }
 
-      var isStandalone = window.navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
-
-      if (liff.isInClient()) {
-        if (!liff.isLoggedIn()) {
-          liff.login();
-        } else {
-          liff.getProfile().then(function(profile) {
-            currentLineUid = profile.userId;
-            verifyLineUserDirect(currentLineUid, profile);
-          });
-        }
-      } else if (isStandalone) {
-        // เมื่อเปิดจากหน้าจอโฮม (PWA) ให้ล็อกอินผ่าน Web Login เพื่อคงเซสชันในหน้าจอโฮม
+      if (!liff.isLoggedIn()) {
+        // เรียกกระบวนการล็อกอินของ LINE โดยตรง จะไม่เกิดการรีเฟรชเปล่า
         liff.login({ redirectUri: window.location.origin + window.location.pathname });
       } else {
-        // หากเปิดจากภายนอก ส่งเข้าสู่ LIFF URL โดยตรงเพื่อความราบรื่นและไม่หลุดไป Chrome
-        window.location.href = "https://liff.line.me/" + LIFF_ID;
+        liff.getProfile().then(function(profile) {
+          currentLineUid = profile.userId;
+          verifyLineUserDirect(currentLineUid, profile);
+        }).catch(function(err) {
+          console.warn("getProfile error, re-authenticating:", err);
+          liff.login({ redirectUri: window.location.origin + window.location.pathname });
+        });
       }
     }
 
