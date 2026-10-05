@@ -1158,7 +1158,7 @@
         <p class="text-[11px] text-slate-600 dark:text-slate-300"><b>📁 โครงการ:</b> <span id="receiptActionProject">-</span></p>
         <div class="p-2 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 text-[11px] text-emerald-900 dark:text-emerald-300 flex items-start gap-2">
           <i class="fa-solid fa-circle-check text-emerald-600 shrink-0 mt-0.5"></i>
-          <span><b>เอกสาร PDF แท้ (Vector Quality):</b> ตัวหนังสือคมชัด 100% สามารถเลือก "Save as PDF" ได้จากหน้าต่างสั่งพิมพ์ทันที</span>
+          <span><b>เอกสาร PDF แท้ (Vector Quality):</b> ตัวหนังสือคมชัด 100% สามารถเลือก "Save as PDF" ได้ทันที</span>
         </div>
       </div>
 
@@ -1166,6 +1166,10 @@
         <button onclick="triggerSystemPrintDirect()" class="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-800 to-emerald-700 hover:from-emerald-700 hover:to-emerald-600 active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-md shadow-emerald-950/20 flex items-center justify-center gap-2 transition-all">
           <i class="fa-solid fa-print text-base"></i>
           <span>บันทึกเป็น PDF / สั่งพิมพ์ (คมชัดระดับเวกเตอร์)</span>
+        </button>
+        <button onclick="openReceiptInSeparateWindow()" class="w-full py-2.5 px-4 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-xs flex items-center justify-center gap-2 transition-all">
+          <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          <span>เปิดเอกสารเต็มหน้าจอ (แนะนำสำหรับ Safari / iPhone)</span>
         </button>
       </div>
 
@@ -3237,6 +3241,7 @@
     // --- DIRECT HIGH-RESOLUTION VECTOR PRINT & PDF SYSTEM ---
     var activePrintingBillItems = [];
     var activePrintingTxId = '';
+    var activeReceiptHtmlContent = '';
 
     function printA4Receipt(txId) {
       activePrintingTxId = txId;
@@ -3255,6 +3260,210 @@
               activePrintingBillItems = found;
               prepareReceiptDocument(found, txId);
             }
+          })
+          .withFailureHandler(function() {
+            showLoading(false);
+            showToast('ดึงข้อมูลบิลไม่สำเร็จ', 'error');
+          })
+          .getAdminRequests(null);
+        return;
+      }
+
+      activePrintingBillItems = billItems;
+      prepareReceiptDocument(billItems, txId);
+    }
+
+    function prepareReceiptDocument(billItems, txId) {
+      var first = billItems[0];
+      var storedLogo = localStorage.getItem('smo_rx_logo');
+      var logoSrc = storedLogo ? cleanDriveUrl(storedLogo) : (currentClubLogo ? cleanDriveUrl(currentClubLogo) : '/favicon.png?v=10');
+      
+      var rawBorrowerName = first.BorrowerName || 'ไม่ระบุชื่อ';
+      var cleanBorrowerName = rawBorrowerName.replace(/\s*\([^)]*\)\s*/g, '').trim();
+      var thaiBorrowDate = formatThaiDateLong(first.BorrowDate);
+      var thaiReturnDate = formatThaiDateLong(first.ReturnDate);
+
+      var itemsRows = billItems.map(function(item, idx) {
+        return '<tr>' +
+          '<td style="text-align:center; border:1px solid #64748b; padding:8px 4px; font-size:13px;">' + (idx + 1) + '</td>' +
+          '<td style="border:1px solid #64748b; padding:8px 12px; font-size:13px; font-weight:500;">' + item.EquipmentName + ' <span style="font-size:12px; color:#475569; font-weight:normal;">(' + (item.EquipmentColor || '-') + ')</span></td>' +
+          '<td style="text-align:center; border:1px solid #64748b; padding:8px 4px; font-size:13px; font-weight:700; color:#0f766e;">' + item.Quantity + ' ' + (item.EquipmentUnit || 'ชิ้น') + '</td>' +
+          '<td style="text-align:center; border:1px solid #64748b; padding:8px 4px; font-size:13px; color:#94a3b8;">[ &nbsp; &nbsp; ]</td>' +
+          '<td style="text-align:center; border:1px solid #64748b; padding:8px 4px; font-size:13px; color:#94a3b8;">[ &nbsp; &nbsp; ]</td>' +
+        '</tr>';
+      }).join('');
+
+      var logoImgTag = '';
+      if (logoSrc && logoSrc !== 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply') {
+        logoImgTag = '<img src="' + logoSrc + '" crossOrigin="anonymous" style="width:70px; height:70px; object-fit:contain; flex-shrink:0;" alt="ตราสโมสร" onerror="this.style.display=\'none\';" />';
+      }
+
+      var htmlContent = 
+        '<div style="font-family: \'Kanit\', sans-serif; font-size:13.5px; color:#0f172a; line-height:1.6; width:100%; box-sizing:border-box; background:#ffffff;">' +
+          
+          '<!-- ส่วนหัวเอกสารและตราสัญลักษณ์ -->' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid #103824; padding-bottom:12px; margin-bottom:14px;">' +
+            '<div style="display:flex; align-items:center; gap:14px;">' +
+              logoImgTag +
+              '<div>' +
+                '<h2 style="margin:0; font-size:21px; color:#103824; font-weight:700; letter-spacing:-0.2px;">ใบยืม – คืน พัสดุและอุปกรณ์</h2>' +
+                '<p style="margin:2px 0 0 0; font-size:13.5px; color:#334155; font-weight:400;">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>' +
+              '</div>' +
+            '</div>' +
+            '<div style="border:2px solid #103824; padding:6px 14px; font-weight:700; font-family:monospace; font-size:14.5px; border-radius:8px; background:#f8faf8; color:#103824; white-space:nowrap; flex-shrink:0;">' +
+              'ที่ ' + txId +
+            '</div>' +
+          '</div>' +
+
+          '<!-- ข้อมูลผู้ยืมและโครงการ -->' +
+          '<div style="margin-bottom:14px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:10px 16px; font-size:13px; line-height:1.8;">' +
+            '<div style="display:flex; justify-content:space-between; flex-wrap:nowrap; gap:16px;">' +
+              '<div style="flex:1;"><b>ผู้ขอยืม:</b> ' + cleanBorrowerName + '</div>' +
+              '<div style="width:220px;"><b>รหัสนิสิต:</b> ' + (first.BorrowerID || '-') + '</div>' +
+            '</div>' +
+            '<div style="display:flex; justify-content:space-between; flex-wrap:nowrap; gap:16px;">' +
+              '<div><b>ในนามโครงการ / ฝ่าย:</b> ' + (first.ProjectGroup || 'ทั่วไป') + '</div>' +
+            '</div>' +
+            '<div><b>นำไปใช้ในกิจกรรม:</b> ' + (first.UserNote || '-') + '</div>' +
+            '<div style="display:flex; justify-content:space-between; flex-wrap:nowrap; gap:16px; margin-top:2px;">' +
+              '<div style="flex:1;"><b>วันที่ยืม:</b> ' + thaiBorrowDate + '</div>' +
+              '<div style="width:220px;"><b>กำหนดส่งคืน:</b> ' + thaiReturnDate + '</div>' +
+            '</div>' +
+          '</div>' +
+
+          '<!-- ตารางรายการพัสดุ -->' +
+          '<table style="width:100%; border-collapse:collapse; margin:12px 0; font-size:13px;">' +
+            '<thead>' +
+              '<tr style="background-color:#f1f5f9; color:#1e293b;">' +
+                '<th style="width:48px; border:1px solid #64748b; padding:8px 4px; text-align:center; font-weight:600;">ลำดับ</th>' +
+                '<th style="border:1px solid #64748b; padding:8px 12px; text-align:left; font-weight:600;">รายการพัสดุ</th>' +
+                '<th style="width:120px; border:1px solid #64748b; padding:8px 4px; text-align:center; font-weight:600;">จำนวน / หน่วย</th>' +
+                '<th style="width:80px; border:1px solid #64748b; padding:8px 4px; text-align:center; font-weight:600;">ตรวจยืม</th>' +
+                '<th style="width:80px; border:1px solid #64748b; padding:8px 4px; text-align:center; font-weight:600;">ตรวจคืน</th>' +
+              '</tr>' +
+            '</thead>' +
+            '<tbody>' + itemsRows + '</tbody>' +
+          '</table>' +
+
+          '<!-- ข้อตกลงความรับผิดชอบ -->' +
+          '<p style="font-size:11.5px; margin:10px 0 24px 0; color:#475569; line-height:1.6;">' +
+            '* ข้าพเจ้าขอรับรองว่าจะดูแลรักษาพัสดุอุปกรณ์ให้อยู่ในสภาพสมบูรณ์ หากเกิดการชำรุด เสียหาย หรือสูญหาย ยินดีรับผิดชอบชดใช้ตามระเบียบงานคลังพัสดุ สโมสรนิสิตฯ ทุกประการ' +
+          '</p>' +
+
+          '<!-- ช่องลงนามผู้ยืมและเจ้าหน้าที่ -->' +
+          '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:28px; text-align:center; font-size:12.5px; padding:0 20px;">' +
+            '<div style="width:270px;">' +
+              '<p style="margin:0 0 6px 0; white-space:nowrap;">ลงชื่อ ................................................................ ผู้ยืม</p>' +
+              '<p style="margin:4px 0 6px 0;">( ' + cleanBorrowerName + ' )</p>' +
+              '<p style="margin:0;">วันที่ ........ / .................... / ............</p>' +
+            '</div>' +
+            '<div style="width:270px;">' +
+              '<p style="margin:0 0 6px 0; white-space:nowrap;">ลงชื่อ ................................................................ ผู้ตรวจรับ</p>' +
+              '<p style="margin:4px 0 6px 0;">( กรรมการฝ่ายพัสดุและแสงเสียง สโมสรนิสิตฯ )</p>' +
+              '<p style="margin:0;">วันที่ ........ / .................... / ............</p>' +
+            '</div>' +
+          '</div>' +
+
+        '</div>';
+
+      activeReceiptHtmlContent = htmlContent;
+
+      // บรรจุลง In-page Print Container
+      var printArea = document.getElementById('printContainer');
+      if (printArea) {
+        printArea.innerHTML = htmlContent;
+        printArea.classList.remove('hidden');
+      }
+
+      // เซ็ตข้อมูลและเปิด Action Modal สรุป
+      document.getElementById('receiptActionTxId').innerText = 'เลขที่บิล: ' + txId;
+      document.getElementById('receiptActionBorrower').innerText = cleanBorrowerName + ' (' + (first.BorrowerID || '-') + ')';
+      document.getElementById('receiptActionProject').innerText = first.ProjectGroup || 'ทั่วไป';
+
+      var isInLine = (typeof liff !== 'undefined' && liff.isInClient && liff.isInClient());
+      var lineNotice = document.getElementById('lineExternalBrowserNotice');
+      if (lineNotice) lineNotice.classList.toggle('hidden', !isInLine);
+
+      var modal = document.getElementById('receiptActionModal');
+      if (modal && typeof modal.showModal === 'function') {
+        modal.showModal();
+      } else {
+        triggerSystemPrintDirect();
+      }
+    }
+
+    function triggerSystemPrintDirect() {
+      var modal = document.getElementById('receiptActionModal');
+      if (modal && modal.open) modal.close();
+
+      var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) || /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+      if (isSafari) {
+        // สำหรับ Safari (iOS / macOS): ใช้เทคนิคซ่อนโมดอล ปลดล็อค Layout แล้วพิมพ์ทันที
+        var printArea = document.getElementById('printContainer');
+        if (printArea) printArea.classList.remove('hidden');
+
+        // ขอ requestAnimationFrame เพื่อให้ Safari วาดหน้าจอทันก่อนสั่ง print
+        requestAnimationFrame(function() {
+          setTimeout(function() {
+            try {
+              window.print();
+            } catch(e) {
+              openReceiptInSeparateWindow();
+            }
+          }, 80);
+        });
+      } else {
+        setTimeout(function() {
+          window.print();
+        }, 150);
+      }
+    }
+
+    // ฟังก์ชันเปิดเอกสารเต็มหน้าจอในแท็บใหม่ (รองรับ Safari & LINE Browser 100%)
+    function openReceiptInSeparateWindow() {
+      if (!activeReceiptHtmlContent) {
+        showToast('กรุณากดเลือกบิลที่ต้องการพิมพ์อีกครั้ง', 'warning');
+        return;
+      }
+
+      var modal = document.getElementById('receiptActionModal');
+      if (modal && modal.open) modal.close();
+
+      var win = window.open('', '_blank');
+      if (!win) {
+        // หาก Safari บล็อกป๊อปอัป ให้พิมพ์ในหน้านี้โดยตรง
+        window.print();
+        return;
+      }
+
+      var fullDoc = '<!DOCTYPE html><html lang="th"><head>' +
+        '<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
+        '<title>ใบยืมพัสดุ_' + activePrintingTxId + '</title>' +
+        '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+        '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+        '<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">' +
+        '<style>' +
+          '@page { size: A4 portrait; margin: 10mm 12mm; }' +
+          'body { font-family: "Kanit", sans-serif; margin: 0; padding: 20px; background: #fff; color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }' +
+          '.no-print { margin-bottom: 20px; padding: 12px 16px; background: #103824; color: #fff; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }' +
+          '.btn-print { background: #dfc8a5; color: #103824; font-weight: bold; border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 14px; }' +
+          '@media print { .no-print { display: none !important; } body { padding: 0 !important; } }' +
+        '</style></head><body>' +
+        '<div class="no-print">' +
+          '<span style="font-size:14px; font-weight:bold;">📄 ใบยืม - คืน พัสดุ (พร้อมสั่งพิมพ์ / บันทึก PDF)</span>' +
+          '<button class="btn-print" onclick="window.print()">🖨️ สั่งพิมพ์ / บันทึกเป็น PDF</button>' +
+        '</div>' +
+        activeReceiptHtmlContent +
+        '<script>' +
+          'window.onload = function() { setTimeout(function() { window.print(); }, 350); };' +
+        '<\/script>' +
+        '</body></html>';
+
+      win.document.open();
+      win.document.write(fullDoc);
+      win.document.close();
+    }
           })
           .withFailureHandler(function() {
             showLoading(false);
