@@ -28,6 +28,19 @@
   <meta property="og:description" content="สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย" />
   <meta property="og:image" content="/favicon.png" />
 
+  <!-- Silence Tailwind CDN Production Warning -->
+  <script>
+    (function() {
+      const origWarn = console.warn;
+      console.warn = function(...args) {
+        if (args[0] && typeof args[0] === 'string' && args[0].includes('cdn.tailwindcss.com should not be used in production')) {
+          return;
+        }
+        origWarn.apply(console, args);
+      };
+    })();
+  </script>
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -1510,8 +1523,7 @@
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({ action: actionName, payload: payload || {} }),
           redirect: 'follow',
-          cache: 'no-cache',
-          credentials: 'omit'
+          cache: 'no-store'
         })
         .then(function(res) {
           if (!res.ok) throw new Error("HTTP Status " + res.status);
@@ -1528,7 +1540,7 @@
           done();
           if (retryCount < maxRetries) {
             var nextAttempt = retryCount + 1;
-            var waitTime = 1000 * nextAttempt;
+            var waitTime = 1200 * nextAttempt;
             setTimeout(function() {
               fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, nextAttempt);
             }, waitTime);
