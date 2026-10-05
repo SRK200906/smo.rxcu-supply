@@ -1326,6 +1326,31 @@
       return url;
     }
 
+    // ฟังก์ชันแปลงวันที่เป็นภาษาไทยแบบเต็ม (เช่น 26 สิงหาคม 2569)
+    function formatThaiDateLong(dateStr) {
+      if (!dateStr || dateStr === '-' || dateStr === 'undefined') return '-';
+      var d = new Date(dateStr);
+      if (isNaN(d.getTime())) {
+        // กรณีเป็นสตริงแบบ YYYY-MM-DD
+        var parts = dateStr.split('-');
+        if (parts.length === 3) {
+          d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        }
+      }
+      if (isNaN(d.getTime())) return dateStr;
+
+      var thaiMonths = [
+        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+      ];
+
+      var day = d.getDate();
+      var month = thaiMonths[d.getMonth()];
+      var year = d.getFullYear() > 2400 ? d.getFullYear() : d.getFullYear() + 543;
+
+      return day + ' ' + month + ' ' + year;
+    }
+
     function updateFavicon(iconUrl) {
       var favicon = document.getElementById('dynamicFavicon');
       if (!favicon) {
@@ -3271,85 +3296,95 @@
 
     function executePrintHtml(billItems, txId) {
       var first = billItems[0];
-      var logoSrc = cleanDriveUrl(currentClubLogo) || '/favicon.png?v=10';
+      var storedLogo = localStorage.getItem('smo_rx_logo');
+      var logoSrc = storedLogo ? cleanDriveUrl(storedLogo) : (currentClubLogo ? cleanDriveUrl(currentClubLogo) : '/favicon.png?v=10');
       
       // ดึงชื่อเต็ม: คำนำหน้า + ชื่อจริง + นามสกุล เท่านั้น (ไม่ใส่ชื่อเล่นในวงเล็บ)
       var rawBorrowerName = first.BorrowerName || 'ไม่ระบุชื่อ';
       var cleanBorrowerName = rawBorrowerName.replace(/\s*\([^)]*\)\s*/g, '').trim();
 
+      // แปลงวันที่เป็นรูปแบบภาษาไทยเต็ม (เช่น 1 ตุลาคม 2569)
+      var thaiBorrowDate = formatThaiDateLong(first.BorrowDate);
+      var thaiReturnDate = formatThaiDateLong(first.ReturnDate);
+
       var itemsRows = billItems.map(function(item, idx) {
         return '<tr>' +
-          '<td style="text-align:center; border:1px solid #cbd5e1; padding:8px 6px; font-size:13px;">' + (idx + 1) + '</td>' +
-          '<td style="border:1px solid #cbd5e1; padding:8px 12px; font-size:13px; font-weight:500;">' + item.EquipmentName + ' <span style="font-size:12px; color:#64748b; font-weight:normal;">(' + (item.EquipmentColor || '-') + ')</span></td>' +
-          '<td style="text-align:center; border:1px solid #cbd5e1; padding:8px 6px; font-size:13px; font-weight:600; color:#0f766e;">' + item.Quantity + ' ' + (item.EquipmentUnit || 'ชิ้น') + '</td>' +
-          '<td style="text-align:center; border:1px solid #cbd5e1; padding:8px 6px; font-size:13px; color:#94a3b8;">[ &nbsp; &nbsp; ]</td>' +
-          '<td style="text-align:center; border:1px solid #cbd5e1; padding:8px 6px; font-size:13px; color:#94a3b8;">[ &nbsp; &nbsp; ]</td>' +
+          '<td style="text-align:center; border:1px solid #cbd5e1; padding:10px 6px; font-size:13.5px;">' + (idx + 1) + '</td>' +
+          '<td style="border:1px solid #cbd5e1; padding:10px 14px; font-size:13.5px; font-weight:500;">' + item.EquipmentName + ' <span style="font-size:12px; color:#64748b; font-weight:normal;">(' + (item.EquipmentColor || '-') + ')</span></td>' +
+          '<td style="text-align:center; border:1px solid #cbd5e1; padding:10px 6px; font-size:13.5px; font-weight:600; color:#0f766e;">' + item.Quantity + ' ' + (item.EquipmentUnit || 'ชิ้น') + '</td>' +
+          '<td style="text-align:center; border:1px solid #cbd5e1; padding:10px 6px; font-size:13px; color:#94a3b8;">[ &nbsp; &nbsp; ]</td>' +
+          '<td style="text-align:center; border:1px solid #cbd5e1; padding:10px 6px; font-size:13px; color:#94a3b8;">[ &nbsp; &nbsp; ]</td>' +
         '</tr>';
       }).join('');
 
+      var logoImgTag = '';
+      if (logoSrc && logoSrc !== 'https://placehold.co/300x200/183327/ffffff?text=RxCU+Supply') {
+        logoImgTag = '<img src="' + logoSrc + '" crossOrigin="anonymous" style="width:72px; height:72px; object-fit:contain; flex-shrink:0;" alt="ตราสโมสร" onerror="this.style.display=\'none\';" />';
+      }
+
       var htmlContent = 
-        '<div style="font-family: \'Kanit\', sans-serif; font-size:13.5px; color:#0f172a; line-height:1.65; width:100%; box-sizing:border-box;">' +
+        '<div style="font-family: \'Kanit\', sans-serif; font-size:14px; color:#0f172a; line-height:1.7; width:100%; box-sizing:border-box;">' +
           
           '<!-- ส่วนหัวเอกสารและตราสัญลักษณ์ -->' +
-          '<div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2.5px solid #103824; padding-bottom:14px; margin-bottom:18px;">' +
+          '<div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2.5px solid #103824; padding-bottom:14px; margin-bottom:18px;">' +
             '<div style="display:flex; align-items:center; gap:16px;">' +
-              (currentClubLogo ? '<img src="' + logoSrc + '" style="width:68px; height:68px; object-fit:contain; flex-shrink:0;" alt="ตราสโมสร" />' : '') +
+              logoImgTag +
               '<div>' +
-                '<h2 style="margin:0; font-size:20px; color:#103824; font-weight:700; letter-spacing:-0.2px;">ใบยืม – คืน พัสดุและอุปกรณ์</h2>' +
-                '<p style="margin:2px 0 0 0; font-size:13.5px; color:#475569; font-weight:400;">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>' +
+                '<h2 style="margin:0; font-size:22px; color:#103824; font-weight:700; letter-spacing:-0.2px;">ใบยืม – คืน พัสดุและอุปกรณ์</h2>' +
+                '<p style="margin:2px 0 0 0; font-size:14px; color:#475569; font-weight:400;">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>' +
               '</div>' +
             '</div>' +
-            '<div style="border:2px solid #103824; padding:6px 16px; font-weight:700; font-family:monospace; font-size:14px; border-radius:8px; background:#f8faf8; color:#103824; white-space:nowrap; flex-shrink:0;">' +
+            '<div style="border:2px solid #103824; padding:6px 16px; font-weight:700; font-family:monospace; font-size:15px; border-radius:8px; background:#f8faf8; color:#103824; white-space:nowrap; flex-shrink:0;">' +
               'ที่ ' + txId +
             '</div>' +
           '</div>' +
 
           '<!-- ข้อมูลผู้ยืมและโครงการ -->' +
-          '<div style="margin-bottom:16px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px 18px; font-size:13px; line-height:1.8;">' +
-            '<div style="display:flex; justify-content:space-between; flex-wrap:nowrap; gap:12px;">' +
-              '<div><b>ผู้ขอยืม:</b> ' + cleanBorrowerName + '</div>' +
-              '<div><b>รหัสนิสิต:</b> ' + (first.BorrowerID || '-') + '</div>' +
+          '<div style="margin-bottom:18px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px 20px; font-size:13.5px; line-height:1.9;">' +
+            '<div style="display:flex; justify-content:space-between; flex-wrap:nowrap; gap:16px;">' +
+              '<div style="flex:1;"><b>ผู้ขอยืม:</b> ' + cleanBorrowerName + '</div>' +
+              '<div style="width:220px;"><b>รหัสนิสิต:</b> ' + (first.BorrowerID || '-') + '</div>' +
             '</div>' +
-            '<div style="display:flex; justify-content:space-between; flex-wrap:nowrap; gap:12px;">' +
+            '<div style="display:flex; justify-content:space-between; flex-wrap:nowrap; gap:16px;">' +
               '<div><b>ในนามโครงการ / ฝ่าย:</b> ' + (first.ProjectGroup || 'ทั่วไป') + '</div>' +
             '</div>' +
             '<div><b>นำไปใช้ในกิจกรรม:</b> ' + (first.UserNote || '-') + '</div>' +
-            '<div style="display:flex; justify-content:space-between; flex-wrap:nowrap; gap:12px; margin-top:2px;">' +
-              '<div><b>วันที่ยืม:</b> ' + (first.BorrowDate || '-') + '</div>' +
-              '<div><b>กำหนดส่งคืน:</b> ' + (first.ReturnDate || '-') + '</div>' +
+            '<div style="display:flex; justify-content:space-between; flex-wrap:nowrap; gap:16px; margin-top:2px;">' +
+              '<div style="flex:1;"><b>วันที่ยืม:</b> ' + thaiBorrowDate + '</div>' +
+              '<div style="width:220px;"><b>กำหนดส่งคืน:</b> ' + thaiReturnDate + '</div>' +
             '</div>' +
           '</div>' +
 
           '<!-- ตารางรายการพัสดุ -->' +
-          '<table style="width:100%; border-collapse:collapse; margin:16px 0; font-size:13px;">' +
+          '<table style="width:100%; border-collapse:collapse; margin:16px 0; font-size:13.5px;">' +
             '<thead>' +
               '<tr style="background-color:#f1f5f9; color:#1e293b;">' +
-                '<th style="width:55px; border:1px solid #cbd5e1; padding:8px 4px; text-align:center; font-weight:600;">ลำดับ</th>' +
-                '<th style="border:1px solid #cbd5e1; padding:8px 12px; text-align:left; font-weight:600;">รายการพัสดุ</th>' +
-                '<th style="width:140px; border:1px solid #cbd5e1; padding:8px 4px; text-align:center; font-weight:600;">จำนวน / หน่วย</th>' +
-                '<th style="width:90px; border:1px solid #cbd5e1; padding:8px 4px; text-align:center; font-weight:600;">ตรวจยืม</th>' +
-                '<th style="width:90px; border:1px solid #cbd5e1; padding:8px 4px; text-align:center; font-weight:600;">ตรวจคืน</th>' +
+                '<th style="width:55px; border:1px solid #cbd5e1; padding:9px 4px; text-align:center; font-weight:600;">ลำดับ</th>' +
+                '<th style="border:1px solid #cbd5e1; padding:9px 14px; text-align:left; font-weight:600;">รายการพัสดุ</th>' +
+                '<th style="width:140px; border:1px solid #cbd5e1; padding:9px 4px; text-align:center; font-weight:600;">จำนวน / หน่วย</th>' +
+                '<th style="width:90px; border:1px solid #cbd5e1; padding:9px 4px; text-align:center; font-weight:600;">ตรวจยืม</th>' +
+                '<th style="width:90px; border:1px solid #cbd5e1; padding:9px 4px; text-align:center; font-weight:600;">ตรวจคืน</th>' +
               '</tr>' +
             '</thead>' +
             '<tbody>' + itemsRows + '</tbody>' +
           '</table>' +
 
           '<!-- ข้อตกลงความรับผิดชอบ -->' +
-          '<p style="font-size:11.5px; margin:12px 0 28px 0; color:#64748b; line-height:1.6;">' +
+          '<p style="font-size:12px; margin:14px 0 32px 0; color:#64748b; line-height:1.65;">' +
             '* ข้าพเจ้าขอรับรองว่าจะดูแลรักษาพัสดุอุปกรณ์ให้อยู่ในสภาพสมบูรณ์ หากเกิดการชำรุด เสียหาย หรือสูญหาย ยินดีรับผิดชอบชดใช้ตามระเบียบงานคลังพัสดุ สโมสรนิสิตฯ ทุกประการ' +
           '</p>' +
 
           '<!-- ช่องลงนามผู้ยืมและเจ้าหน้าที่ -->' +
-          '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:35px; text-align:center; font-size:12.5px; padding:0 20px;">' +
-            '<div style="width:280px;">' +
-              '<p style="margin:0 0 6px 0;">ลงชื่อ ................................................................ ผู้ยืม</p>' +
+          '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:35px; text-align:center; font-size:13px; padding:0 24px;">' +
+            '<div style="width:290px;">' +
+              '<p style="margin:0 0 6px 0; white-space:nowrap;">ลงชื่อ ................................................................ ผู้ยืม</p>' +
               '<p style="margin:4px 0 6px 0;">( ' + cleanBorrowerName + ' )</p>' +
-              '<p style="margin:0;">วันที่ ......./......./...........</p>' +
+              '<p style="margin:0;">วันที่ ........ / .................... / ............</p>' +
             '</div>' +
-            '<div style="width:280px;">' +
-              '<p style="margin:0 0 6px 0;">ลงชื่อ ................................................................ ผู้ตรวจรับ</p>' +
+            '<div style="width:290px;">' +
+              '<p style="margin:0 0 6px 0; white-space:nowrap;">ลงชื่อ ................................................................ ผู้ตรวจรับ</p>' +
               '<p style="margin:4px 0 6px 0;">( กรรมการฝ่ายพัสดุและแสงเสียง สโมสรนิสิตฯ )</p>' +
-              '<p style="margin:0;">วันที่ ......./......./...........</p>' +
+              '<p style="margin:0;">วันที่ ........ / .................... / ............</p>' +
             '</div>' +
           '</div>' +
 
