@@ -689,12 +689,31 @@
             </div>
           </div>
 
-          <!-- อัตราการยืมตามหมวดหมู่ -->
+          <!-- กล่องแจ้งเตือนพัสดุใกล้หมด / มีความต้องการยืมสูง -->
           <div class="bg-white dark:bg-[#12231b] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm space-y-3">
-            <h4 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-              <i class="fa-solid fa-chart-simple text-[#c5a880]"></i> อัตราการใช้งานพัสดุแยกตามหมวดหมู่
-            </h4>
-            <div id="adminCategoryProgressContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"></div>
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs sm:text-sm font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation"></i> พัสดุสต็อกใกล้หมด / กำลังถูกยืมใช้งานสูง
+              </h4>
+              <span id="lowStockCountBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">0 รายการ</span>
+            </div>
+            <div id="adminLowStockContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs">
+              <p class="col-span-full text-slate-400 py-2 text-center text-xs">สต็อกพัสดุอยู่ในเกณฑ์ปกติ</p>
+            </div>
+          </div>
+
+          <!-- อัตราการยืมตามหมวดหมู่ (เรียง % สูง -> ต่ำ + Accordion ดูรายการย่อย) -->
+          <div class="bg-white dark:bg-[#12231b] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-emerald-950/80 shadow-sm space-y-3.5">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <i class="fa-solid fa-chart-simple text-[#c5a880]"></i> อัตราการใช้งานพัสดุแยกตามหมวดหมู่
+              </h4>
+              <button id="btnToggleAllCategories" onclick="toggleCategoryDisplayLimit()" class="text-[11px] font-semibold text-emerald-700 dark:text-[#dfc8a5] hover:underline flex items-center gap-1">
+                <span>แสดงทั้งหมด</span>
+                <i id="iconToggleAllCategories" class="fa-solid fa-chevron-down text-[10px]"></i>
+              </button>
+            </div>
+            <div id="adminCategoryProgressContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-3 text-xs"></div>
           </div>
         </div>
 
@@ -1158,10 +1177,10 @@
 
     // 4 หมวดหมู่ที่ปักหมุดแสดงบนหน้าแรก
     var PINNED_CATEGORIES = [
-      'OFC - สำนักงานและเครื่องเขียน',
-      'ACT - กิจกรรมและสันทนาการ',
-      'DEC - ตกแต่งและสถานที่',
-      'SL - แสงและเสียง'
+      'ประกอบกิจกรรม',
+      'เครื่องแต่งกาย-พร็อพ',
+      'วัสดุสำนักงาน',
+      'เครื่องเสียงและแสงไฟ'
     ];
 
     // ตัวแปรสถานะและคลังข้อมูลหลักของระบบ
@@ -1182,6 +1201,8 @@
     var lastFailedRetryFn = null;
     var currentActiveView = 'HOME';
     var currentAdminSubView = 'MONITOR'; // 'MONITOR' หรือ 'MANAGEMENT'
+    var isShowAllCategories = false;
+    var expandedCategories = {};
 
     function checkIfAdmin(user) {
       if (!user || !user.role) return false;
@@ -1300,6 +1321,15 @@
 
     window.addEventListener('DOMContentLoaded', function() {
       initTheme();
+
+      // ล้างพารามิเตอร์ OAuth / LIFF (?code=...&state=...) ออกจากแถบ URL อัตโนมัติ ป้องกันเบราว์เซอร์ใช้ซ้ำจนพัง
+      if (window.location.search && (window.location.search.indexOf('code=') !== -1 || window.location.search.indexOf('liffClientId=') !== -1)) {
+        try {
+          var cleanPath = window.location.origin + window.location.pathname;
+          window.history.replaceState({}, document.title, cleanPath);
+        } catch (e) {}
+      }
+
       initLiffSDK();
       currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=10';
       renderClubLogo(currentClubLogo);
@@ -1476,12 +1506,12 @@
     // --- BACKEND API PROXY WITH AUTO-RETRY ---
     function fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, retryCount) {
       if (typeof retryCount === 'undefined') retryCount = 0;
-      var maxRetries = 2; // ลดการยิงกระหน่ำซ้ำซ้อน
+      var maxRetries = 2;
 
       fetch(GAS_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: actionName, payload: payload }),
+        body: JSON.stringify({ action: actionName, payload: payload || {} }),
         redirect: 'follow',
         cache: 'no-cache',
         credentials: 'omit'
@@ -1499,12 +1529,12 @@
       .catch(function(err) {
         if (retryCount < maxRetries) {
           var nextAttempt = retryCount + 1;
-          var waitTime = 1500 * nextAttempt;
+          var waitTime = 1200 * nextAttempt;
           setTimeout(function() {
             fetchWithAutoRetry(actionName, payload, successHandler, failureHandler, nextAttempt);
           }, waitTime);
         } else {
-          console.error("API Call Error after retries:", err);
+          console.warn("API Call Warning after retries (" + actionName + "):", err);
           showLoading(false);
           stopRefreshIconAnimation();
 
@@ -2444,7 +2474,7 @@
       if (oEl) oEl.innerText = Object.keys(overdueTxs).length + ' บิล';
       if (lEl) lEl.innerText = outOfStockCount + ' รายการ';
 
-      // แสดงรายการที่เกินกำหนดคืน
+      // 1. แสดงรายการที่เกินกำหนดคืน
       var overdueBox = document.getElementById('adminOverdueContainer');
       if (overdueBox) {
         var overdueKeys = Object.keys(overdueTxs);
@@ -2464,31 +2494,159 @@
         }
       }
 
-      // แสดงอัตราการยืมตามหมวดหมู่
-      var catBox = document.getElementById('adminCategoryProgressContainer');
-      if (catBox) {
-        var catStats = {};
-        allItems.forEach(function(i) {
-          var c = i['หมวดหมู่'] || 'ทั่วไป';
-          if (!catStats[c]) catStats[c] = { total: 0, borrowed: 0 };
-          catStats[c].total += Number(i['จำนวนทั้งหมด'] || i['จำนวนคงเหลือปัจจุบัน'] || 1);
-          catStats[c].borrowed += Number(i['จำนวนที่ติดยืมปัจจุบัน'] || 0);
-        });
+      // 2. แสดงรายการพัสดุที่สต็อกใกล้หมด หรือมีอัตราการยืมสูง
+      renderAdminLowStockAlerts();
 
-        catBox.innerHTML = Object.keys(catStats).map(function(c) {
-          var s = catStats[c];
-          var pct = s.total > 0 ? Math.round((s.borrowed / s.total) * 100) : 0;
-          return '<div class="p-3 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-100 dark:border-emerald-950/60 space-y-1.5">' +
-            '<div class="flex justify-between items-center">' +
-              '<span class="font-bold text-slate-700 dark:text-slate-200">' + c + '</span>' +
-              '<span class="text-[11px] font-mono text-emerald-700 dark:text-emerald-400">' + pct + '% (ยืม ' + s.borrowed + '/' + s.total + ')</span>' +
+      // 3. แสดงอัตราการยืมตามหมวดหมู่ (เรียงจาก % สูงสุดไปต่ำสุด + Accordion ย่อ/ขยาย)
+      renderAdminCategoryProgress();
+    }
+
+    function renderAdminLowStockAlerts() {
+      var container = document.getElementById('adminLowStockContainer');
+      var badge = document.getElementById('lowStockCountBadge');
+      if (!container) return;
+
+      var lowStockItems = allItems.filter(function(i) {
+        var inStock = Number(i['จำนวนคงเหลือปัจจุบัน'] || 0);
+        var total = Number(i['จำนวนทั้งหมด'] || inStock);
+        var borrowed = Number(i['จำนวนที่ติดยืมปัจจุบัน'] || 0);
+
+        // เงื่อนไข: สต็อกเหลือ <= 2 ชิ้น หรือ ยืมไปแล้วเกิน 75% และเหลือสต็อก <= 5
+        var isAlmostEmpty = inStock <= 2;
+        var isHighDemand = total > 0 && (borrowed / total >= 0.75) && inStock <= 5;
+        return isAlmostEmpty || isHighDemand;
+      });
+
+      if (badge) badge.innerText = lowStockItems.length + ' รายการ';
+
+      if (lowStockItems.length === 0) {
+        container.innerHTML = '<p class="col-span-full text-slate-400 py-3 text-center text-xs">สต็อกพัสดุทุกรายการอยู่ในระดับปลอดภัย</p>';
+        return;
+      }
+
+      container.innerHTML = lowStockItems.slice(0, 6).map(function(item) {
+        var id = item['รหัสพัสดุ'];
+        var name = item['รายการ'];
+        var inStock = Number(item['จำนวนคงเหลือปัจจุบัน'] || 0);
+        var total = Number(item['จำนวนทั้งหมด'] || inStock);
+        var unit = item['หน่วย'] || 'ชิ้น';
+        var img = cleanDriveUrl(item['รูปภาพ']) || 'https://placehold.co/300x200/183327/ffffff?text=RxCU';
+
+        var isZero = inStock <= 0;
+        var badgeColor = isZero ? 'bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300';
+        var badgeText = isZero ? 'หมดคลัง (0 ' + unit + ')' : 'เหลือเพียง ' + inStock + ' ' + unit;
+
+        return '<div class="p-2.5 rounded-xl bg-slate-50 dark:bg-[#0a1510] border border-slate-200/80 dark:border-emerald-950/60 flex items-center justify-between gap-2.5">' +
+          '<div class="flex items-center gap-2 min-w-0 flex-1 cursor-pointer" onclick="openItemDetails(\'' + id + '\')">' +
+            '<img src="' + img + '" class="w-10 h-10 rounded-lg object-cover border dark:border-emerald-900/40 shrink-0 bg-white dark:bg-[#12231b]" />' +
+            '<div class="truncate">' +
+              '<p class="font-bold text-slate-800 dark:text-slate-200 truncate">' + name + '</p>' +
+              '<p class="text-[10px] text-slate-400 font-mono">ID: ' + id + ' (ทั้งหมด ' + total + ' ' + unit + ')</p>' +
             '</div>' +
-            '<div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden">' +
-              '<div class="bg-gradient-to-r from-emerald-600 to-amber-500 h-2 rounded-full" style="width: ' + pct + '%"></div>' +
+          '</div>' +
+          '<span class="text-[10px] font-bold px-2 py-1 rounded-lg shrink-0 ' + badgeColor + '">' + badgeText + '</span>' +
+        '</div>';
+      }).join('');
+    }
+
+    function toggleCategoryDisplayLimit() {
+      isShowAllCategories = !isShowAllCategories;
+      var btnText = document.querySelector('#btnToggleAllCategories span');
+      var icon = document.getElementById('iconToggleAllCategories');
+      if (btnText) btnText.innerText = isShowAllCategories ? 'ย่อแสดง 5 หมวด' : 'แสดงทั้งหมด';
+      if (icon) icon.className = isShowAllCategories ? 'fa-solid fa-chevron-up text-[10px]' : 'fa-solid fa-chevron-down text-[10px]';
+      renderAdminCategoryProgress();
+    }
+
+    function toggleCategoryAccordion(catKey) {
+      expandedCategories[catKey] = !expandedCategories[catKey];
+      renderAdminCategoryProgress();
+    }
+
+    function renderAdminCategoryProgress() {
+      var catBox = document.getElementById('adminCategoryProgressContainer');
+      if (!catBox) return;
+
+      var catStats = {};
+      allItems.forEach(function(i) {
+        var c = i['หมวดหมู่'] || 'ทั่วไป';
+        if (!catStats[c]) {
+          catStats[c] = { name: c, total: 0, borrowed: 0, inStock: 0, items: [] };
+        }
+        var total = Number(i['จำนวนทั้งหมด'] || i['จำนวนคงเหลือปัจจุบัน'] || 1);
+        var inStock = Number(i['จำนวนคงเหลือปัจจุบัน'] || 0);
+        var borrowed = Number(i['จำนวนที่ติดยืมปัจจุบัน'] || 0);
+
+        catStats[c].total += total;
+        catStats[c].borrowed += borrowed;
+        catStats[c].inStock += inStock;
+        catStats[c].items.push(i);
+      });
+
+      // จัดเรียงตามเปอร์เซ็นต์การถูกยืมจาก สูง -> ต่ำ
+      var sortedCats = Object.keys(catStats).map(function(k) {
+        var s = catStats[k];
+        var pct = s.total > 0 ? Math.round((s.borrowed / s.total) * 100) : 0;
+        return {
+          key: k,
+          name: s.name,
+          total: s.total,
+          borrowed: s.borrowed,
+          inStock: s.inStock,
+          percentage: pct,
+          items: s.items
+        };
+      }).sort(function(a, b) {
+        return b.percentage - a.percentage;
+      });
+
+      var displayList = isShowAllCategories ? sortedCats : sortedCats.slice(0, 5);
+
+      catBox.innerHTML = displayList.map(function(cat) {
+        var isExpanded = !!expandedCategories[cat.key];
+        var chevronClass = isExpanded ? 'fa-chevron-up' : 'fa-chevron-down';
+
+        // รายการย่อยภายในหมวดหมู่
+        var subItemsHtml = '';
+        if (isExpanded) {
+          subItemsHtml = '<div class="mt-2.5 pt-2.5 border-t border-slate-200/70 dark:border-emerald-950/80 space-y-1.5">' +
+            '<p class="text-[10px] font-bold text-slate-400">รายการพัสดุในหมวดนี้ (' + cat.items.length + ' รายการ):</p>' +
+            '<div class="max-h-44 overflow-y-auto space-y-1.5 pr-1 custom-scroll">' +
+            cat.items.map(function(sub) {
+              var subInStock = Number(sub['จำนวนคงเหลือปัจจุบัน'] || 0);
+              var subBorrowed = Number(sub['จำนวนที่ติดยืมปัจจุบัน'] || 0);
+              var subUnit = sub['หน่วย'] || 'ชิ้น';
+              return '<div onclick="openItemDetails(\'' + sub['รหัสพัสดุ'] + '\')" class="p-1.5 px-2 rounded-lg bg-white/70 dark:bg-[#12231b] border border-slate-200/50 dark:border-emerald-900/40 flex items-center justify-between text-[11px] cursor-pointer hover:border-emerald-600 transition-colors">' +
+                '<div class="truncate mr-2">' +
+                  '<span class="font-semibold text-slate-700 dark:text-slate-200 truncate block">' + sub['รายการ'] + '</span>' +
+                  '<span class="text-[9px] text-slate-400 font-mono">ID: ' + sub['รหัสพัสดุ'] + '</span>' +
+                '</div>' +
+                '<div class="text-right shrink-0">' +
+                  '<span class="font-bold text-emerald-700 dark:text-emerald-400">เหลือ ' + subInStock + '</span> ' +
+                  '<span class="text-slate-400 text-[10px]">(ยืม ' + subBorrowed + ' ' + subUnit + ')</span>' +
+                '</div>' +
+              '</div>';
+            }).join('') +
             '</div>' +
           '</div>';
-        }).join('');
-      }
+        }
+
+        return '<div class="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#0a1510] border border-slate-200/90 dark:border-emerald-950/70 shadow-sm transition-all">' +
+          '<div class="flex items-center justify-between cursor-pointer select-none" onclick="toggleCategoryAccordion(\'' + cat.key + '\')">' +
+            '<div class="truncate pr-2">' +
+              '<span class="font-bold text-slate-800 dark:text-slate-200 text-xs sm:text-sm truncate block">' + cat.name + '</span>' +
+              '<span class="text-[10px] font-mono text-emerald-700 dark:text-[#dfc8a5]">' + cat.percentage + '% (ยืม ' + cat.borrowed + '/' + cat.total + ' ชิ้น)</span>' +
+            '</div>' +
+            '<div class="w-7 h-7 rounded-full bg-white dark:bg-[#12231b] border border-slate-200 dark:border-emerald-900/50 flex items-center justify-center text-slate-500 dark:text-slate-300 text-xs shrink-0 shadow-xs">' +
+              '<i class="fa-solid ' + chevronClass + '"></i>' +
+            '</div>' +
+          '</div>' +
+          '<div class="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-2 overflow-hidden mt-2.5">' +
+            '<div class="bg-gradient-to-r from-emerald-600 via-amber-500 to-[#c5a880] h-2 rounded-full transition-all duration-500" style="width: ' + cat.percentage + '%"></div>' +
+          '</div>' +
+          subItemsHtml +
+        '</div>';
+      }).join('');
     }
 
     function renderAdminCards() {
