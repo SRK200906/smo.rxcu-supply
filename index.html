@@ -73,6 +73,9 @@
   <!-- html2canvas สำหรับแปลงใบยืมเป็นรูปภาพบนมือถือ (รองรับ LINE & iOS/Android) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+  <!-- jsPDF สำหรับสร้างและส่งออกไฟล์ PDF มาตรฐาน A4 โดยตรง -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -1158,17 +1161,21 @@
       <!-- Action Toolbar (Mobile-friendly) -->
       <div class="p-2 sm:px-4 bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200/60 dark:border-amber-900/40 flex flex-wrap items-center justify-between gap-2 text-xs shrink-0">
         <p class="text-[11px] text-amber-900 dark:text-amber-200 flex items-center gap-1.5 font-medium">
-          <i class="fa-solid fa-mobile-screen text-amber-600"></i>
-          <span>ตัวอย่างเอกสาร A4</span>
+          <i class="fa-solid fa-file-pdf text-rose-600"></i>
+          <span>เอกสาร A4 ทางการ</span>
         </p>
         <div class="flex items-center gap-1.5 ml-auto flex-wrap justify-end">
+          <button id="btnSaveReceiptPdf" onclick="downloadReceiptAsPdf()" class="px-3 py-1.5 rounded-xl bg-rose-700 hover:bg-rose-800 text-white font-bold text-[11px] shadow-sm flex items-center gap-1 active:scale-95 transition-transform">
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>ดาวน์โหลด PDF</span>
+          </button>
           <button id="btnSaveReceiptImg" onclick="downloadReceiptAsImage()" class="px-3 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-[11px] shadow-sm flex items-center gap-1 active:scale-95 transition-transform">
             <i class="fa-solid fa-image"></i>
             <span>บันทึกรูปภาพ</span>
           </button>
           <button onclick="triggerSystemPrint()" class="px-3 py-1.5 rounded-xl bg-[#10231a] hover:bg-[#1b3a2c] text-white font-bold text-[11px] shadow-sm flex items-center gap-1 active:scale-95 transition-transform">
             <i class="fa-solid fa-print"></i>
-            <span>สั่งพิมพ์ / PDF</span>
+            <span>พิมพ์</span>
           </button>
           <button id="btnReceiptOpenBrowser" onclick="openReceiptInBrowser()" class="hidden px-2.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] shadow-sm flex items-center gap-1">
             <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -3418,8 +3425,79 @@
       try {
         window.print();
       } catch(e) {
-        showToast('กรุณากดปุ่ม "บันทึกรูปภาพ" เพื่อเซฟใบยืม', 'info');
+        showToast('กรุณากดปุ่ม "ดาวน์โหลด PDF" เพื่อบันทึกใบยืม', 'info');
       }
+    }
+
+    function downloadReceiptAsPdf() {
+      var paper = document.getElementById('receiptModalPaper');
+      if (!paper) return;
+
+      var btn = document.getElementById('btnSaveReceiptPdf');
+      var origHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> กำลังสร้าง PDF...';
+      }
+
+      if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+        showToast('กำลังโหลดระบบสร้างไฟล์ PDF กรุณาลองใหม่อีกครั้ง', 'warning');
+        if (btn) { btn.disabled = false; btn.innerHTML = origHtml; }
+        return;
+      }
+
+      // 1. แคปเจอร์ภาพใบยืม A4 ความละเอียดสูง (2x High DPI)
+      html2canvas(paper, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        width: 794,
+        windowWidth: 850
+      }).then(function(canvas) {
+        var imgData = canvas.toDataURL('image/jpeg', 0.95);
+        var { jsPDF } = window.jspdf;
+
+        // 2. สร้างเอกสาร PDF สัดส่วน A4 มาตรฐาน (210 x 297 มม.)
+        var pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4',
+          compress: true
+        });
+
+        var pdfWidth = pdf.internal.pageSize.getWidth();
+        var pdfHeight = pdf.internal.pageSize.getHeight();
+
+        // 3. วางภาพพอดีเต็มหน้ากระดาษ A4 หน้าเดียว
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+
+        var cleanTxId = (currentManagingTxId || 'RxCU').replace(/[\/\\]/g, '_');
+        var fileName = 'ใบยืมพัสดุ_' + cleanTxId + '.pdf';
+
+        // 4. บันทึกหรือเปิดไฟล์ PDF
+        var isLineApp = typeof liff !== 'undefined' && liff.isInClient && liff.isInClient();
+        if (isLineApp) {
+          // หากอยู่ใน LINE ให้เปิดเป็น Data URI ใน Tab ใหม่เพื่อป้องกันการบล็อกดาวน์โหลด
+          var blobUrl = pdf.output('bloburl');
+          window.open(blobUrl, '_blank');
+          showToast('สร้าง PDF สำเร็จ กำลังเปิดเอกสาร...', 'success');
+        } else {
+          pdf.save(fileName);
+          showToast('ดาวน์โหลดไฟล์ PDF เรียบร้อยแล้ว', 'success');
+        }
+
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      }).catch(function(err) {
+        console.error("PDF generation failed:", err);
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+        showToast('สร้าง PDF ไม่สำเร็จ กรุณาใช้ปุ่มบันทึกรูปภาพหรือสั่งพิมพ์แทน', 'warning');
+      });
     }
 
     function downloadReceiptAsImage() {
