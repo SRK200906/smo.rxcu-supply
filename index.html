@@ -1413,22 +1413,26 @@
     }
 
     function loginWithLine() {
-      if (!window.liff) {
-        showToast('ไม่สามารถเรียก LINE SDK ได้', 'error');
+      if (typeof liff === 'undefined') {
+        showToast('ไม่พบ LINE SDK กรุณาลองใหม่อีกครั้ง', 'warning');
         return;
       }
 
       if (!liff.isLoggedIn()) {
-        // เรียกกระบวนการล็อกอินของ LINE โดยตรง จะไม่เกิดการรีเฟรชเปล่า
         liff.login({ redirectUri: window.location.origin + window.location.pathname });
       } else {
-        liff.getProfile().then(function(profile) {
-          currentLineUid = profile.userId;
-          verifyLineUserDirect(currentLineUid, profile);
-        }).catch(function(err) {
-          console.warn("getProfile error, re-authenticating:", err);
-          liff.login({ redirectUri: window.location.origin + window.location.pathname });
-        });
+        showLoading(true);
+        liff.getProfile()
+          .then(function(profile) {
+            currentLineUid = profile.userId;
+            localStorage.setItem('smo_rx_line_uid', currentLineUid);
+            verifyLineUserDirect(currentLineUid, profile);
+          })
+          .catch(function(err) {
+            showLoading(false);
+            console.warn("getProfile error, re-authenticating:", err);
+            liff.login({ redirectUri: window.location.origin + window.location.pathname });
+          });
       }
     }
 
@@ -1437,7 +1441,7 @@
       var btn = document.getElementById('btnGateLineLogin');
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังตรวจสอบบัญชี...';
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> <span>กำลังตรวจสอบบัญชี...</span>';
       }
 
       google.script.run
@@ -1445,7 +1449,7 @@
           showLoading(false);
           if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-brands fa-line text-xl"></i> <span>เข้าสู่ระบบด้วย LINE</span>';
+            btn.innerHTML = '<i class="fa-brands fa-line text-xl"></i> <span id="btnGateLineText">เข้าสู่ระบบด้วย LINE</span>';
           }
 
           if (res && res.success) {
@@ -1455,20 +1459,26 @@
               showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' + (currentUser.firstName || ''), 'success');
               unlockAppInterface();
             } else {
-              showToast('พบบัญชี LINE ใหม่! กรุณากรอกรหัสนิสิตและฝ่ายเพื่อผูกบัญชี', 'info');
+              showToast('พบบัญชี LINE ใหม่! กรุณากรอกรหัสนิสิตและฝ่ายเพื่อลงทะเบียน', 'info');
               switchGateAuthMode('REGISTER');
               if (profile && profile.displayName) {
-                document.getElementById('gateRegFirstName').value = profile.displayName;
+                var nameInput = document.getElementById('gateRegFirstName');
+                if (nameInput && !nameInput.value) {
+                  nameInput.value = profile.displayName;
+                }
               }
             }
+          } else {
+            showToast(res ? res.message : 'เกิดข้อผิดพลาดในการตรวจสอบบัญชี LINE', 'error');
           }
         })
-        .withFailureHandler(function() {
+        .withFailureHandler(function(err) {
           showLoading(false);
           if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-brands fa-line text-xl"></i> <span>เข้าสู่ระบบด้วย LINE</span>';
+            btn.innerHTML = '<i class="fa-brands fa-line text-xl"></i> <span id="btnGateLineText">เข้าสู่ระบบด้วย LINE</span>';
           }
+          showToast('ไม่สามารถเชื่อมต่อระบบยืนยันตัวตน LINE ได้', 'error');
         })
         .verifyLineLogin(lineUid);
     }
