@@ -1418,15 +1418,7 @@
     window.addEventListener('DOMContentLoaded', function() {
       initTheme();
 
-      // ล้างพารามิเตอร์ OAuth / LIFF (?code=...&state=...) ออกจากแถบ URL อัตโนมัติ ป้องกันเบราว์เซอร์ใช้ซ้ำจนพัง
-      if (window.location.search && (window.location.search.indexOf('code=') !== -1 || window.location.search.indexOf('liffClientId=') !== -1)) {
-        try {
-          var cleanPath = window.location.origin + window.location.pathname;
-          window.history.replaceState({}, document.title, cleanPath);
-        } catch (e) {}
-      }
-
-      initLiffSDK();
+      // โหลดการตั้งค่าเริ่มต้น
       currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=10';
       renderClubLogo(currentClubLogo);
 
@@ -1451,17 +1443,35 @@
       var endDateEl = document.getElementById('cartEndDate');
       if (startDateEl) startDateEl.value = today;
       if (endDateEl) endDateEl.value = today;
+
+      // เริ่มต้นระบบ LINE LIFF (ต้องรันหลังจากตั้งค่า UI เรียบร้อย และไม่ลบ URL params ก่อนเวลาอันควร)
+      initLiffSDK();
     });
 
-    // --- LINE LIFF INTEGRATION ENGINE ---
+    // --- LINE LIFF INTEGRATION ENGINE (STABLE & DEBUG-FRIENDLY) ---
     function initLiffSDK() {
-      if (typeof liff === 'undefined' || !LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
+      if (typeof liff === 'undefined') {
+        console.warn("ไม่พบ LIFF SDK บนหน้าเว็บ");
+        updateLineStatusUI(false);
+        return;
+      }
+
+      if (!LIFF_ID || LIFF_ID.indexOf("ใส่_") !== -1) {
+        console.warn("LIFF_ID ยังไม่ได้ถูกกำหนดค่า");
         updateLineStatusUI(false);
         return;
       }
 
       liff.init({ liffId: LIFF_ID })
         .then(function() {
+          // เมื่อ LIFF init เสร็จสมบูรณ์แล้ว จึงค่อยล้าง ?code=... ออกจาก URL เพื่อความสะอาดตา
+          if (window.location.search && (window.location.search.indexOf('code=') !== -1 || window.location.search.indexOf('liffClientId=') !== -1)) {
+            try {
+              var cleanUrl = window.location.origin + window.location.pathname;
+              window.history.replaceState({}, document.title, cleanUrl);
+            } catch (e) {}
+          }
+
           if (liff.isLoggedIn()) {
             return liff.getProfile();
           }
@@ -1482,6 +1492,7 @@
             if (name) name.innerText = profile.displayName || 'LINE User';
             if (btnText) btnText.innerText = 'ดำเนินการต่อด้วย ' + (profile.displayName || 'LINE');
 
+            // หากยังไม่ได้ล็อกอินในระบบคลังพัสดุ ให้ตรวจสอบ LINE UID กับฐานข้อมูลทันที
             if (!currentUser) {
               verifyLineUserDirect(currentLineUid, profile);
             } else if (currentUser && currentUser.id && (!currentUser.lineUid || currentUser.lineUid !== currentLineUid)) {
@@ -1490,19 +1501,29 @@
           }
         })
         .catch(function(err) {
-          console.warn("LIFF init warning:", err);
+          console.error("LIFF init error:", err);
           updateLineStatusUI(false);
+          // แสดงข้อความ error แจ้งเตือนบนหน้าจอเพื่อไม่ให้ผู้ใช้สับสน
+          if (window.location.search && window.location.search.indexOf('code=') !== -1) {
+            showToast('เชื่อมต่อ LINE ไม่สำเร็จ: ' + (err.message || 'กรุณาลองใหม่อีกครั้ง'), 'error');
+          }
         });
     }
 
     function loginWithLine() {
       if (typeof liff === 'undefined') {
-        showToast('ไม่พบ LINE SDK กรุณาลองใหม่อีกครั้ง', 'warning');
+        showToast('ไม่พบระบบ LINE SDK กรุณารีเฟรชหน้าเว็บ', 'error');
         return;
       }
 
       if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: window.location.origin + window.location.pathname });
+        try {
+          var redirectTarget = window.location.origin + window.location.pathname;
+          liff.login({ redirectUri: redirectTarget });
+        } catch (e) {
+          console.error("liff.login error:", e);
+          liff.login();
+        }
       } else {
         showLoading(true);
         liff.getProfile()
@@ -1514,7 +1535,8 @@
           .catch(function(err) {
             showLoading(false);
             console.warn("getProfile error, re-authenticating:", err);
-            liff.login({ redirectUri: window.location.origin + window.location.pathname });
+            var redirectTarget = window.location.origin + window.location.pathname;
+            liff.login({ redirectUri: redirectTarget });
           });
       }
     }
@@ -1524,7 +1546,7 @@
       var btn = document.getElementById('btnGateLineLogin');
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> <span>กำลังตรวจสอบบัญชี...</span>';
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-1"></i> <span>กำลังตรวจสอบบัญชี LINE...</span>';
       }
 
       google.script.run
@@ -1532,7 +1554,7 @@
           showLoading(false);
           if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fa-brands fa-line text-xl"></i> <span id="btnGateLineText">เข้าสู่ระบบด้วย LINE</span>';
+            btn.innerHTML = '<i class="fa-brands fa-line text-xl"></i> <span id="btnGateLineText">' + (profile && profile.displayName ? ('ดำเนินการต่อด้วย ' + profile.displayName) : 'เข้าสู่ระบบด้วย LINE') + '</span>';
           }
 
           if (res && res.success) {
@@ -1542,7 +1564,7 @@
               showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' + (currentUser.firstName || ''), 'success');
               unlockAppInterface();
             } else {
-              showToast('พบบัญชี LINE ใหม่! กรุณากรอกรหัสนิสิตและฝ่ายเพื่อลงทะเบียน', 'info');
+              showToast('ตรวจพบบัญชี LINE ใหม่! กรุณากรอกรหัสนิสิตและฝ่ายเพื่อลงทะเบียน', 'info');
               switchGateAuthMode('REGISTER');
               if (profile && profile.displayName) {
                 var nameInput = document.getElementById('gateRegFirstName');
@@ -1561,7 +1583,8 @@
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-brands fa-line text-xl"></i> <span id="btnGateLineText">เข้าสู่ระบบด้วย LINE</span>';
           }
-          showToast('ไม่สามารถเชื่อมต่อระบบยืนยันตัวตน LINE ได้', 'error');
+          var errMsg = (err && err.message) ? err.message : 'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์เพื่อตรวจสอบ LINE ได้';
+          showToast(errMsg, 'error', true);
         })
         .verifyLineLogin(lineUid);
     }
