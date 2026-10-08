@@ -7,9 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 
   <!-- Favicon & Touch Icon สำหรับหน้าจอโฮมมือถือ -->
-  <link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=10" />
-  <link id="dynamicAppleTouchIcon" rel="apple-touch-icon" href="/favicon.png?v=10" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=10" />
+  <link id="dynamicFavicon" rel="icon" type="image/png" href="/favicon.png?v=11" />
+  <link id="dynamicAppleTouchIcon" rel="apple-touch-icon" href="/favicon.png?v=11" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png?v=11" />
   
   <!-- การตั้งค่า PWA / Web Clip สำหรับ iOS & Android -->
   <meta name="mobile-web-app-capable" content="yes" />
@@ -1326,7 +1326,7 @@
         document.head.appendChild(appleIcon);
       }
       var clean = cleanDriveUrl(iconUrl);
-      var finalUrl = clean || '/favicon.png?v=10';
+      var finalUrl = clean || '/favicon.png?v=11';
       if (favicon) favicon.href = finalUrl;
       if (appleIcon) appleIcon.href = finalUrl;
     }
@@ -1406,7 +1406,7 @@
       initTheme();
 
       // โหลดการตั้งค่าเริ่มต้น
-      currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=10';
+      currentClubLogo = localStorage.getItem('smo_rx_logo') || '/favicon.png?v=11';
       renderClubLogo(currentClubLogo);
 
       var session = localStorage.getItem('smo_rx_user');
@@ -3284,7 +3284,7 @@
     function prepareReceiptDocument(billItems, txId) {
       var first = billItems[0];
       var storedLogo = localStorage.getItem('smo_rx_logo');
-      var logoSrc = storedLogo ? cleanDriveUrl(storedLogo) : (currentClubLogo ? cleanDriveUrl(currentClubLogo) : '/favicon.png?v=10');
+      var logoSrc = storedLogo ? cleanDriveUrl(storedLogo) : (currentClubLogo ? cleanDriveUrl(currentClubLogo) : '/favicon.png?v=11');
       
       var rawBorrowerName = first.BorrowerName || 'ไม่ระบุชื่อ';
       var cleanBorrowerName = rawBorrowerName.replace(/\s*\([^)]*\)\s*/g, '').trim();
