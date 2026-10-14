@@ -125,38 +125,40 @@
     }
 
     /* ================= สไตล์สำหรับพิมพ์และเซฟเป็น Vector PDF แท้ ================= */
-    @media print {
-      @page {
-        size: A4 portrait;
-        margin: 10mm 12mm;
-      }
-      html, body {
-        background: #ffffff !important;
-        color: #000000 !important;
-        height: auto !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      body * {
-        visibility: hidden !important;
-      }
-      #printContainer, #printContainer * {
-        visibility: visible !important;
-      }
-      #printContainer {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        display: block !important;
-        background: #ffffff !important;
-        color: #000000 !important;
-      }
-    }
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  /* ซ่อนองค์ประกอบอื่นๆ ทั้งหมดในหน้าเว็บไม่ให้ลอยมาติด */
+  body > *:not(#printContainer) {
+    display: none !important;
+  }
+  #printContainer, #printContainer * {
+    visibility: visible !important;
+  }
+  #printContainer {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
   </style>
 </head>
 <body class="min-h-full flex flex-col antialiased selection:bg-emerald-800 selection:text-white">
@@ -2976,7 +2978,10 @@
               '</div>' +
               '<div class="bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 p-1 rounded-xl text-center">' +
                 '<span class="block text-[9px] font-bold text-rose-700 dark:text-rose-400">ชำรุด/สูญหาย:</span>' +
-                '<input type="number" id="returnBad-' + item.rowIndex + '" value="0" min="0" max="' + item.Quantity + '" class="w-12 p-0.5 text-center bg-white dark:bg-[#0a1510] border dark:border-rose-900/60 rounded font-bold text-rose-700 dark:text-rose-400 text-xs" />' +
+                '<div class="flex items-center gap-1 bg-white dark:bg-[#12231b] p-1 rounded-xl border dark:border-emerald-900/60">' +
+                 '<span class="text-slate-500 dark:text-slate-400 font-medium text-[11px] pl-1">อนุมัติ/ปรับจำนวน:</span>' +
+                 '<input type="number" id="approveQty-' + item.rowIndex + '" value="' + item.Quantity + '" min="1" class="w-16 p-1 text-center font-bold text-emerald-800 dark:text-emerald-300 rounded text-xs bg-slate-50 dark:bg-[#0a1510] border border-emerald-300 focus:outline-none focus:ring-1 focus:ring-emerald-500" />' +
+                 '<span class="text-[10px] text-slate-400 pr-1">' + item.EquipmentUnit + '</span>' +
               '</div>' +
             '</div>';
         }
