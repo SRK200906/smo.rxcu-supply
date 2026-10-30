@@ -166,6 +166,47 @@
   <!-- พื้นที่สำหรับพิมพ์ใบยืม A4 แบบฝังในหน้า (Vector Print & Save as PDF Container) -->
   <div id="printContainer" class="hidden"></div>
 
+    <!-- ================= MODAL แจ้งเตือนย้ายแพลตฟอร์ม (แสดงสำหรับทุกคนรวมถึงคนที่ล็อกอินค้างไว้) ================= -->
+  <dialog id="personnelNoticeModal" class="p-0 backdrop:bg-slate-900/85 rounded-3xl shadow-2xl max-w-md w-[92vw] border border-amber-300/40 dark:border-amber-700/50 overflow-hidden">
+    <div class="p-5 sm:p-6 space-y-4 bg-white dark:bg-[#12231b] text-slate-800 dark:text-slate-100">
+      
+      <!-- Modal Header -->
+      <div class="text-center space-y-2">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl shadow-inner">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <h3 class="font-bold text-base sm:text-lg text-[#10231a] dark:text-[#f0e4cf]">
+          ประกาศย้ายระบบคลังพัสดุอย่างเป็นทางการ
+        </h3>
+        <p class="text-xs text-amber-700 dark:text-amber-300 font-medium px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 inline-block border border-amber-200/60 dark:border-amber-900/50">
+          <i class="fa-solid fa-circle-info mr-1"></i> สำหรับผู้ใช้งานทุกท่าน
+        </p>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="bg-slate-50 dark:bg-[#0a1510] p-4 rounded-2xl border border-slate-200/80 dark:border-emerald-950/80 text-xs sm:text-sm space-y-2.5 leading-relaxed text-center">
+        <p class="text-slate-700 dark:text-slate-200 font-medium">
+          ระบบคลังพัสดุ สโมสรนิสิตเภสัชศาสตร์ จุฬาฯ ได้ย้ายไปใช้งานที่เว็บไซต์ใหม่เรียบร้อยแล้ว กรุณาเข้าใช้งานผ่านลิงก์ด้านล่างนี้:
+        </p>
+        <div class="p-3 rounded-xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-emerald-900 dark:text-emerald-300 font-mono text-xs break-all flex items-center justify-center gap-2">
+          <i class="fa-solid fa-link text-amber-600 shrink-0"></i>
+          <span class="font-bold">https://www.smorxcu.com/assets</span>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="space-y-2 pt-1">
+        <a href="https://www.smorxcu.com/assets" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-md shadow-amber-950/20 flex items-center justify-center gap-2.5 transition-all text-center">
+          <i class="fa-solid fa-arrow-up-right-from-square text-base"></i>
+          <span>ไปยังเว็บไซต์ใหม่ (smorxcu.com/assets)</span>
+        </a>
+        <button type="button" onclick="closePersonnelNoticeModal()" class="w-full py-2 px-4 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-500 text-[11px] font-medium flex items-center justify-center gap-1">
+          <span>ปิดหน้าต่างนี้ (ใช้งานต่อชั่วคราว)</span>
+        </button>
+      </div>
+
+    </div>
+  </dialog>
 
   <!-- ================= AUTHENTICATION GATE ================= -->
   <section id="authGateSection" class="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 gate-safe bg-gradient-to-br from-[#091510] via-[#12281e] to-[#1c3d2e] text-slate-800 relative z-50">
@@ -177,21 +218,20 @@
           <i id="gateLogoFallback" class="fa-solid fa-boxes-stacked text-2xl text-[#c5a880]"></i>
         </div>
         <h2 class="text-base sm:text-lg font-bold text-white tracking-wide">ระบบคลังพัสดุและอุปกรณ์</h2>
-        <p class="text-xs text-emerald-200 mt-0.5 font-light">สโมสรนิสิตเภสัชศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย</p>
+        <p class="text-xs text-emerald-200 mt-0.5 font-light">ADMIN Portal</p>
         <span class="inline-block mt-2 text-[10px] bg-[#c5a880]/20 text-[#f5eedc] px-3 py-0.5 rounded-full font-medium border border-[#c5a880]/30">
-          SMO.RxCU Supply Portal
+          ADMIN Portal
         </span>
       </div>
 
 
-        <!-- Banner แจ้งเตือนตรวจจับ LINE Account เมื่อเปิดใน LINE App -->
         <!-- Login Form (แบบเดิมสำรอง) -->
         <div id="gateLoginForm" class="space-y-3.5 text-xs">
           <div>
             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">รหัสนิสิต / ประจำตัวประชาชน <span class="text-rose-500">*</span></label>
             <div class="relative">
               <i class="fa-solid fa-id-card absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="text" id="gateLoginId" placeholder="เช่น 68xxxxxx33" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl focus:bg-white dark:focus:bg-[#12231b] focus:outline-none focus:border-emerald-600 font-medium text-slate-800 dark:text-slate-100" />
+              <input type="text" id="gateLoginId" placeholder="ADMIN Portal" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl focus:bg-white dark:focus:bg-[#12231b] focus:outline-none focus:border-emerald-600 font-medium text-slate-800 dark:text-slate-100" />
             </div>
           </div>
 
@@ -199,7 +239,7 @@
             <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">ชื่อจริง (ไม่ต้องระบุคำนำหน้า) <span class="text-rose-500">*</span></label>
             <div class="relative">
               <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-              <input type="text" id="gateLoginName" placeholder="เช่น ภัทรพล" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl focus:bg-white dark:focus:bg-[#12231b] focus:outline-none focus:border-emerald-600 font-medium text-slate-800 dark:text-slate-100" />
+              <input type="text" id="gateLoginName" placeholder="ADMIN Portal" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl focus:bg-white dark:focus:bg-[#12231b] focus:outline-none focus:border-emerald-600 font-medium text-slate-800 dark:text-slate-100" />
             </div>
           </div>
 
