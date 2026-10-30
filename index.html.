@@ -185,35 +185,12 @@
 
 
         <!-- Banner แจ้งเตือนตรวจจับ LINE Account เมื่อเปิดใน LINE App -->
-        <div id="gateLineDetectedBanner" class="hidden p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 text-xs flex items-center gap-3">
-          <img id="gateLineProfilePic" src="" class="w-10 h-10 rounded-full border border-emerald-400 shrink-0 object-cover" />
-          <div class="truncate flex-1">
-            <p class="font-bold text-emerald-950 dark:text-emerald-200 truncate" id="gateLineDisplayName">ตรวจพบบัญชี LINE</p>
-            <p class="text-[10px] text-emerald-700 dark:text-emerald-400">พร้อมรับแจ้งเตือนบิลผ่านแชตอัตโนมัติ</p>
-          </div>
-        </div>
-
-        <!-- 🟢 1. ปุ่มหลัก: ล็อกอินผ่าน LINE (Primary Action) -->
-        <button id="btnGateLineLogin" type="button" onclick="loginWithLine()" class="w-full py-3.5 px-4 rounded-2xl bg-[#06C755] hover:bg-[#05b34c] active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-lg shadow-emerald-900/20 flex items-center justify-center gap-2.5 transition-all">
-          <i class="fa-brands fa-line text-xl"></i>
-          <span id="btnGateLineText">เข้าสู่ระบบด้วย LINE</span>
-        </button>
-
-        <div class="relative flex py-1 items-center">
-          <div class="flex-grow border-t border-slate-200 dark:border-emerald-900/40"></div>
-          <span class="flex-shrink mx-3 text-[11px] font-medium text-slate-400">หรือใช้วิธีอื่น</span>
-          <div class="flex-grow border-t border-slate-200 dark:border-emerald-900/40"></div>
-        </div>
 
         <!-- แท็บสลับเข้าสู่ระบบธรรมดา / ลงทะเบียน -->
         <div class="flex bg-slate-100 dark:bg-slate-900/60 p-1 rounded-2xl text-xs font-semibold">
           <button id="gateTabLogin" onclick="switchGateAuthMode('LOGIN')" class="flex-1 py-2 rounded-xl bg-white dark:bg-[#1b3327] shadow-sm text-[#183327] dark:text-[#f2e6d0] font-bold transition-all">
             <i class="fa-solid fa-id-card mr-1"></i> เข้าด้วยรหัสนิสิต
           </button>
-          <button id="gateTabRegister" onclick="switchGateAuthMode('REGISTER')" class="flex-1 py-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 font-medium transition-all">
-            <i class="fa-solid fa-user-plus mr-1"></i> ลงทะเบียนใหม่
-          </button>
-        </div>
 
         <!-- Login Form (แบบเดิมสำรอง) -->
         <div id="gateLoginForm" class="space-y-3.5 text-xs">
@@ -239,70 +216,7 @@
           </button>
         </div>
 
-        <!-- Register Form -->
-        <div id="gateRegisterForm" class="hidden space-y-2.5 text-xs max-h-[50vh] overflow-y-auto pr-1 custom-scroll">
-          <div class="grid grid-cols-3 gap-2">
-            <div>
-              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">คำนำหน้า</label>
-              <input type="text" id="gateRegPrefix" value="นสภ." class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-            </div>
-            <div class="col-span-2">
-              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ชื่อจริง <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegFirstName" placeholder="ชื่อจริง" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">นามสกุล <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegLastName" placeholder="นามสกุล" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-            </div>
-            <div>
-              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ชื่อเล่น <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegNickname" placeholder="ชื่อเล่น" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">รหัสนิสิต / ประจำตัวประชาชน <span class="text-rose-500">*</span></label>
-            <input type="text" id="gateRegId" placeholder="เช่น 68xxxxxx33" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ชั้นปี</label>
-              <input type="text" id="gateRegYear" placeholder="เช่น 3" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-            </div>
-            <div>
-              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ฝ่ายที่สังกัด</label>
-              <input type="text" id="gateRegDept" placeholder="เช่น ฝ่ายพัสดุฯ" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ในนามโครงการ / ชมรม</label>
-            <input type="text" id="gateRegProject" placeholder="เช่น สโมสรนิสิตฯ, ค่ายเภสัชฯ" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div>
-              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">เบอร์โทรศัพท์ <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegPhone" placeholder="08xxxxxxxx" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-            </div>
-            <div>
-              <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">ไอดีไลน์ <span class="text-rose-500">*</span></label>
-              <input type="text" id="gateRegLine" placeholder="Line ID" class="w-full p-2 bg-slate-50 dark:bg-[#0a1510] border border-slate-200 dark:border-emerald-900/50 rounded-xl font-medium text-xs dark:text-slate-100" />
-            </div>
-          </div>
-
-          <button id="btnGateRegister" onclick="executeGateRegister()" class="w-full py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-md transition-all mt-2 flex items-center justify-center gap-1.5">
-            <i class="fa-solid fa-user-check"></i> <span>บันทึกการลงทะเบียนและผูก LINE</span>
-          </button>
-        </div>
-
-      </div>
-    </div>
-  </section>
+        
 
   <!-- ================= MAIN APP WRAPPER ================= -->
   <div id="appMainWrapper" class="hidden min-h-screen flex flex-col pb-24 md:pb-0">
