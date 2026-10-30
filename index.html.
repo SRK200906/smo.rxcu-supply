@@ -166,48 +166,6 @@
   <!-- พื้นที่สำหรับพิมพ์ใบยืม A4 แบบฝังในหน้า (Vector Print & Save as PDF Container) -->
   <div id="printContainer" class="hidden"></div>
 
-<!-- ================= MODAL แจ้งเตือนย้ายแพลตฟอร์ม (ย้ายทั้งหมด) ================= -->
-<dialog id="personnelNoticeModal" class="p-0 backdrop:bg-slate-900/85 rounded-3xl shadow-2xl max-w-md w-[92vw] border border-amber-300/40 dark:border-amber-700/50 overflow-hidden">
-  <div class="p-5 sm:p-6 space-y-4 bg-white dark:bg-[#12231b] text-slate-800 dark:text-slate-100">
-    
-    <!-- Modal Header -->
-    <div class="text-center space-y-2">
-      <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl shadow-inner">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-      </div>
-      <h3 class="font-bold text-base sm:text-lg text-[#10231a] dark:text-[#f0e4cf]">
-        ประกาศย้ายระบบคลังพัสดุอย่างเป็นทางการ
-      </h3>
-      <p class="text-xs text-amber-700 dark:text-amber-300 font-medium px-2.5 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 inline-block border border-amber-200/60 dark:border-amber-900/50">
-        <i class="fa-solid fa-circle-info mr-1"></i> สำหรับผู้ใช้งานทุกท่าน (นิสิตและบุคลากร)
-      </p>
-    </div>
-
-    <!-- Modal Body -->
-    <div class="bg-slate-50 dark:bg-[#0a1510] p-4 rounded-2xl border border-slate-200/80 dark:border-emerald-950/80 text-xs sm:text-sm space-y-2.5 leading-relaxed text-center">
-      <p class="text-slate-700 dark:text-slate-200 font-medium">
-        ระบบคลังพัสดุ สโมสรนิสิตเภสัชศาสตร์ จุฬาฯ ได้ย้ายไปใช้งานที่เว็บไซต์ใหม่เรียบร้อยแล้ว กรุณาเข้าใช้งานผ่านลิงก์ด้านล่างนี้:
-      </p>
-      <div class="p-3 rounded-xl bg-amber-50/90 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-emerald-900 dark:text-emerald-300 font-mono text-xs break-all flex items-center justify-center gap-2">
-        <i class="fa-solid fa-link text-amber-600 shrink-0"></i>
-        <span class="font-bold">https://www.smorxcu.com/assets</span>
-      </div>
-    </div>
-
-    <!-- Action Button -->
-    <div class="space-y-2 pt-1">
-      <a href="https://www.smorxcu.com/assets" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-md shadow-amber-950/20 flex items-center justify-center gap-2.5 transition-all text-center">
-        <i class="fa-solid fa-arrow-up-right-from-square text-base"></i>
-        <span>ไปยังเว็บไซต์ใหม่ (smorxcu.com/assets)</span>
-      </a>
-      <button type="button" onclick="closePersonnelNoticeModal()" class="w-full py-2 px-4 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-500 text-[11px] font-medium flex items-center justify-center gap-1">
-        <span>ปิดหน้าต่างนี้ (สำหรับดูระบบเดิมชั่วคราว)</span>
-      </button>
-    </div>
-
-  </div>
-</dialog>
-
 
   <!-- ================= AUTHENTICATION GATE ================= -->
   <section id="authGateSection" class="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 gate-safe bg-gradient-to-br from-[#091510] via-[#12281e] to-[#1c3d2e] text-slate-800 relative z-50">
@@ -224,21 +182,6 @@
           SMO.RxCU Supply Portal
         </span>
       </div>
-
-      <div class="p-5 sm:p-6 space-y-4">
-        <!-- Banner แจ้งเตือนย้ายเว็บสำหรับบุคลากรและนิสิตในคณะ -->
-<div class="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs flex items-center justify-between gap-2">
-  <div class="flex items-center gap-2 truncate">
-    <i class="fa-solid fa-building-user text-amber-600 dark:text-amber-400 text-sm shrink-0"></i>
-    <div class="truncate">
-      <p class="font-bold text-amber-900 dark:text-amber-200 truncate">นิสิต / บุคลากรในคณะ?</p>
-      <p class="text-[10px] text-amber-700 dark:text-amber-400 truncate">ย้ายระบบไปที่ smorxcu.com/assets</p>
-    </div>
-  </div>
-  <a href="https://www.smorxcu.com/assets" class="px-2.5 py-1 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-[10px] shrink-0 transition-colors shadow-sm">
-    ไปเว็บใหม่ →
-  </a>
-</div>
 
 
         <!-- Banner แจ้งเตือนตรวจจับ LINE Account เมื่อเปิดใน LINE App -->
